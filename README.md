@@ -1,29 +1,25 @@
-# README #
+### **📁 Pascal Server Pages (PSP)**
 
-This README would normally document whatever steps are necessary to get your application up and running.
+**Framework | Object Pascal | Delphi-Based | With DWS! (Delphi Web Script)**
 
-### What is this repository for? ###
+> *A lightweight, no-nonsense web framework for building fast, minimal, and stateful web applications using Delphi Pascal.*
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+**Pascal Server Pages (PSP)** is a retro-inspired, modern-executing server-side scripting framework built in Object Pascal. Designed for speed, predictability, and minimal dependencies, PSP allows developers to build full HTML5 web apps *without* JavaScript or CSS. Think PHP circa 2004 — but rebuilt in Pascal, with clean syntax and actual type safety.
 
-### How do I get set up? ###
+#### 🧠 Features:
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+* `<% %>` inline code execution with optional external `.pas` files
+* DWS scripting integration for dynamic logic
+* Support for CGI and standalone HTTP server modes
+* Clean separation between presentation and logic
+* Deliberately dated aesthetic and structure for full “forgotten university IT department” vibes
 
-### Contribution guidelines ###
+#### 🔒 Use Cases:
 
-* Writing tests
-* Code review
-* Other guidelines
+* Internal portals
+* Lightweight dashboards
+* Legacy-style support ticket systems
+* FTP-style web frontends
+* Anything that doesn’t need React. Ever.
 
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+> *"It just works. And it’s weirdly fast."*
