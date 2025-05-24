@@ -1,6 +1,6 @@
-![image](images/mascot.png)
-
-
+<p align="center">
+  <img src="images/mascot.png" alt="Pascal Server Pages Logo" width="250"/>
+</p>
 
 ### **📁 Pascal Server Pages (PSP)**
 
