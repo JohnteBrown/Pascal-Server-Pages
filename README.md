@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/mascot.png" alt="Pascal Server Pages Logo" width="250"/>
+  <img src="images/mascot.png" alt="Pascal Server Pages Logo" width="40"/>
 </p>
 
 ### **📁 Pascal Server Pages (PSP)**
