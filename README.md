@@ -1,3 +1,7 @@
+![image](images/mascot.png)
+
+
+
 ### **📁 Pascal Server Pages (PSP)**
 
 **Framework | Object Pascal | Delphi-Based | With DWS! (Delphi Web Script)**
