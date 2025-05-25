@@ -3,40 +3,41 @@ unit UdwsCryptoTests;
 interface
 
 uses
-   Classes, SysUtils,
-   dwsXPlatformTests, dwsComp, dwsCompiler, dwsExprs, dwsErrors,
-   dwsCryptoLibModule, dwsXPlatform, dwsCompilerContext, dwsEncodingLibModule,
-   dwsJSONConnector;
+  Classes, SysUtils,
+  dwsXPlatformTests, dwsComp, dwsCompiler, dwsExprs, dwsErrors,
+  dwsCryptoLibModule, dwsXPlatform, dwsCompilerContext, dwsEncodingLibModule,
+  dwsJSONConnector;
 
 type
 
-   TdwsCryptoTests = class (TTestCase)
-      private
-         FTests : TStringList;
-         FCompiler : TDelphiWebScript;
-         FCryptoLib : TdwsCryptoLib;
-         FEncodingLib : TdwsEncodingLib;
-         FJSONLib : TdwsJSONLibModule;
+  TdwsCryptoTests = class(TTestCase)
+  private
+    FTests: TStringList;
+    FCompiler: TDelphiWebScript;
+    FCryptoLib: TdwsCryptoLib;
+    FEncodingLib: TdwsEncodingLib;
+    FJSONLib: TdwsJSONLibModule;
 
-      public
-         procedure SetUp; override;
-         procedure TearDown; override;
+  public
+    procedure SetUp; override;
+    procedure TearDown; override;
 
-         procedure Execution;
-         procedure Compilation;
+    procedure Execution;
+    procedure Compilation;
 
-      published
+  published
 
-         procedure CompilationNormal;
-         procedure CompilationWithMapAndSymbols;
-         procedure ExecutionNonOptimized;
-         procedure ExecutionOptimized;
-   end;
+    procedure CompilationNormal;
+    procedure CompilationWithMapAndSymbols;
+    procedure ExecutionNonOptimized;
+    procedure ExecutionOptimized;
+  end;
 
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
 implementation
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
@@ -49,142 +50,151 @@ implementation
 //
 procedure TdwsCryptoTests.SetUp;
 begin
-   FTests:=TStringList.Create;
+  FTests := TStringList.Create;
 
-   CollectFiles(ExtractFilePath(ParamStr(0))+'CryptoLib'+PathDelim, '*.pas', FTests);
+  CollectFiles(ExtractFilePath(ParamStr(0)) + 'CryptoLib' + PathDelim,
+    '*.pas', FTests);
 
-   FCompiler:=TDelphiWebScript.Create(nil);
+  FCompiler := TDelphiWebScript.Create(nil);
 
-   FCryptoLib:=TdwsCryptoLib.Create(nil);
-   FCryptoLib.dwsCrypto.Script:=FCompiler;
+  FCryptoLib := TdwsCryptoLib.Create(nil);
+  FCryptoLib.dwsCrypto.Script := FCompiler;
 
-   FEncodingLib := TdwsEncodingLib.Create(nil);
-   FEncodingLib.dwsEncoding.Script := FCompiler;
+  FEncodingLib := TdwsEncodingLib.Create(nil);
+  FEncodingLib.dwsEncoding.Script := FCompiler;
 
-   FJSONLib := TdwsJSONLibModule.Create(nil);
-   FJSONLib.Script := FCompiler;
+  FJSONLib := TdwsJSONLibModule.Create(nil);
+  FJSONLib.Script := FCompiler;
 end;
 
 // TearDown
 //
 procedure TdwsCryptoTests.TearDown;
 begin
-   FCryptoLib.Free;
-   FEncodingLib.Free;
-   FJSONLib.Free;
+  FCryptoLib.Free;
+  FEncodingLib.Free;
+  FJSONLib.Free;
 
-   FCompiler.Free;
+  FCompiler.Free;
 
-   FTests.Free;
+  FTests.Free;
 end;
 
 // Compilation
 //
 procedure TdwsCryptoTests.Compilation;
 var
-   source : TStringList;
-   i : Integer;
-   prog : IdwsProgram;
+  source: TStringList;
+  i: Integer;
+  prog: IdwsProgram;
 begin
-   source:=TStringList.Create;
-   try
+  source := TStringList.Create;
+  try
 
-      for i:=0 to FTests.Count-1 do begin
+    for i := 0 to FTests.Count - 1 do
+    begin
 
-         source.LoadFromFile(FTests[i]);
+      source.LoadFromFile(FTests[i]);
 
-         prog:=FCompiler.Compile(source.Text);
-         CheckEquals('', prog.Msgs.AsInfo, FTests[i]);
+      prog := FCompiler.Compile(source.Text);
+      CheckEquals('', prog.Msgs.AsInfo, FTests[i]);
 
-      end;
+    end;
 
-   finally
-      source.Free;
-   end;
+  finally
+    source.Free;
+  end;
 end;
 
 // CompilationNormal
 //
 procedure TdwsCryptoTests.CompilationNormal;
 begin
-   FCompiler.Config.CompilerOptions:=[coOptimize];
-   Compilation;
+  FCompiler.Config.CompilerOptions := [coOptimize];
+  Compilation;
 end;
 
 // CompilationWithMapAndSymbols
 //
 procedure TdwsCryptoTests.CompilationWithMapAndSymbols;
 begin
-   FCompiler.Config.CompilerOptions:=[coSymbolDictionary, coContextMap, coAssertions];
-   Compilation;
+  FCompiler.Config.CompilerOptions := [coSymbolDictionary, coContextMap,
+    coAssertions];
+  Compilation;
 end;
 
 // ExecutionNonOptimized
 //
 procedure TdwsCryptoTests.ExecutionNonOptimized;
 begin
-   FCompiler.Config.CompilerOptions:=[coAssertions];
-   Execution;
+  FCompiler.Config.CompilerOptions := [coAssertions];
+  Execution;
 end;
 
 // ExecutionOptimized
 //
 procedure TdwsCryptoTests.ExecutionOptimized;
 begin
-   FCompiler.Config.CompilerOptions:=[coOptimize, coAssertions];
-   Execution;
+  FCompiler.Config.CompilerOptions := [coOptimize, coAssertions];
+  Execution;
 end;
 
 // Execution
 //
 procedure TdwsCryptoTests.Execution;
 var
-   source, expectedResult : TStringList;
-   i : Integer;
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   resultText, resultsFileName : String;
+  source, expectedResult: TStringList;
+  i: Integer;
+  prog: IdwsProgram;
+  exec: IdwsProgramExecution;
+  resultText, resultsFileName: String;
 begin
-   source:=TStringList.Create;
-   expectedResult:=TStringList.Create;
-   try
+  source := TStringList.Create;
+  expectedResult := TStringList.Create;
+  try
 
-      for i:=0 to FTests.Count-1 do begin
+    for i := 0 to FTests.Count - 1 do
+    begin
 
-         source.LoadFromFile(FTests[i]);
+      source.LoadFromFile(FTests[i]);
 
-         prog:=FCompiler.Compile(source.Text);
+      prog := FCompiler.Compile(source.Text);
 
-         CheckEquals('', prog.Msgs.AsInfo, FTests[i]);
-         exec:=prog.Execute;
+      CheckEquals('', prog.Msgs.AsInfo, FTests[i]);
+      exec := prog.Execute;
 
-         resultText:=exec.Result.ToString;
-         if exec.Msgs.Count>0 then
-            resultText:=resultText+#13#10'>>>> Error(s): '#13#10+exec.Msgs.AsInfo;
+      resultText := exec.Result.ToString;
+      if exec.Msgs.Count > 0 then
+        resultText := resultText + #13#10'>>>> Error(s): '#13#10 +
+          exec.Msgs.AsInfo;
 
-         resultsFileName:=ChangeFileExt(FTests[i], '.txt');
-         if FileExists(resultsFileName) then begin
-            expectedResult.LoadFromFile(resultsFileName);
-            CheckEquals(expectedResult.Text, resultText, FTests[i]);
-         end else CheckEquals('', resultText, FTests[i]);
-         CheckEquals('', exec.Msgs.AsInfo, FTests[i]);
+      resultsFileName := ChangeFileExt(FTests[i], '.txt');
+      if FileExists(resultsFileName) then
+      begin
+        expectedResult.LoadFromFile(resultsFileName);
+        CheckEquals(expectedResult.Text, resultText, FTests[i]);
+      end
+      else
+        CheckEquals('', resultText, FTests[i]);
+      CheckEquals('', exec.Msgs.AsInfo, FTests[i]);
 
-      end;
+    end;
 
-   finally
-      expectedResult.Free;
-      source.Free;
-   end;
+  finally
+    expectedResult.Free;
+    source.Free;
+  end;
 end;
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 initialization
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
-   RegisterTest('LibModules', TdwsCryptoTests);
+RegisterTest('LibModules', TdwsCryptoTests);
 
 end.

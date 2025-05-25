@@ -4,9 +4,9 @@ interface
 
 uses
   System.SysUtils, System.Classes,
-  dwsComp,       // DWScript compiler (yes this is correct, dwsCompiler.pas is not the same as dwsComp.pas
-  dwsExprs,      // DWScript expressions & runtime
-  dwsSymbols;    // DWScript symbol system
+  dwsComp, // DWScript compiler (yes this is correct, dwsCompiler.pas is not the same as dwsComp.pas
+  dwsExprs, // DWScript expressions & runtime
+  dwsSymbols; // DWScript symbol system
 
 type
   TPSPParser = class
@@ -15,7 +15,7 @@ type
     FHTMLBuffer: TStringList;
     FCodeBuffer: TStringList;
     FScript: TdwsProgram; // compiled DWScript program
-    FFileName: string;     // store filename for base path
+    FFileName: string; // store filename for base path
 
     procedure ParseLine(const Line: string);
     procedure FlushBuffers;
@@ -75,7 +75,8 @@ begin
       if IncludeEnd > 0 then
       begin
         // Extract filename inside quotes, e.g. <%include 'foo.pas'%> lol
-        IncludeFileName := Copy(Line, IncludeStart + Length('<%include'), IncludeEnd - (IncludeStart + Length('<%include')));
+        IncludeFileName := Copy(Line, IncludeStart + Length('<%include'),
+          IncludeEnd - (IncludeStart + Length('<%include')));
         IncludeFileName := IncludeFileName.Trim;
         IncludeFileName := IncludeFileName.Replace('''', '').Replace('"', '');
 
@@ -95,8 +96,10 @@ begin
           finally
             IncludedContent.Free;
           end;
-        end else
-          raise Exception.CreateFmt('Include file not found: %s', [IncludeFilePath]);
+        end
+        else
+          raise Exception.CreateFmt('Include file not found: %s',
+            [IncludeFilePath]);
       end;
     end;
     Inc(i);
@@ -135,7 +138,8 @@ begin
     EndPos := Pos(CloseTag, Line);
     if EndPos > 0 then
     begin
-      CodeChunk := Copy(Line, StartPos + Length(OpenTag), EndPos - StartPos - Length(OpenTag));
+      CodeChunk := Copy(Line, StartPos + Length(OpenTag),
+        EndPos - StartPos - Length(OpenTag));
       AfterTag := Copy(Line, EndPos + Length(CloseTag), MaxInt);
 
       if BeforeTag <> '' then
@@ -143,9 +147,11 @@ begin
       FCodeBuffer.Add(Trim(CodeChunk));
       if AfterTag <> '' then
         FHTMLBuffer.Add(AfterTag);
-    end else
+    end
+    else
       FHTMLBuffer.Add(Line);
-  end else
+  end
+  else
     FHTMLBuffer.Add(Line);
 end;
 
@@ -195,4 +201,3 @@ begin
 end;
 
 end.
-

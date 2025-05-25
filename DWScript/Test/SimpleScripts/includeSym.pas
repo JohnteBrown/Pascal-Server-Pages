@@ -1,5 +1,5 @@
-var includeSym := 'world';
+var
+includeSym := 'world';
 
-{$i 'includeSym'}
-
-PrintLn('Bye bye '+IncludeSym);
+{$I 'includeSym'}
+PrintLn('Bye bye ' + includeSym);

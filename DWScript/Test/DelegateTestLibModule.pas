@@ -14,18 +14,22 @@ uses
 
 type
   TDelegateTestLib = class(TDataModule)
-    procedure dwsUnitDelegateTestClassesTFooMethodsSetOnTestEval(Info: TProgramInfo; ExtObject: TObject);
-    procedure dwsUnitDelegateTestClassesTFooMethodsTestEval(Info: TProgramInfo; ExtObject: TObject);
-    procedure dwsUnitDelegateTestClassesTFooConstructorsCreateEval(Info: TProgramInfo; var ExtObject: TObject);
-    procedure dwsUnitDelegateTestFunctionsCallMeEval(info: TProgramInfo);
-    procedure dwsUnitDelegateTestFunctionsCallFuncEval(info: TProgramInfo);
-    procedure dwsUnitDelegateTestFunctionsCallEventEval(info: TProgramInfo);
+    procedure dwsUnitDelegateTestClassesTFooMethodsSetOnTestEval
+      (Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsUnitDelegateTestClassesTFooMethodsTestEval(Info: TProgramInfo;
+      ExtObject: TObject);
+    procedure dwsUnitDelegateTestClassesTFooConstructorsCreateEval
+      (Info: TProgramInfo; var ExtObject: TObject);
+    procedure dwsUnitDelegateTestFunctionsCallMeEval(Info: TProgramInfo);
+    procedure dwsUnitDelegateTestFunctionsCallFuncEval(Info: TProgramInfo);
+    procedure dwsUnitDelegateTestFunctionsCallEventEval(Info: TProgramInfo);
     procedure dwsUnitDelegateTestClassesTFooCleanUp(ExternalObject: TObject);
   private
     FScript: TDelphiWebScript;
     procedure SetScript(const Value: TDelphiWebScript);
   protected
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
   published
     property Script: TDelphiWebScript read FScript write SetScript;
   end;
@@ -41,111 +45,118 @@ uses
 
 type
 
-   TNotifyScriptEvent = procedure (Info : TProgramInfo; Sender : TObject) of object;
+  TNotifyScriptEvent = procedure(Info: TProgramInfo; Sender: TObject) of object;
 
-   TFooItem = class
-      private
-         FOnTest : TNotifyScriptEvent;
+  TFooItem = class
+  private
+    FOnTest: TNotifyScriptEvent;
 
-      public
-         procedure Test(Info : TProgramInfo);
-         property OnTest: TNotifyScriptEvent read FOnTest write FOnTest;
-   end;
+  public
+    procedure Test(Info: TProgramInfo);
+    property OnTest: TNotifyScriptEvent read FOnTest write FOnTest;
+  end;
 
-   TWrapper = class
-      private
-         FItem : TObject;
-         FScriptObj : IScriptObj;
+  TWrapper = class
+  private
+    FItem: TObject;
+    FScriptObj: IScriptObj;
 
-      public
-         constructor Create(AItem: TObject; const AScriptObj: IScriptObj = nil);
-         destructor Destroy; override;
+  public
+    constructor Create(AItem: TObject; const AScriptObj: IScriptObj = nil);
+    destructor Destroy; override;
 
-         function CheckScriptObj: boolean;
+    function CheckScriptObj: boolean;
 
-         property Item: TObject read FItem;
-         property ScriptObj: IScriptObj read FScriptObj write FScriptObj;
+    property Item: TObject read FItem;
+    property ScriptObj: IScriptObj read FScriptObj write FScriptObj;
 
-         procedure OnTestHandler(Info : TProgramInfo; Sender: TObject);
-   end;
+    procedure OnTestHandler(Info: TProgramInfo; Sender: TObject);
+  end;
 
+  { TDataModuleDelegateTest }
 
-{ TDataModuleDelegateTest }
-
-procedure TDelegateTestLib.dwsUnitDelegateTestClassesTFooConstructorsCreateEval(Info: TProgramInfo; var ExtObject: TObject);
+procedure TDelegateTestLib.dwsUnitDelegateTestClassesTFooConstructorsCreateEval
+  (Info: TProgramInfo; var ExtObject: TObject);
 begin
-   ExtObject := TFooItem.Create;
+  ExtObject := TFooItem.Create;
 end;
 
-procedure TDelegateTestLib.dwsUnitDelegateTestClassesTFooCleanUp(
-  ExternalObject: TObject);
+procedure TDelegateTestLib.dwsUnitDelegateTestClassesTFooCleanUp
+  (ExternalObject: TObject);
 begin
-   ExternalObject.Free;
+  ExternalObject.Free;
 end;
 
-procedure TDelegateTestLib.dwsUnitDelegateTestClassesTFooMethodsSetOnTestEval(Info: TProgramInfo; ExtObject: TObject);
+procedure TDelegateTestLib.dwsUnitDelegateTestClassesTFooMethodsSetOnTestEval
+  (Info: TProgramInfo; ExtObject: TObject);
 var
-   v : Variant;
-   e : TNotifyScriptEvent;
+  v: Variant;
+  e: TNotifyScriptEvent;
 begin
-   v := Info.Params[0].Value;
-   // Attach wrapper's event handler to the wrapped object's event
-   if VarIsNull(v) then begin
-      e := nil;
-   end else begin
-      Info.Vars['FOnTest'].Value := v;
-      e := TWrapper(ExtObject).OnTestHandler;
-   end;
-   ((ExtObject as TWrapper).Item as TFooItem).OnTest := e;
+  v := Info.Params[0].Value;
+  // Attach wrapper's event handler to the wrapped object's event
+  if VarIsNull(v) then
+  begin
+    e := nil;
+  end
+  else
+  begin
+    Info.Vars['FOnTest'].Value := v;
+    e := TWrapper(ExtObject).OnTestHandler;
+  end;
+  ((ExtObject as TWrapper).Item as TFooItem).OnTest := e;
 end;
 
-procedure TDelegateTestLib.dwsUnitDelegateTestClassesTFooMethodsTestEval(Info: TProgramInfo; ExtObject: TObject);
+procedure TDelegateTestLib.dwsUnitDelegateTestClassesTFooMethodsTestEval
+  (Info: TProgramInfo; ExtObject: TObject);
 var
-   Wrapper: TWrapper;
-   Item: TFooItem;
+  Wrapper: TWrapper;
+  Item: TFooItem;
 begin
-   Wrapper := (ExtObject as TWrapper);
+  Wrapper := (ExtObject as TWrapper);
 
-   if not Wrapper.CheckScriptObj then Exit;
+  if not Wrapper.CheckScriptObj then
+    Exit;
 
-   Item := (Wrapper.Item as TFooItem);
-   Item.Test(Info);
+  Item := (Wrapper.Item as TFooItem);
+  Item.Test(Info);
 end;
 
-procedure TDelegateTestLib.dwsUnitDelegateTestFunctionsCallEventEval(
-  info: TProgramInfo);
+procedure TDelegateTestLib.dwsUnitDelegateTestFunctionsCallEventEval
+  (Info: TProgramInfo);
 var
-   f : IInfo;
-   v : Variant;
+  f: IInfo;
+  v: Variant;
 begin
-   f:=info.Params[0];
-   v:=Info.ParamAsVariant[1];
-   f.Call([v]);
+  f := Info.Params[0];
+  v := Info.ParamAsVariant[1];
+  f.Call([v]);
 end;
 
-procedure TDelegateTestLib.dwsUnitDelegateTestFunctionsCallFuncEval(
-  info: TProgramInfo);
+procedure TDelegateTestLib.dwsUnitDelegateTestFunctionsCallFuncEval
+  (Info: TProgramInfo);
 var
-   f : IInfo;
-   v : Int64;
+  f: IInfo;
+  v: Int64;
 begin
-   f:=info.Params[0];
-   v:=Info.ParamAsInteger[1];
-   Info.ResultAsString:=f.Call([v]).Value;
+  f := Info.Params[0];
+  v := Info.ParamAsInteger[1];
+  Info.ResultAsString := f.Call([v]).Value;
 end;
 
-procedure TDelegateTestLib.dwsUnitDelegateTestFunctionsCallMeEval(
-  info: TProgramInfo);
+procedure TDelegateTestLib.dwsUnitDelegateTestFunctionsCallMeEval
+  (Info: TProgramInfo);
 var
-   f : IInfo;
-   v : Int64;
+  f: IInfo;
+  v: Int64;
 begin
-   f:=info.RootInfo(Info.ParamAsString[0]);
-   v:=Info.ParamAsInteger[1];
-   Info.ResultAsString:=f.Call([v]).Value;
+  f := Info.RootInfo(Info.ParamAsString[0]);
+  v := Info.ParamAsInteger[1];
+  Info.ResultAsString := f.Call([v]).Value;
 end;
 
-procedure TDelegateTestLib.Notification(AComponent: TComponent; Operation: TOperation);
+procedure TDelegateTestLib.Notification(AComponent: TComponent;
+  Operation: TOperation);
 begin
   inherited;
   if (Operation = opRemove) and (AComponent = Script) then
@@ -169,14 +180,13 @@ end;
 
 { TFooItem }
 
-procedure TFooItem.Test(Info : TProgramInfo);
+procedure TFooItem.Test(Info: TProgramInfo);
 begin
-   if Assigned(FOnTest) then
-      FOnTest(Info, Self);
+  if Assigned(FOnTest) then
+    FOnTest(Info, Self);
 end;
 
 { TScriptObjectInfo }
-
 
 { TWrapper }
 
@@ -188,9 +198,9 @@ end;
 
 constructor TWrapper.Create(AItem: TObject; const AScriptObj: IScriptObj);
 begin
-   inherited Create;
-   FItem := AItem;
-   FScriptObj := AScriptObj;
+  inherited Create;
+  FItem := AItem;
+  FScriptObj := AScriptObj;
 end;
 
 destructor TWrapper.Destroy;
@@ -198,33 +208,37 @@ begin
   inherited;
 end;
 
-procedure TWrapper.OnTestHandler(Info : TProgramInfo; Sender: TObject);
+procedure TWrapper.OnTestHandler(Info: TProgramInfo; Sender: TObject);
 var
-   Item: TFooItem;
-   Delegate: IInfo;
+  Item: TFooItem;
+  Delegate: IInfo;
 begin
-   Item := (FItem as TFooItem);
+  Item := (FItem as TFooItem);
 
-   if (not CheckScriptObj) then begin
-      //OutputDebugString('Script Object has been destroyed');
+  if (not CheckScriptObj) then
+  begin
+    // OutputDebugString('Script Object has been destroyed');
+    Item.OnTest := nil;
+    Exit;
+  end;
+
+  Delegate := Info.Vars['Self'].Member['FOnTest'];
+
+  if (Delegate <> nil) and (Delegate.ScriptObj <> nil) then
+  begin
+    try
+
+      Delegate.Call([ScriptObj]);
+
+    except
       Item.OnTest := nil;
-      exit;
-   end;
-
-   Delegate := Info.Vars['Self'].Member['FOnTest'];
-
-   if (Delegate <> nil) and (Delegate.ScriptObj <> nil) then begin
-      try
-
-         Delegate.Call([ScriptObj]);
-
-      except
-         Item.OnTest := nil;
-         raise;
-      end;
-   end else begin
-      Item.OnTest := nil;
-   end;
+      raise;
+    end;
+  end
+  else
+  begin
+    Item.OnTest := nil;
+  end;
 end;
 
 end.

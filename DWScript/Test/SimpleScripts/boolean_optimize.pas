@@ -1,9 +1,10 @@
-procedure PrintBool(v : Variant);
+procedure PrintBool(v: Variant);
 begin
-	PrintLn(if v then 'True' else 'False');
+  PrintLn(if v then 'True' else 'False');
 end;
 
-var v : Variant := 1;
+var
+  v: Variant := 1;
 
 PrintBool(True and v);
 PrintBool(v and True);

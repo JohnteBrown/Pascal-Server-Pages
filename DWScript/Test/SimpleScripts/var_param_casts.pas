@@ -1,40 +1,45 @@
-var v : Variant := 0;
+var
+  v: Variant := 0;
 
-procedure TestFloat(var f : Float);
+procedure TestFloat(var f: Float);
 begin
-   f:=v;
+  f := v;
 end;
 
-var f : Float;
+var
+  f: Float;
 TestFloat(f);
-PrintLn(f-f);
+PrintLn(f - f);
 
-procedure TestInteger(var i : Integer);
+procedure TestInteger(var i: Integer);
 begin
-   f:=v;
+  f := v;
 end;
 
-var i : Integer;
-v:=1.0;
+var
+  i: Integer;
+v := 1.0;
 TestInteger(i);
-PrintLn(i-i);
+PrintLn(i - i);
 
-procedure TestString(var s : String);
+procedure TestString(var s: String);
 begin
-   s:=v;
+  s := v;
 end;
 
-var s : String;
-v:='hello';
+var
+  s: String;
+v := 'hello';
 TestString(s);
-PrintLn(v+v);
+PrintLn(v + v);
 
-procedure TestBool(var b : Boolean);
+procedure TestBool(var b: Boolean);
 begin
-   b:=v;
+  b := v;
 end;
 
-var b : Boolean;
-v:=True;
+var
+  b: Boolean;
+v := True;
 TestBool(b);
 PrintLn(b and b);

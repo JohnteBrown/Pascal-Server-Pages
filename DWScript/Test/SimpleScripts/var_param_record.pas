@@ -1,19 +1,23 @@
-type TRecord = record X : Float; end;
+type
+  TRecord = record
+    X: Float;
+  end;
 
-procedure Test(const x: Float; var r: Float); overload;
+procedure Test(const X: Float; var r: Float); overload;
 begin
-  r := x;
+  r := X;
 end;
 
-procedure Test(const x: Float; var r: TRecord); overload;
+procedure Test(const X: Float; var r: TRecord); overload;
 var
   temp: Float;
 begin
-  Test(x, temp);
+  Test(X, temp);
   r.X := temp;
 end;
 
-var r : TRecord;
+var
+  r: TRecord;
 Test(123, r);
 
 PrintLn(r.X);

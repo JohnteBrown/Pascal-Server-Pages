@@ -1,36 +1,38 @@
-if ConditionalDefined('ALPHA') then PrintLn('ALPHA 1');
-if ConditionalDefined('BETA') then PrintLn('BETA 1');
+if ConditionalDefined('ALPHA') then
+  PrintLn('ALPHA 1');
+if ConditionalDefined('BETA') then
+  PrintLn('BETA 1');
 
-{$if Defined('ALPHA')}
+{$IF Defined('ALPHA')}
 PrintLn('Alpha defined');
-{$else}
+{$ELSE}
 PrintLn('Alpha not defined');
-{$endif}
-
-{$define ALPHA}
-
-{$if Defined('ALPHA')}
+{$ENDIF}
+{$DEFINE ALPHA}
+{$IF Defined('ALPHA')}
 PrintLn('Alpha defined');
-{$else}
+{$ELSE}
 PrintLn('Alpha not defined');
-{$endif}
+{$ENDIF}
+if ConditionalDefined('ALPHA') then
+  PrintLn('ALPHA 2');
+if ConditionalDefined('BETA') then
+  PrintLn('BETA 2');
 
-if ConditionalDefined('ALPHA') then PrintLn('ALPHA 2');
-if ConditionalDefined('BETA') then PrintLn('BETA 2');
+{$DEFINE BETA}
+if ConditionalDefined('ALPHA') then
+  PrintLn('ALPHA 3');
+if ConditionalDefined('BETA') then
+  PrintLn('BETA 3');
 
-{$define BETA}
+{$UNDEF ALPHA}
+if ConditionalDefined('ALPHA') then
+  PrintLn('ALPHA 4');
+if ConditionalDefined('BETA') then
+  PrintLn('BETA 4');
 
-if ConditionalDefined('ALPHA') then PrintLn('ALPHA 3');
-if ConditionalDefined('BETA') then PrintLn('BETA 3');
-
-{$undef ALPHA}
-
-if ConditionalDefined('ALPHA') then PrintLn('ALPHA 4');
-if ConditionalDefined('BETA') then PrintLn('BETA 4');
-
-{$if Defined('ALPHA')}
+{$IF Defined('ALPHA')}
 PrintLn('Alpha defined');
-{$else}
+{$ELSE}
 PrintLn('Alpha not defined');
-{$endif}
-
+{$ENDIF}

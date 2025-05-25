@@ -1,24 +1,28 @@
 type
-   TBase = class end;
+  TBase = class
+  end;
+
 type
-   TChild = class (TBase);
+  TChild = class(TBase);
+
 type
-   TSubChild = class (TChild);
+  TSubChild = class(TChild);
+
 type
-   TOtherChild = class(TBase);
-   
-procedure PrintHierarchy(base : TClass);
+  TOtherChild = class(TBase);
+
+procedure PrintHierarchy(base: TClass);
 begin
-   while Assigned(base) do begin
-      Print(' => ');
-      Print(base.ClassName);
-      base:=base.ClassParent;
-   end;
-   PrintLn('');
+  while Assigned(base) do
+  begin
+    Print(' => ');
+    Print(base.ClassName);
+    base := base.ClassParent;
+  end;
+  PrintLn('');
 end;
 
 PrintHierarchy(TBase);
 PrintHierarchy(TChild);
 PrintHierarchy(TSubChild);
 PrintHierarchy(TOtherChild);
-

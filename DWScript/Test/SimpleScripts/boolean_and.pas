@@ -1,4 +1,5 @@
-var b : Boolean := True;
+var
+  b: Boolean := True;
 
 PrintLn(b and b);
 PrintLn(b and True);

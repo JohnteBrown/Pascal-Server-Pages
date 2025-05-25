@@ -1,19 +1,21 @@
-procedure Test(var err : String);
+procedure Test(var err: String);
 begin
-	procedure AddError(msg : String);
-	begin
-		PrintLn('1'+err);
-		err:=err+msg+'!';
-	end;
 
-	PrintLn('2'+err);
-	AddError('test');
+  procedure AddError(msg: String);
+  begin
+    PrintLn('1' + err);
+    err := err + msg + '!';
+  end;
+
+  PrintLn('2' + err);
+  AddError('test');
 end;
 
-var err:='';
+var
+err := '';
 Test(err);
 PrintLn(err);
 
-err:='-';
+err := '-';
 Test(err);
 PrintLn(err);

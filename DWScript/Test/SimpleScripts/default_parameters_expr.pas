@@ -1,16 +1,16 @@
-procedure Test1(a : Float = 1);
+procedure Test1(a: Float = 1);
 begin
-   PrintLn(a);
+  PrintLn(a);
 end;
 
-procedure Test2(a : Integer = 1+1);
+procedure Test2(a: Integer = 1 + 1);
 begin
-   PrintLn(a);
+  PrintLn(a);
 end;
 
-procedure Test3(a : Float = StrToInt("123"));
+procedure Test3(a: Float = StrToInt(" 123 "));
 begin
-   PrintLn(a);
+  PrintLn(a);
 end;
 
 Test1;

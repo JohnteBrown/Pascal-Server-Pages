@@ -1,18 +1,23 @@
-type TEvent  = procedure (s : String);
-type TMyEvent = TEvent;
+type
+  TEvent = procedure(s: String);
 
-var e : TEvent;
-var m : TMyEvent;
+type
+  TMyEvent = TEvent;
 
-procedure Test(s : String);
+var
+  e: TEvent;
+
+var
+  m: TMyEvent;
+
+procedure Test(s: String);
 begin
-	PrintLn(s);
+  PrintLn(s);
 end;
 
-e:=Test;
+e := Test;
 e('alpha');
-m:=e;
+m := e;
 m('beta');
-e:=m;
+e := m;
 e('gamma');
-

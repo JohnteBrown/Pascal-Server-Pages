@@ -1,3 +1,2 @@
 PrintLn('''
-   l'appel du "lyon" ou ''du loup''
-   ''');
+   l' appel du " lyon " ou '' du loup '' ''');

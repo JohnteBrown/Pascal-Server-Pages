@@ -6,8 +6,8 @@ uses
         System.SysUtils,
         System.Classes,
         Web.HTTPApp,
-        System.IOUtils;
-        PSPParser in 'PSPParser.pas';
+        System.IOUtils,
+        PSPParser;
 
 type
         TWebModule1 = class(TWebModule)
@@ -24,9 +24,6 @@ var
         WebModuleClass: TComponentClass = TWebModule1;
 
 implementation
-
-uses
-        PSPParser;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 {$R *.dfm}

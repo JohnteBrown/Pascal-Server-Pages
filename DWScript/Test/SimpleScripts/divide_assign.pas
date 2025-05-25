@@ -1,10 +1,9 @@
-var f := 150.0;
+var
+f := 150.0;
 
-f /= 1.5;
+f / = 1.5;
 PrintLn(f);
-f /= f;
+f / = f;
 PrintLn(f);
-f /= 1+f;
+f / = 1 + f;
 PrintLn(f);
-
-

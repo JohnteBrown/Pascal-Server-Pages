@@ -1,22 +1,22 @@
-{**********************************************************************}
-{                                                                      }
-{    "The contents of this file are subject to the Mozilla Public      }
-{    License Version 1.1 (the "License"); you may not use this         }
-{    file except in compliance with the License. You may obtain        }
-{    a copy of the License at http://www.mozilla.org/MPL/              }
-{                                                                      }
-{    Software distributed under the License is distributed on an       }
-{    "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express       }
-{    or implied. See the License for the specific language             }
-{    governing rights and limitations under the License.               }
-{                                                                      }
-{    The Initial Developer of the Original Code is Matthias            }
-{    Ackermann. For other initial contributors, see contributors.txt   }
-{    Subsequent portions Copyright Creative IT.                        }
-{                                                                      }
-{    Current maintainer: Eric Grange                                   }
-{                                                                      }
-{**********************************************************************}
+{ ********************************************************************** }
+{ }
+{ "The contents of this file are subject to the Mozilla Public }
+{ License Version 1.1 (the "License"); you may not use this }
+{ file except in compliance with the License. You may obtain }
+{ a copy of the License at http://www.mozilla.org/MPL/ }
+{ }
+{ Software distributed under the License is distributed on an }
+{ "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express }
+{ or implied. See the License for the specific language }
+{ governing rights and limitations under the License. }
+{ }
+{ The Initial Developer of the Original Code is Matthias }
+{ Ackermann. For other initial contributors, see contributors.txt }
+{ Subsequent portions Copyright Creative IT. }
+{ }
+{ Current maintainer: Eric Grange }
+{ }
+{ ********************************************************************** }
 unit dwsStrings;
 
 {$I dws.inc}
@@ -148,40 +148,56 @@ const
   CPE_OnOffExpected = 'ON/OFF expected';
   CPE_UnexpectedSection = 'Unexpected section declaration "%s"';
   CPE_UnexpectedStatement = 'Unexpected statement';
-  CPE_UnexpectedImplementationInInterface = 'Unexpected implementation in interface section';
+  CPE_UnexpectedImplementationInInterface =
+    'Unexpected implementation in interface section';
   CPE_UnexpectedEnd = 'Unexpected END';
   CPE_ClassExpected = 'CLASS expected';
-  CPE_OnlyOneFieldExpectedForExternal = 'Only one field expected for EXTERNAL name';
-  CPE_ExternalArrayForStaticMethodsOnly = 'External array is supported only for static methods';
+  CPE_OnlyOneFieldExpectedForExternal =
+    'Only one field expected for EXTERNAL name';
+  CPE_ExternalArrayForStaticMethodsOnly =
+    'External array is supported only for static methods';
   CPE_ExternalVariablesMustBeGlobal = 'External variables must be global';
-  CPE_ExternalClassVariablesInitializationIsNotSupported = 'External class variables initialization is not supported';
-  CPE_ExternalPropertyNoArguments = 'External properties can only have zero or one argument';
+  CPE_ExternalClassVariablesInitializationIsNotSupported =
+    'External class variables initialization is not supported';
+  CPE_ExternalPropertyNoArguments =
+    'External properties can only have zero or one argument';
   CPE_ExternalPropertyNoType = 'External properties require a type';
 
-  CPE_GenericParametersNotSupportedHere = 'Generic parameters not supported here';
+  CPE_GenericParametersNotSupportedHere =
+    'Generic parameters not supported here';
   CPE_GenericParametersListExpected = 'Generic parameters list expected';
   CPE_UnsupportedGenericConstraint = 'Unsupported generic constraint';
-  CPE_SpecializationNotSupportedYet = 'Specialization of %s is not supported yet';
+  CPE_SpecializationNotSupportedYet =
+    'Specialization of %s is not supported yet';
   CPE_GenericityNotSupportedYet = 'Genericity of %s not supported yet';
-  CPE_PartialClassesCannotBeSpecialized = 'Partial classes cannot be specialized';
-  CPE_NoAvailableBinaryOpSpecialization = 'No available specialization of operator "%s" for types "%s" and "%s"';
+  CPE_PartialClassesCannotBeSpecialized =
+    'Partial classes cannot be specialized';
+  CPE_NoAvailableBinaryOpSpecialization =
+    'No available specialization of operator "%s" for types "%s" and "%s"';
 
   // ReadName
   CPE_UnknownName = 'Unknown name "%s"';
   CPE_UnknownNameDotName = 'Unknown name "%s.%s"';
   CPE_UnknownType = 'Unknown type "%s"';
   CPE_UnknownUnit = 'Unknown unit "%s"';
-  CPE_MemberSymbolNotVisible = 'Member symbol "%s" is not visible from this scope';
+  CPE_MemberSymbolNotVisible =
+    'Member symbol "%s" is not visible from this scope';
 
   // Class declaration errors
-  CPE_CantOverrideNotInherited = 'No method "%s" found in class: "override" not applicable';
-  CPE_CantOverrideNotVirtual = 'Inherited method "%s" isn''t virtual. "override" not applicable';
-  CPE_CantOverrideWrongParameterList = 'Parameter list doesn''t match the inherited method';
-  CPE_CantOverrideWrongResultType = 'Result type doesn''t match the inherited method';
-  CPE_CantOverrideWrongMethodType = '"override" not applicable between class and instance methods';
+  CPE_CantOverrideNotInherited =
+    'No method "%s" found in class: "override" not applicable';
+  CPE_CantOverrideNotVirtual =
+    'Inherited method "%s" isn''t virtual. "override" not applicable';
+  CPE_CantOverrideWrongParameterList =
+    'Parameter list doesn''t match the inherited method';
+  CPE_CantOverrideWrongResultType =
+    'Result type doesn''t match the inherited method';
+  CPE_CantOverrideWrongMethodType =
+    '"override" not applicable between class and instance methods';
   CPE_CantOverrideWrongFuncKind = 'Cannot override a %s with a %s';
   CPE_CantFinalWithoutOverride = 'Cannot mark "final" without overriding';
-  CPE_CantOverrideFinal = 'Method "%s" marked as final. "override" not applicable';
+  CPE_CantOverrideFinal =
+    'Method "%s" marked as final. "override" not applicable';
   CPE_CantReintroduce = 'Method "%s" isn''t overlapping a virtual method';
   CPE_ReintroduceWarning = 'Method "%s" overlaps a virtual method';
   CPE_FieldRedefined = 'There is already a field with name "%s"';
@@ -193,11 +209,13 @@ const
   CPE_SymbolRedefined = 'There is already a symbol with name "%s"';
   CPE_ImplClassNameExpected = 'Class name expected';
   CPE_ImplInvalidClass = '"%s" is not a method of class "%s"';
-  CPE_ImplAbstract = '"%s.%s" is declared "abstract", no implementation allowed';
+  CPE_ImplAbstract =
+    '"%s.%s" is declared "abstract", no implementation allowed';
   CPE_StructureIsNotExternal = '"%s" is not external';
   CPE_NonVirtualAbstract = '"abstract" is only valid for virtual methods';
   CPE_NonConstructorDefault = 'Only a constructor can be marked as default';
-  CPE_DefaultConstructorAlreadyDefined = 'Class "%s" already has "%s" as default constructor';
+  CPE_DefaultConstructorAlreadyDefined =
+    'Class "%s" already has "%s" as default constructor';
   CPE_AbstractClassUsage = 'Trying to use an abstract class';
   CPE_AbstractMethodUsage = 'Trying to call an abstract method';
   CPE_ImplClassExpected = 'Declaration should start with "class"';
@@ -206,41 +224,56 @@ const
   CPE_InheritedWithoutName = 'Name expected after "inherited"';
   CPE_InheritedMethodNotFound = 'Method "%s" not found in ancestor class';
   CPE_StaticMethodExpected = 'Class method or constructor expected';
-  CPE_InternalConstructorCall = 'Constructing internal class "%s" is not allowed';
-  CPE_UnexpectedConstructor = 'Constructor invoked on instance outside of constructor';
+  CPE_InternalConstructorCall =
+    'Constructing internal class "%s" is not allowed';
+  CPE_UnexpectedConstructor =
+    'Constructor invoked on instance outside of constructor';
   CPE_UnexpectedDestructor = 'Destructor can only be invoked on instance';
   CPE_UnexpectedMethodImplementation = 'Unexpected method implementation';
   CPE_WriteOnlyProperty = 'Cannot read a write only property';
   CPE_ReadOnlyProperty = 'Cannot set a value for a read-only property';
   CPE_CantReadProperty = 'Property cannot be read-accessed';
   CPE_FieldIsReadOnly = 'Field "%s" is readonly';
-  CPE_ObjectReferenceExpected = 'Object reference needed to read/write an object field';
-  CPE_StaticPropertyWriteExpected = 'Write access of property should be a static method';
-  CPE_StaticPropertyReadExpected = 'Read access of property should be a static method';
-  CPE_OnlyNonVirtualClassMethodsAsStatic = 'Only non-virtual class methods can be marked as static';
+  CPE_ObjectReferenceExpected =
+    'Object reference needed to read/write an object field';
+  CPE_StaticPropertyWriteExpected =
+    'Write access of property should be a static method';
+  CPE_StaticPropertyReadExpected =
+    'Read access of property should be a static method';
+  CPE_OnlyNonVirtualClassMethodsAsStatic =
+    'Only non-virtual class methods can be marked as static';
   CPE_UnknownClass = 'Class "%s" not found';
   CPE_NotAClass = '"%s" is not a class';
   CPE_NotAProperty = '"%s" is not a property';
   CPE_CannotDemotePropertyVisibility = 'Cannot demote property visibility';
-  CPE_ClassForwardAlreadyExists = 'There is already a forward declaration of the "%s" class';
+  CPE_ClassForwardAlreadyExists =
+    'There is already a forward declaration of the "%s" class';
   CPE_ClassAlreadyDefined = 'Class "%s" already defined';
   CPE_ClassWasNotPartial = 'Previous declaration of class was not "partial"';
   CPH_ClassWasPartial = 'Previous declaration of class was "partial"';
-  CPE_ClassPartialModifiersNotMatched = 'Modifiers do not match previous "partial" declaration of class';
-  CPE_FuncForwardAlreadyExists = 'There is already a forward declaration of this function';
-  CPE_ForwardNotImplemented = 'The function "%s" was forward declared but not implemented';
+  CPE_ClassPartialModifiersNotMatched =
+    'Modifiers do not match previous "partial" declaration of class';
+  CPE_FuncForwardAlreadyExists =
+    'There is already a forward declaration of this function';
+  CPE_ForwardNotImplemented =
+    'The function "%s" was forward declared but not implemented';
   CPE_CantImplementAFunctionType = 'Cannot implement a function type';
   CPE_ClassIsSealed = 'Class "%s" is sealed, inheriting is not allowed';
   CPE_ClassIsInternal = 'Class "%s" is internal, inheriting is not allowed';
-  CPE_ClassIsStaticNoInstantiation = 'Class "%s" is static, instantiation not allowed';
+  CPE_ClassIsStaticNoInstantiation =
+    'Class "%s" is static, instantiation not allowed';
   CPE_ClassIsStaticNoInstances = 'Class "%s" is static, no instances allowed';
-  CPE_ClassAncestorNotStatic = 'Class "%s" is not static, cannot inherit as static';
-  CPE_ClassAncestorDoesNotMatch = 'Class ancestor does not match with previous declaration';
-  CPE_ClassExternalAncestorMustBeExternalOrObject = 'External classes must inherit from an external class or Object';
+  CPE_ClassAncestorNotStatic =
+    'Class "%s" is not static, cannot inherit as static';
+  CPE_ClassAncestorDoesNotMatch =
+    'Class ancestor does not match with previous declaration';
+  CPE_ClassExternalAncestorMustBeExternalOrObject =
+    'External classes must inherit from an external class or Object';
   CPE_MustBeSubClassOf = 'Subclass of %s expected';
   CPE_MethodOrPropertyExpected = 'Method or property declaration expected';
   CPE_OverloadableOperatorExpected = 'Overloadable operator expected';
-  CPE_OverloadAlreadyExists = 'An overload already exists for this operator and types';
+  CPE_OverloadAlreadyExists =
+    'An overload already exists for this operator and types';
   CPE_SingleParameterExpected = 'Single parameter expected';
   CPE_UsesExpected = '"USES" expected';
   CPE_FieldMethodUnknown = 'Field/method "%s" not found';
@@ -255,18 +288,24 @@ const
   CPE_IncompatibleWriteSymbol = 'Symbol "%s" has an incompatible type';
   CPE_ClassNotCompletelyDefined = 'Class "%s" isn''t defined completely';
   CPE_MethodNotImplemented = 'Method "%s" of class "%s" not implemented';
-  CPE_CantWriteProperty = 'Cannot write properties of complex type (record, array)';
-  CPE_CantUseCombinedAssignmentOnProperty = 'Cannot use combined assignment on property';
+  CPE_CantWriteProperty =
+    'Cannot write properties of complex type (record, array)';
+  CPE_CantUseCombinedAssignmentOnProperty =
+    'Cannot use combined assignment on property';
   CPE_MultipleDefaultProperties = '"%s" already has "%s" as default property';
   CPE_NoDefaultPropertyAllowed = 'No default property is allowed here';
   CPE_ParamsExpected = 'Parameters expected';
   CPE_NoParamsExpected = 'No parameters expected';
-  CPE_NoProtectedVisibilityForHelpers = 'Helpers do not supported "protected" visibility specifier';
-  CPE_HelpersNotAllowedForDelegates = 'Helpers not allowed for delegates or function pointers';
+  CPE_NoProtectedVisibilityForHelpers =
+    'Helpers do not supported "protected" visibility specifier';
+  CPE_HelpersNotAllowedForDelegates =
+    'Helpers not allowed for delegates or function pointers';
   CPE_HelperExpected = '"helper" expected';
   CPE_AnonymousMethodsNotAllowedHere = 'Anonymous methods not allowed here';
-  CPE_AnonymousClassesMustBeFullyDefined = 'Anonymous classes must be fully defined';
-  CPE_AnonymousClassNotAllowed = 'Anonymous class not allowed by compiler options';
+  CPE_AnonymousClassesMustBeFullyDefined =
+    'Anonymous classes must be fully defined';
+  CPE_AnonymousClassNotAllowed =
+    'Anonymous class not allowed by compiler options';
   CPE_AsyncNotSupported = 'ASYNC is not supported';
   CPE_AwaitNotSupported = 'AWAIT is not supported';
 
@@ -274,17 +313,23 @@ const
   CPE_DanglingAttribute = 'Dangling attribute declaration';
 
   // Record declaration
-  CPE_AnonymousRecordMethodsMustBeInline = 'Anonymous record methods must be inline';
-  CPE_NoProtectedVisibilityForRecords = 'Records do not supported "protected" visibility specifier';
-  CPE_RecordFieldsMustBeBeforeMethods = 'Record fields must be declared before record methods';
+  CPE_AnonymousRecordMethodsMustBeInline =
+    'Anonymous record methods must be inline';
+  CPE_NoProtectedVisibilityForRecords =
+    'Records do not supported "protected" visibility specifier';
+  CPE_RecordFieldsMustBeBeforeMethods =
+    'Record fields must be declared before record methods';
 
   // Interface declaration
   CPE_InterfaceAlreadyDefined = 'Interface "%s" already defined';
   CPE_NotAnInterface = '"%s" is not an interface';
-  CPE_MissingMethodForInterface = 'Missing matching method "%s" for interface "%s"';
+  CPE_MissingMethodForInterface =
+    'Missing matching method "%s" for interface "%s"';
   CPE_InterfaceAlreadyImplemented = 'Interface "%s" already implemented';
-  CPE_InterfaceNotCompletelyDefined = 'Interface "%s" isn''t defined completely';
-  CPE_InterfaceForwardAlreadyExists = 'There is already a forward declaration of the "%s" interface';
+  CPE_InterfaceNotCompletelyDefined =
+    'Interface "%s" isn''t defined completely';
+  CPE_InterfaceForwardAlreadyExists =
+    'There is already a forward declaration of the "%s" interface';
 
   // CompareFuncSymbols
   CPE_FunctionExpected = 'Declaration should be "function"';
@@ -297,34 +342,43 @@ const
   CPE_BadNumberOfParameters = 'Expected %d parameters (instead of %d)';
   CPE_BadParameterName = 'Parameter %d - Name "%s" expected';
   CPE_BadParameterType = 'Parameter %d - Type "%s" expected (instead of "%s")';
-  CPE_IncompatibleParameterTypes = 'Incompatible parameter types - "%s" expected (instead of "%s")';
+  CPE_IncompatibleParameterTypes =
+    'Incompatible parameter types - "%s" expected (instead of "%s")';
   CPE_VarParameterExpected = 'Parameter %d (%s) - Var-parameter expected';
   CPE_ConstParameterExpected = 'Parameter %d (%s) - Const-parameter expected';
   CPE_ValueParameterExpected = 'Parameter %d (%s) - Value-parameter expected';
-  CPE_MismatchingParameterDefaultValues = 'Parameter %d (%s) - default value at implementation does not match declaration or forward';
+  CPE_MismatchingParameterDefaultValues =
+    'Parameter %d (%s) - default value at implementation does not match declaration or forward';
   CPE_VarParameterForbidden = 'Parameter %d - Var-parameter forbidden';
 
   // Arrays
   CPE_ArrayBoundNotAConstant = 'Bound isn''t a constant expression';
   CPE_ArrayBoundNotOrdinal = 'Bound isn''t of an ordinal type';
-  CPE_LowerBoundGreaterThanUpperBound = 'Lower bound is greater than upper bound';
+  CPE_LowerBoundGreaterThanUpperBound =
+    'Lower bound is greater than upper bound';
   CPE_ArrayBoundsOfDifferentTypes = 'Array bounds are of different types';
   CPE_ArrayIndexMismatch = 'Array index expected "%s" but got "%s"';
-  CPE_ArrayMethodRestrictedToDynamicArrays = 'Array method "%s" is restricted to dynamic arrays';
-  CPE_ArrayMethodNotAvailableOnOpenArrays = 'Array method "%s" not available on open arrays';
-  CPE_ArrayDoesNotHaveNaturalSortOrder = 'Array does not have a natural sort order';
+  CPE_ArrayMethodRestrictedToDynamicArrays =
+    'Array method "%s" is restricted to dynamic arrays';
+  CPE_ArrayMethodNotAvailableOnOpenArrays =
+    'Array method "%s" not available on open arrays';
+  CPE_ArrayDoesNotHaveNaturalSortOrder =
+    'Array does not have a natural sort order';
 
   // Sets
-  CPE_SetTooLargeForCastToInteger = 'Set has too many elements for cast to integer';
+  CPE_SetTooLargeForCastToInteger =
+    'Set has too many elements for cast to integer';
   CPE_ElementOutOfSetBound = 'Element is out of set bounds';
 
   // Assign
-  CPE_RightSideNeedsReturnType = 'Assignment''s right-side-argument has no return type';
+  CPE_RightSideNeedsReturnType =
+    'Assignment''s right-side-argument has no return type';
   CPE_CantWriteToLeftSide = 'Cannot assign a value to the left-side argument';
 
   // Function/Procedures
   CPE_FunctionTypeExpected = 'Function type expected';
-  CPE_IncompatibleParameterType = 'Type of parameter %d don''t match the declaration';
+  CPE_IncompatibleParameterType =
+    'Type of parameter %d don''t match the declaration';
   CPE_InvalidResultType = 'Invalid type "%s" for function result';
   CPE_NoResultTypeExpected = 'No result type expected';
   CPE_DuplicateExternal = 'An external function named "%s" is already declared';
@@ -333,13 +387,16 @@ const
   CPE_NameIsReserved = 'Name "%s" is reserved';
   CPE_TypeExpected = 'Type expected';
   CPE_InvalidType = '%s is not a Type';
-  CPE_UnknownMemberForType = 'There is no accessible member with name "%s" for type %s';
-  CPE_UnknownMethodForType = 'There is no accessible method with name "%s" for type %s';
+  CPE_UnknownMemberForType =
+    'There is no accessible member with name "%s" for type %s';
+  CPE_UnknownMethodForType =
+    'There is no accessible method with name "%s" for type %s';
   CPE_NoMemberExpected = 'No member expected';
   CPE_NoArrayExpected = 'Not an array';
   CPE_NoMethodExpected = 'Not a method';
   CPE_NoIndicesExpectedForOpenArray = 'No indices expected for open array';
-  CPE_InvalidInstruction = 'Invalid Instruction - function or assignment expected';
+  CPE_InvalidInstruction =
+    'Invalid Instruction - function or assignment expected';
   CPE_ConstantInstruction = 'Constant Instruction - has no effect';
   CPE_EndOfBlockExpected = 'End of block expected';
   CPE_ContructorExpected = 'Constructor expected';
@@ -351,15 +408,24 @@ const
   CPE_NoDefaultConstructor = 'Class "%s" has no default constructor';
   CPE_NoDefaultProperty = 'Class "%s" has no default property';
   CPE_ConstVarParam = 'Argument %d (%s) cannot be passed as Var-parameter';
-  CPE_OnlyVariablesAsVarParam = 'Only a variable can be be passed as Var-parameter';
-  CPE_StrictParameterTypeCheckNotSupportedFor = 'Strict parameter typecheck is not support for "%s" parameters';
-  CPE_MustExplicitOverloads = 'Overloaded procedure "%s" must be marked with the "overload" directive';
-  CPH_MustExplicitMethodOverload = 'Overloaded method "%s" must be marked with the "overload" directive';
-  CPH_ShouldExplicitMethodOverload = 'Overloaded method "%s" should be marked with the "overload" directive';
-  CPE_NoMatchingOverloadDeclaration = 'There is no overloaded version of "%s" declared with these arguments';
-  CPE_NoMatchingOverloadForCall = 'There is no overloaded version of "%s" that can be called with these arguments';
-  CPE_MatchingOverload = 'Overload of "%s" will be ambiguous with a previously declared version';
-  CPH_AmbiguousMatchingOverloadsForCall = 'Ambiguous matching overloads of "%s"';
+  CPE_OnlyVariablesAsVarParam =
+    'Only a variable can be be passed as Var-parameter';
+  CPE_StrictParameterTypeCheckNotSupportedFor =
+    'Strict parameter typecheck is not support for "%s" parameters';
+  CPE_MustExplicitOverloads =
+    'Overloaded procedure "%s" must be marked with the "overload" directive';
+  CPH_MustExplicitMethodOverload =
+    'Overloaded method "%s" must be marked with the "overload" directive';
+  CPH_ShouldExplicitMethodOverload =
+    'Overloaded method "%s" should be marked with the "overload" directive';
+  CPE_NoMatchingOverloadDeclaration =
+    'There is no overloaded version of "%s" declared with these arguments';
+  CPE_NoMatchingOverloadForCall =
+    'There is no overloaded version of "%s" that can be called with these arguments';
+  CPE_MatchingOverload =
+    'Overload of "%s" will be ambiguous with a previously declared version';
+  CPH_AmbiguousMatchingOverloadsForCall =
+    'Ambiguous matching overloads of "%s"';
   CPE_OverloadNotAllowed = 'Overload not allowed';
   CPE_ClassMethodOrConstructorExpected = 'Class method or constructor expected';
   CPE_ClassMemberExpected = 'Class member expected';
@@ -375,18 +441,27 @@ const
   CPE_FunctionOptimizationFailed = 'Evaluation of "%s" failed: %s %s';
 
   CPH_VariableDeclaredButNotUsed = 'Variable "%s" declared but not used';
-  CPH_VariableDeclaredButNotWrittenTo = 'Variable "%s" declared but never written to';
-  CPH_PrivateFieldDeclaredButNotUsed = 'Private field "%s" declared but never used';
-  CPH_PrivateMethodDeclaredButNotUsed = 'Private method "%s" declared but never used';
-  CPH_PrivateVirtualMethodCantBeOverridden = 'Private virtual methods cannot be overridden';
+  CPH_VariableDeclaredButNotWrittenTo =
+    'Variable "%s" declared but never written to';
+  CPH_PrivateFieldDeclaredButNotUsed =
+    'Private field "%s" declared but never used';
+  CPH_PrivateMethodDeclaredButNotUsed =
+    'Private method "%s" declared but never used';
+  CPH_PrivateVirtualMethodCantBeOverridden =
+    'Private virtual methods cannot be overridden';
   CPH_ResultNotUsed = 'Result is never used';
-  CPH_RedundantVisibilitySpecifier = 'Redundant specifier, visibility is already "%s"';
+  CPH_RedundantVisibilitySpecifier =
+    'Redundant specifier, visibility is already "%s"';
   CPH_RedundantFunctionCall = 'Redundant function call';
-  CPH_NameAmbiguousInScopeContext = 'Name "%s" could be ambiguous in its scope context';
-  CPH_ReferenceTypeParamAsVarButNeverWrittenTo = '"%s" parameter is a reference type passed as VAR, but never written to';
-  CPH_ReferenceTypeParamAsConst = '"%s" parameter is a reference type passed as CONST';
+  CPH_NameAmbiguousInScopeContext =
+    'Name "%s" could be ambiguous in its scope context';
+  CPH_ReferenceTypeParamAsVarButNeverWrittenTo =
+    '"%s" parameter is a reference type passed as VAR, but never written to';
+  CPH_ReferenceTypeParamAsConst =
+    '"%s" parameter is a reference type passed as CONST';
   CPH_UnitAlreadyReferred = 'Unit "%s" redeclared';
-  CPH_UnitAlreadyReferredInInterface = 'Unit "%s" already declared in interface section';
+  CPH_UnitAlreadyReferredInInterface =
+    'Unit "%s" already declared in interface section';
   CPH_AssigningToItself = 'Assigning %s to itself';
 
   CPH_PreferIntToStr = 'Prefer .ToString or IntToStr()';
@@ -396,20 +471,25 @@ const
   CPE_OfObjectExpected = 'OF OBJECT expected';
   CPH_ReferenceToIsLegacy = 'REFERENCE TO modifier is legacy and ignored';
 
-  CPH_CaseDoesNotMatchDeclaration = '"%s" does not match case of declaration ("%s")';
+  CPH_CaseDoesNotMatchDeclaration =
+    '"%s" does not match case of declaration ("%s")';
   CPH_KeywordCaseMismatch = 'Case mismatch for "%s" should be "%s"';
 
-  CPH_CallConventionIsNotSupportedAndIgnored = 'Call convention "%s" is not supported and ignored';
+  CPH_CallConventionIsNotSupportedAndIgnored =
+    'Call convention "%s" is not supported and ignored';
 
-  CPH_ReintroducedPropertyBrackets = 'Property "%s" reintroduced a method, you should remove empty brackets ()';
+  CPH_ReintroducedPropertyBrackets =
+    'Property "%s" reintroduced a method, you should remove empty brackets ()';
 
-  CPH_UnnamedEnumerationElement = 'Enumeration element is unnamed or out of range';
+  CPH_UnnamedEnumerationElement =
+    'Enumeration element is unnamed or out of range';
 
   CPH_EmptyThenBlock = 'Empty THEN block';
   CPH_EmptyElseBlock = 'Empty ELSE block';
   CPH_BeginInCaseOfElseClause = 'Redundant "begin" in clause of a case..of';
 
-  CPH_CaseRangeLowerBoundIsGreaterThanHigherBound = 'Case range condition lower bound is greater than higher bound';
+  CPH_CaseRangeLowerBoundIsGreaterThanHigherBound =
+    'Case range condition lower bound is greater than higher bound';
 
   // TypeCheck
   CPE_BooleanExpected = 'Boolean expected';
@@ -426,15 +506,19 @@ const
 
   CPE_IntegerCastInvalid = 'Cannot cast this type to "Integer"';
   CPE_IncompatibleTypes = 'Incompatible types: "%s" and "%s"';
-  CPE_AssignIncompatibleTypes = 'Incompatible types: Cannot assign "%s" to "%s"';
-  CPE_RangeIncompatibleTypes = 'Range start and range stop are of incompatible types: "%s" and "%s"';
+  CPE_AssignIncompatibleTypes =
+    'Incompatible types: Cannot assign "%s" to "%s"';
+  CPE_RangeIncompatibleTypes =
+    'Range start and range stop are of incompatible types: "%s" and "%s"';
   CPE_TypeCouldNotBeInferenced = 'Type could not be inferenced';
   CPE_RangeTooLarge = 'Range is too large';
   CPE_InvalidIntegerFormat = '"%s" is not a valid integer value';
-  CPE_InvalidIntegerBaseFormat = '"%s" is not a valid 64bit integer value in base %d';
+  CPE_InvalidIntegerBaseFormat =
+    '"%s" is not a valid 64bit integer value in base %d';
   CPE_InvalidFloatFormat = '"%s" is not a valid floating point value';
 
-  CPE_LocalFunctionAsDelegate = 'Local procedure/function cannot be used as delegate';
+  CPE_LocalFunctionAsDelegate =
+    'Local procedure/function cannot be used as delegate';
   CPE_SymbolCannotBeCaptured = 'Symbol "%s" cannot be captured';
 
   // Connector
@@ -442,18 +526,21 @@ const
   CPE_NilConnectorCall = 'Attempt to call on a nil connector';
   CPE_NilConnectorRead = 'Attempt to read on a nil connector';
   CPE_NilConnectorWrite = 'Attempt to write on a nil connector';
-  CPE_MethodConnectorParams = 'Method "%s" of connector "%s" does not accepts those parameters';
+  CPE_MethodConnectorParams =
+    'Method "%s" of connector "%s" does not accepts those parameters';
   CPE_ConnectorParams = 'Connector "%s" does not accepts those parameters';
   CPE_ConnectorMember = 'Member "%s" readonly or not found in connector "%s"';
   CPE_ConnectorTypeMismatch = 'Type mismatch in connector';
   CPE_ConnectorIndex = 'No index access in connector "%s"';
   CPE_ConnectorTooManyArguments = 'Too many arguments for connector call (%d)';
   CPE_ConnectorCantBeSpecialized = 'Connector "%s" cannot be specialized';
-  CPE_ConnectorInvalidSpecifier = 'Connector "%s" specialization to "%s" failed';
+  CPE_ConnectorInvalidSpecifier =
+    'Connector "%s" specialization to "%s" failed';
 
   // Others
   CPE_CompilationAborted = 'Compilation aborted';
-  CPE_RecompileInContextDoesntSupportUnits = 'RecompileInContect does not support units';
+  CPE_RecompileInContextDoesntSupportUnits =
+    'RecompileInContect does not support units';
 
   CPE_ConstantExpressionExpected = 'Constant expression expected';
   CPE_IntegerExpressionExpected = 'Integer expression expected';
@@ -464,7 +551,8 @@ const
 
   CPE_CompilerSwitchUnknown = 'Compiler switch "%s" unknown';
 
-  CPE_FlagEnumerationCantHaveUserValues = 'Flags enumerations cannot have user values';
+  CPE_FlagEnumerationCantHaveUserValues =
+    'Flags enumerations cannot have user values';
   CPE_EnumerationElementOverflow = 'Enumeration element overflow';
 
   CPE_IncludeFileNotFound = 'Could not find file "%s" on input paths';
@@ -475,36 +563,47 @@ const
   CPE_BreakOutsideOfLoop = '"Break" outside of loop';
   CPE_ContinueOutsideOfLoop = '"Continue" outside of loop';
   CPE_ExitInFinally = '"Exit" not allowed in "Finally" block';
-  CPE_BreakContinueInFinally = 'Direct "Break" or "Continue" not allowed in "Finally" block';
+  CPE_BreakContinueInFinally =
+    'Direct "Break" or "Continue" not allowed in "Finally" block';
 
   CPE_UnbalancedConditionalDirective = 'Unbalanced conditional directive';
   CPE_UnfinishedConditionalDirective = 'Unfinished conditional directive';
-  CPE_UnexpectedEndOfFileForUnfinishedComment = 'Unexpected end of file (unfinished comment)';
-  CPE_UnexpectedEndOfFileForUnfinishedDirective = 'Unexpected end of file (unfinished directive)';
+  CPE_UnexpectedEndOfFileForUnfinishedComment =
+    'Unexpected end of file (unfinished comment)';
+  CPE_UnexpectedEndOfFileForUnfinishedDirective =
+    'Unexpected end of file (unfinished directive)';
 
-  CPE_UnexpectedEqGtrForLambdaStatement = 'Unexpected "=>" for a lambda statement';
+  CPE_UnexpectedEqGtrForLambdaStatement =
+    'Unexpected "=>" for a lambda statement';
 
   CPE_TypeIsUnknown = 'Type "%s" unknown';
   CPE_TypeForParamNotFound = 'Type "%s" not found for parameter "%s"';
-  CPE_LazyParamCantHaveDefaultValue = 'lazy parameter cannot have a default value';
-  CPE_LazyParamCantBeFunctionPointer = 'Lazy parameter cannot be a function pointer';
-  CPE_VarParamCantHaveDefaultValue = 'var parameter cannot have a default value';
-  CPE_ConstParamCantHaveDefaultValue = 'const parameter cannot have a default value';
+  CPE_LazyParamCantHaveDefaultValue =
+    'lazy parameter cannot have a default value';
+  CPE_LazyParamCantBeFunctionPointer =
+    'Lazy parameter cannot be a function pointer';
+  CPE_VarParamCantHaveDefaultValue =
+    'var parameter cannot have a default value';
+  CPE_ConstParamCantHaveDefaultValue =
+    'const parameter cannot have a default value';
   CPE_DefaultValueRequired = 'Default value required';
   CPE_OpenArrayParamMustBeConst = 'open array parameter must be const';
-  CPE_OpenArrayParamElementsMustBeConst = 'open array parameter elements must be "const"';
+  CPE_OpenArrayParamElementsMustBeConst =
+    'open array parameter elements must be "const"';
   CPE_FieldExists = 'There is already a field with name "%s"';
   CPE_PropertyExists = 'There is already a property with name "%s"';
   CPE_MethodExists = 'There is already a method with name "%s"';
   CPE_AssignementToFORLoopVariable = 'Assignment to FOR-Loop variable';
-  CPE_FORLoopMustBeLocalVariable = 'For loop control variable must be simple local variable';
+  CPE_FORLoopMustBeLocalVariable =
+    'For loop control variable must be simple local variable';
 
   CPW_Deprecated = '"%s" has been deprecated';
   CPW_DeprecatedWithMessage = '"%s" has been deprecated: %s';
   CPW_InfiniteLoop = 'Infinite loop';
   CPW_ConstantCondition = 'Constant condition';
   CPW_UnReachableCode = 'Unreachable code';
-  CPW_IncludeOnceWithDifferentCase = 'Filename case does not match: "%s" already included as "%s"';
+  CPW_IncludeOnceWithDifferentCase =
+    'Filename case does not match: "%s" already included as "%s"';
   CPW_ForwardIsImplicit = '"forward" is implicit here';
   CPW_ForwardIsMeaningless = '"forward" is meaningless for external functions';
   CPW_PropertyWriterDoesNothing = 'Property writer does nothing';
@@ -526,7 +625,8 @@ const
   CPE_DivisionByZero = 'Division by zero';
 
   // Contracts
-  CPE_PreconditionsMustBeInRootMethod = 'Preconditions must be defined in the root method only';
+  CPE_PreconditionsMustBeInRootMethod =
+    'Preconditions must be defined in the root method only';
 
   // Units
   CPE_UnitExpected = '"unit" expected';
@@ -534,12 +634,15 @@ const
   CPE_UnitNameDoesntMatch = 'Unit name does not match file name';
   CPH_UnitNameCaseDoesntMatch = 'Unit name case does not match file name';
   CPE_UnitCircularReference = 'Circular referencing units detected';
-  CPE_FilterDependsOnUnit = 'The filter "%s" depends on unit "%s" that is not available';
-  CPE_ResultTypeDependsOnUnit = 'The result-type "%s" depends on unit "%s" that is not available';
+  CPE_FilterDependsOnUnit =
+    'The filter "%s" depends on unit "%s" that is not available';
+  CPE_ResultTypeDependsOnUnit =
+    'The result-type "%s" depends on unit "%s" that is not available';
   CPE_NoStaticSymbols = 'Invalid use of static symbols';
 
   // Filter
-  CPE_NoFilterAvailable = 'There is no filter assigned to TDelphiWebScriptII.Config.Filter';
+  CPE_NoFilterAvailable =
+    'There is no filter assigned to TDelphiWebScriptII.Config.Filter';
 
   // TOKENIZER ERRORS
   TOK_InvalidChar = 'Invalid character';
@@ -552,9 +655,11 @@ const
   TOK_NumberSignExpected = 'Number or minus expected';
   TOK_GreaterEqualityExpected = '">" or "=" expected';
   TOK_StringTerminationError = 'End of string constant not found (end of line)';
-  TOK_HereDocTerminationError = 'End of string constant not found (end of file)';
+  TOK_HereDocTerminationError =
+    'End of string constant not found (end of file)';
   TOK_TripleAposStringError = 'Incorrect triple apostrophe string';
-  TOK_TripleAposStringIndentError = 'Incorrect triple apostrophe string indentation';
+  TOK_TripleAposStringIndentError =
+    'Incorrect triple apostrophe string indentation';
   TOK_InvalidHexConstant = 'Invalid hexadecimal constant "%s"';
   TOK_InvalidCharConstant = 'Invalid char constant "%s"';
   TOK_InvalidIntegerConstant = 'Invalid integer constant "%s"';
@@ -589,17 +694,21 @@ const
   RTE_StateInitializedExpected = 'ProgramState "psInitialized" expected';
   RTE_StateReadyToRunExpected = 'ProgramState "psReadyToRun" expected';
 
-  RTE_InstanceOfAbstractClass = 'Trying to create an instance of an abstract class';
+  RTE_InstanceOfAbstractClass =
+    'Trying to create an instance of an abstract class';
   RTE_ArrayUpperBoundExceeded = 'Upper bound exceeded! Index %d';
   RTE_ArrayLowerBoundExceeded = 'Lower bound exceeded! Index %d';
   RTE_ArrayLengthIncorrect = 'Array length is incorrect (%d)';
-  RTE_ArrayLengthIncorrectForDimension = 'Array length is incorrect (%d) for dimension %d';
+  RTE_ArrayLengthIncorrectForDimension =
+    'Array length is incorrect (%d) for dimension %d';
   RTE_ArrayInstanceExpected = 'Array instance expected';
   RTE_PositiveCountExpected = 'Positive count expected (got %d)';
-  RTE_ForLoopStepShouldBeStrictlyPositive = 'FOR loop STEP should be strictly positive: %d';
+  RTE_ForLoopStepShouldBeStrictlyPositive =
+    'FOR loop STEP should be strictly positive: %d';
   RTE_InvalidBreak = 'break without for/while/repeat or case';
   RTE_InvalidContinue = 'continue without for/while/repeat or case';
-  RTE_ClassInstanceCastFailed = 'Cannot cast instance of type "%s" to class "%s"';
+  RTE_ClassInstanceCastFailed =
+    'Cannot cast instance of type "%s" to class "%s"';
   RTE_MetaClassCastFailed = 'Cannot cast "%s" to class "%s"';
   RTE_OrdinalExpected = 'Ordinal expected';
   RTE_VariantVTCastFailed = 'Could not cast variant (%d) to %s';
@@ -636,16 +745,20 @@ const
   // Stack
   RTE_MaximalDatasizeExceeded = 'Maximal data size exceeded (%d Variants)';
   RTE_MaximalRecursionExceeded = 'Maximal recursion exceeded (%d calls)';
-  RTE_MaximalExceptionDepthExceeded = 'Maximal exception depth exceeded (%d nested exceptions)';
+  RTE_MaximalExceptionDepthExceeded =
+    'Maximal exception depth exceeded (%d nested exceptions)';
 
   // TProgramInfo/TInfo
   RTE_VariableNotFound = 'Variable "%s" not found';
   RTE_FunctionNotFound = 'Function/Method "%s" not found';
   RTE_DatatypeNotFound = 'DataType "%s" not found';
-  RTE_ClassMatchNotFound = 'Unable to register external object of type "%s". Class not found';
+  RTE_ClassMatchNotFound =
+    'Unable to register external object of type "%s". Class not found';
 
-  RTE_OnlyVarSymbols = '.Vars[] cannot handle this symbol: "%s". Use .Func[] or .Method[] instead';
-  RTE_OnlyFuncSymbols = '.Func[] cannot handle this symbol: "%s". Use .Vars[] instead';
+  RTE_OnlyVarSymbols =
+    '.Vars[] cannot handle this symbol: "%s". Use .Func[] or .Method[] instead';
+  RTE_OnlyFuncSymbols =
+    '.Func[] cannot handle this symbol: "%s". Use .Vars[] instead';
 
   RTE_InvalidOp = 'Operation "IInfo.%s" not possible on a symbol of type "%s"';
 
@@ -658,11 +771,14 @@ const
 
   RTE_CanNotReadComplexType = 'To read a value of complex type "%s" use .Data';
   RTE_CanNotSetValueForType = 'To write values of type "%s" use .Data';
-  RTE_CanOnlyWriteBlocks = 'Use the .Data property of the type "%s" instead of "%s"';
+  RTE_CanOnlyWriteBlocks =
+    'Use the .Data property of the type "%s" instead of "%s"';
 
   RTE_InvalidInputDataSize = 'Input data of invalid size: %d instead of %d';
-  RTE_InvalidNumberOfParams = 'Invalid number of parameters (%d instead of %d) to call function %s';
-  RTE_UseParameter = 'Use ''Parameter'' property to set parameter "%s" of Function "%s"';
+  RTE_InvalidNumberOfParams =
+    'Invalid number of parameters (%d instead of %d) to call function %s';
+  RTE_UseParameter =
+    'Use ''Parameter'' property to set parameter "%s" of Function "%s"';
   RTE_NoParameterFound = 'No parameter "%s" found in function "%s"';
   RTE_IncorrectParameterIndex = 'Incorrect parameter index %d';
   RTE_IncorrectParameterValue = 'Incorrect parameter value';
@@ -681,23 +797,29 @@ const
   UNT_NameAlreadyExists = 'Name "%s" already exists';
   UNT_UnitNameNotDefined = 'Property %s.UnitName is undefined';
   UNT_ParameterNameAlreadyExists = 'Parameter name "%s" already exists';
-  UNT_DependencyError = 'Dependency check from unit "%s" to unit "%s" failed: %s';
+  UNT_DependencyError =
+    'Dependency check from unit "%s" to unit "%s" failed: %s';
   UNT_PreviousNotOverloaded = 'Previous symbol "%s" not marked as overloaded';
 
   UNT_UnitGenerationError = 'TdwsUnit: "%s" -- %s';
   UNT_SymbolGenerationError = '%s: "%s" -- %s';
 
   UNT_DatatypeUnknown = 'DataType "%s" not found';
-  UNT_DatatypeNotSpecified = 'DataType not specified for property "%s" of class "%s"';
-  UNT_AutoInstantiateWithoutClass = 'AutoInstantiate is true but DataType "%s" is not a class';
+  UNT_DatatypeNotSpecified =
+    'DataType not specified for property "%s" of class "%s"';
+  UNT_AutoInstantiateWithoutClass =
+    'AutoInstantiate is true but DataType "%s" is not a class';
 
   UNT_InterfaceAlreadyDefined = 'Interface already defined';
-  UNT_InterfaceNameAlreadyDefined = 'The interface "%s" is already used for another symbol %s';
+  UNT_InterfaceNameAlreadyDefined =
+    'The interface "%s" is already used for another symbol %s';
 
   UNT_ClassAlreadyDefined = 'Class already defined';
-  UNT_ClassNameAlreadyDefined = 'The class "%s" is already used for another symbol %s';
+  UNT_ClassNameAlreadyDefined =
+    'The class "%s" is already used for another symbol %s';
   UNT_SuperClassUnknwon = 'Superclass "%s" not found';
-  UNT_PropertyNotFoundForPromotion = 'Property "%s" not found in parent class for visibility promotion';
+  UNT_PropertyNotFoundForPromotion =
+    'Property "%s" not found in parent class for visibility promotion';
   UNT_ReadAccessNotFound = 'ReadAccess "%s" not found';
   UNT_WriteAccessNotFound = 'WriteAccess "%s" not found';
   UNT_UsesAccessNotFound = 'UsesAccess "%s" not found';
@@ -705,10 +827,13 @@ const
 
   UNT_InvalidArrayBounds = 'LowBound is higher than HighBound';
 
-  UNT_CantChangeUnitname = 'Cannot change UnitName while property "Script" is assigned';
+  UNT_CantChangeUnitname =
+    'Cannot change UnitName while property "Script" is assigned';
 
-  UNT_InstancesNotSupportedInStaticUnits = 'Instances are not supported in static units';
-  UNT_FastEvalNotSupportedForVirtualMethods = 'FastEval not supported for virtual methods';
+  UNT_InstancesNotSupportedInStaticUnits =
+    'Instances are not supported in static units';
+  UNT_FastEvalNotSupportedForVirtualMethods =
+    'FastEval not supported for virtual methods';
 
   ADP_ChainIsFormingLoop = 'Adapter chain is forming a loop';
   ADP_IncompatibleAdapters = 'Incompatible Adapters: %s -> %s';
@@ -726,4 +851,3 @@ const
 implementation
 
 end.
-

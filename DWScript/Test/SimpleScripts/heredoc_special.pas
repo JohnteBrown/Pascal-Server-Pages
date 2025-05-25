@@ -1,17 +1,10 @@
-var v := #'hello "world" !';
+var
+v := #'hello "world" !';
 PrintLn(v);
 
-v:=#"hello 'again' !";
+v := # " hello 'again' ! ";
 PrintLn(v);
 
-PrintLn(#'
-  first form
-  ''single''
-  ""double"" 
-  with quotes');
-  
-PrintLn(#"
-  second form
-  ''single''
-  ""double"" 
-  with quotes");
+PrintLn(#' first form '' single '' " " double " "with quotes ');
+
+  PrintLn(# " second form '' single '' " " double " "with quotes ");

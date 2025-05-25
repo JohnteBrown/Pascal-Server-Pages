@@ -1,16 +1,18 @@
 type
-   TMyClass = class
-   public
-      constructor Create(x: String);
-	  begin
-		Print(ClassName);
-		PrintLn(x);
-	  end;
-   end;
-   
-type
-   TAlias = TMyClass;
+  TMyClass = class
+  public
+    constructor Create(x: String);
 
-var myObj := new TAlias(' hello');
+    begin
+      Print(ClassName);
+      PrintLn(x);
+    end;
+  end;
+
+type
+  TAlias = TMyClass;
+
+var
+myObj := new TAlias(' hello');
 myObj := TAlias.Create(' world');
-myObj := new (TAlias)(' !');
+myObj := new(TAlias)(' !');

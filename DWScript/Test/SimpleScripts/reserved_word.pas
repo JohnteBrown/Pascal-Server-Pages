@@ -1,13 +1,16 @@
-var &begin : Integer;
+var
+  &begin: Integer;
 
-type &end = class(TObject);
+type
+  &end = class(TObject);
 
-type &procedure = class(&end);
+type
+  &procedure = class(&end);
 
-procedure &shl(&then : String);
+procedure &shl(&then: String);
 begin
-   PrintLn(&then+IntToStr(&begin));
-   &begin:=&begin+1;
+  PrintLn(&then + IntToStr(&begin));
+  &begin := &begin + 1;
 end;
 
 &shl(&end.ClassName);

@@ -1,59 +1,68 @@
 type
-   TMyObj = class
-      Field : Integer;
-   end;
+  TMyObj = class
+    Field: Integer;
+  end;
 
-var o : TMyObj;
+var
+  o: TMyObj;
 
 PrintLn('Free');
-o:=TMyObj.Create;
+o := TMyObj.Create;
 o.Free;
 try
-   o.Free;
+  o.Free;
 except
-   on E: Exception do PrintLn(E.Message);
+  on E: Exception do
+    PrintLn(E.Message);
 end;
 try
-   PrintLn(o.Field);
+  PrintLn(o.Field);
 except
-   on E: Exception do PrintLn(E.Message);
+  on E: Exception do
+    PrintLn(E.Message);
 end;
 try
-   PrintLn(o.ClassName);
+  PrintLn(o.ClassName);
 except
-   on E: Exception do PrintLn(E.Message);
+  on E: Exception do
+    PrintLn(E.Message);
 end;
 
 PrintLn('Destroy');
-o:=TMyObj.Create;
+o := TMyObj.Create;
 o.Destroy;
 try
-   o.Destroy;
+  o.Destroy;
 except
-   on E: Exception do PrintLn(E.Message);
+  on E: Exception do
+    PrintLn(E.Message);
 end;
 try
-   PrintLn(o.Field);
+  PrintLn(o.Field);
 except
-   on E: Exception do PrintLn(E.Message);
+  on E: Exception do
+    PrintLn(E.Message);
 end;
 try
-   PrintLn(o.ClassName);
+  PrintLn(o.ClassName);
 except
-   on E: Exception do PrintLn(E.Message);
+  on E: Exception do
+    PrintLn(E.Message);
 end;
 
 PrintLn('nil');
-o:=TMyObj.Create;
-o:=nil;
+o := TMyObj.Create;
+o := nil;
 o.Free;
 try
-   PrintLn(o.Field);
+  PrintLn(o.Field);
 except
-   on E: Exception do PrintLn(E.Message);
+  on E: Exception do
+    PrintLn(E.Message);
 end;
 try
-   PrintLn(o.ClassName);
+  PrintLn(o.ClassName);
 except
-   on E: Exception do PrintLn(E.Message);
+  on E: Exception do
+    PrintLn(E.Message);
 end;

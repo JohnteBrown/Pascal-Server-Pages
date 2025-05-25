@@ -1,4 +1,4 @@
-{}
+{ }
 PrintLn('before include');
-{$include 'include.inc'}
+{$INCLUDE 'include.inc'}
 PrintLn('after include');

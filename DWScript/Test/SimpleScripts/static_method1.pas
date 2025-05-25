@@ -1,27 +1,32 @@
 type
-   TStatic = class
-      class procedure Print; static;
-      begin
-         Default.Print('Hello ');
-         Default.PrintLn(ClassName);
-      end;
-   end;
+  TStatic = class
+    class procedure Print; static;
 
-type   
-   TSubStatic = class (TStatic); 
+    begin
+      Default.Print('Hello ');
+      Default.PrintLn(ClassName);
+    end;
+  end;
+
+type
+  TSubStatic = class(TStatic);
 
 TStatic.Print;
 
-var c := TStatic;
+var
+c := TStatic;
 c.Print;
 
-var o := TStatic.Create;
+var
+o := TStatic.Create;
 o.Print;
 
 TSubStatic.Print;
 
-var cs := TSubStatic;
+var
+cs := TSubStatic;
 cs.Print;
 
-var os := TSubStatic.Create;
+var
+os := TSubStatic.Create;
 os.Print;

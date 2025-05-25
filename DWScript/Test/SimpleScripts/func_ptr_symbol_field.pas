@@ -1,3 +1,4 @@
-var proc := @TObject.ClassType;
+var
+proc := @TObject.ClassType;
 
 PrintLn(proc.ClassName);

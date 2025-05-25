@@ -1,4 +1,5 @@
-type TEnum = (eZero, eOne, eTwo);
+type
+  TEnum = (eZero, eOne, eTwo);
 
 PrintLn(Ord('A'));
 PrintLn(Ord(''));
@@ -7,24 +8,26 @@ PrintLn(Ord(eTwo));
 PrintLn(Ord(True));
 PrintLn(Ord(False));
 
-var v : Variant;
+var
+  v: Variant;
 
-v:=456;
-PrintLn(Ord(v));
-
-v:='a';
-PrintLn(Ord(v));
-v:='';
+v := 456;
 PrintLn(Ord(v));
 
-v:=True;
+v := 'a';
 PrintLn(Ord(v));
-v:=False;
+v := '';
 PrintLn(Ord(v));
 
-v:=PI;
+v := True;
+PrintLn(Ord(v));
+v := False;
+PrintLn(Ord(v));
+
+v := PI;
 try
-   PrintLn(Ord(v));
+  PrintLn(Ord(v));
 except
-   on e : Exception do PrintLn(e.Message);
+  on e: Exception do
+    PrintLn(e.Message);
 end;

@@ -1,10 +1,12 @@
+var
+  i: Integer = 0;
 
-var i : Integer = 0;
-var j : Integer = 1;
+var
+  j: Integer = 1;
 
 procedure PrintIJ;
 begin
-   PrintLn(IntToStr(i)+' / '+IntToStr(j));
+  PrintLn(IntToStr(i) + ' / ' + IntToStr(j));
 end;
 
 PrintIJ;
@@ -16,17 +18,17 @@ PrintIJ;
 
 i := 0;
 
-i:=i-1;
-j:=j+1;
+i := i - 1;
+j := j + 1;
 
 PrintIJ;
 
-i:=i-j;
-j:=j+i;
+i := i - j;
+j := j + i;
 
 PrintIJ;
 
-i:=-i;
-j:=j+j;
+i := -i;
+j := j + j;
 
 PrintIJ;

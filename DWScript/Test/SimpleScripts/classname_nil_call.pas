@@ -1,13 +1,14 @@
 Type
-   TObjClass = Class Of TObject;
+  TObjClass = Class Of TObject;
 
-var o : TObjClass;
+var
+  o: TObjClass;
 try
-   println(o.ClassName);
+  println(o.ClassName);
 except
-   on E : Exception do
-      PrintLn(E.Message);
-end;   
-   
-o:=TObject;
+  on E: Exception do
+    println(E.Message);
+end;
+
+o := TObject;
 println(o.ClassName);

@@ -1,17 +1,21 @@
-type TStringDynArray = array of string;
-var s : TStringDynArray;
+type
+  TStringDynArray = array of string;
 
-procedure DoPeek(s : TStringDynArray);
+var
+  s: TStringDynArray;
+
+procedure DoPeek(s: TStringDynArray);
 begin
-   try 
-      PrintLn(s.Peek);
-   except
-      on E: Exception do PrintLn(E.Message);
-   end;
+  try
+    PrintLn(s.Peek);
+  except
+    on E: Exception do
+      PrintLn(E.Message);
+  end;
 end;
 
 DoPeek(s);
-s:=['hello', 'world'];
+s := ['hello', 'world'];
 DoPeek(s);
 s.Swap(0, 1);
 DoPeek(s);

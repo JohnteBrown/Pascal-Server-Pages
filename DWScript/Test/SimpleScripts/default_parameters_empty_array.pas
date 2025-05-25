@@ -1,24 +1,24 @@
+procedure Test(a: array of Integer = []); forward;
 
-procedure Test(a : array of Integer = []); forward;
-
-procedure Test(a : array of Integer = []);
+procedure Test(a: array of Integer = []);
 begin
-	PrintLn(a.Length.ToString +':' + a.Map(IntToStr).Join(','));
+  PrintLn(a.Length.ToString + ':' + a.Map(IntToStr).Join(','));
 end;
 
 type
-   TTest = class
-      constructor Create(p : String; parameters: array of string = []);
-   end;
+  TTest = class
+    constructor Create(p: String; parameters: array of string = []);
+  end;
 
-constructor TTest.Create(p : String; parameters: array of string = []);
+constructor TTest.Create(p: String; parameters: array of string = []);
 begin
-	PrintLn(p + parameters.Join(',') + ':' + parameters.Length.ToString);
+  PrintLn(p + parameters.Join(',') + ':' + parameters.Length.ToString);
 end;
 
 Test;
 Test([1]);
 
-var t := new TTest('hello');
+var
+t := new TTest('hello');
 t := new TTest('world', []);
-t := new TTest('world', [ 'foo', 'bar' ]);
+t := new TTest('world', ['foo', 'bar']);

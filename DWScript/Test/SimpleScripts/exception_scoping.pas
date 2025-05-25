@@ -1,11 +1,13 @@
-var e : string;
+var
+  e: string;
 
 try
-	PrintLn('ok');
+  PrintLn('ok');
 except
-   on e : EDelphi do begin
-		PrintLn(EDelphi(e).ClassName);
-	end;
-   on e : Exception do 
-		PrintLn(e.ClassName);
+  on e: EDelphi do
+  begin
+    PrintLn(EDelphi(e).ClassName);
+  end;
+  on e: Exception do
+    PrintLn(e.ClassName);
 end;

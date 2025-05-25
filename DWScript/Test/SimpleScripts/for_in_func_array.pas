@@ -1,23 +1,26 @@
-Type TProc = Procedure;
+Type
+  TProc = Procedure;
 
 procedure Hello;
 begin
-   PrintLn('Hello');
+  PrintLn('Hello');
 end;
 
 procedure World;
 begin
-   PrintLn('World');
+  PrintLn('World');
 end;
 
-Var arr : Array Of TProc;
+Var
+  arr: Array Of TProc;
 
 arr.Add(Hello);
 arr.Add(World);
 arr.Add(World);
 arr.Add(Hello);
 
-Var proc : TProc;
+Var
+  proc: TProc;
 
 For proc In arr Do
-   proc;
+  proc;

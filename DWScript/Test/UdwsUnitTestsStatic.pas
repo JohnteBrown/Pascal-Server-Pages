@@ -3,20 +3,20 @@ unit UdwsUnitTestsStatic;
 interface
 
 uses Classes, SysUtils, dwsXPlatformTests, dwsComp, dwsCompiler, dwsExprs,
-   dwsTokenizer, dwsSymbols, dwsUtils, dwsStack, UdwsUnitTests;
+  dwsTokenizer, dwsSymbols, dwsUtils, dwsStack, UdwsUnitTests;
 
 type
 
-   TdwsUnitTestsStatic = class (TdwsUnitTests)
-      private
-         class var vContext : TdwsUnitTestsContext;
+  TdwsUnitTestsStatic = class(TdwsUnitTests)
+  private
+    class var vContext: TdwsUnitTestsContext;
 
-         procedure DoAfterInitUnitTable(Sender : TObject);
+    procedure DoAfterInitUnitTable(Sender: TObject);
 
-      public
-         procedure SetUp; override;
-         procedure TearDown; override;
-   end;
+  public
+    procedure SetUp; override;
+    procedure TearDown; override;
+  end;
 
 implementation
 
@@ -28,45 +28,46 @@ implementation
 //
 procedure TdwsUnitTestsStatic.SetUp;
 begin
-   FContext:=vContext;
+  FContext := vContext;
 
-   inherited SetUp;
+  inherited SetUp;
 
-   vContext:=FContext;
+  vContext := FContext;
 
-   FUnit.StaticSymbols:=True;
+  FUnit.StaticSymbols := True;
 
-   FUnit.OnAfterInitUnitTable:=DoAfterInitUnitTable;
+  FUnit.OnAfterInitUnitTable := DoAfterInitUnitTable;
 end;
 
 // TearDown
 //
 procedure TdwsUnitTestsStatic.TearDown;
 begin
-   FContext:=nil;
+  FContext := nil;
 
-   inherited TearDown;
+  inherited TearDown;
 end;
 
 // DoAfterInitUnitTable
 //
-procedure TdwsUnitTestsStatic.DoAfterInitUnitTable(Sender : TObject);
+procedure TdwsUnitTestsStatic.DoAfterInitUnitTable(Sender: TObject);
 begin
-   FUnit.Tag:=FUnit.Tag+1;
+  FUnit.Tag := FUnit.Tag + 1;
 end;
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 initialization
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
-   RegisterTest('dwsUnit', TdwsUnitTestsStatic);
+RegisterTest('dwsUnit', TdwsUnitTestsStatic);
 
 finalization
 
-   TdwsUnitTestsStatic.vContext.Free;
+TdwsUnitTestsStatic.vContext.Free;
 
 end.

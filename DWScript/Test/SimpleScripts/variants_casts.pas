@@ -1,48 +1,56 @@
-var v : Variant;
-var s : String;
-var f : Float;
-var i : Integer;
-var b : Boolean;
+var
+  v: Variant;
 
-s:='abcd';
-v:=s;
+var
+  s: String;
+
+var
+  f: Float;
+
+var
+  i: Integer;
+
+var
+  b: Boolean;
+
+s := 'abcd';
+v := s;
 PrintLn(v);
-v:='efgh';
-s:=v;
+v := 'efgh';
+s := v;
 PrintLn(s);
 PrintLn(v);
 
-f:=1.234;
-v:=f;
+f := 1.234;
+v := f;
 PrintLn(v);
-v:=5.678;
-f:=v;
+v := 5.678;
+f := v;
 PrintLn(FloatToStr(f));
 PrintLn(FloatToStr(v));
 
-i:=1234;
-v:=i;
+i := 1234;
+v := i;
 PrintLn(v);
-v:=5678;
-i:=v;
+v := 5678;
+i := v;
 PrintLn(IntToStr(i));
 PrintLn(IntToStr(v));
 
-b:=True;
-v:=b;
+b := True;
+v := b;
 PrintLn(v);
-v:=False;
-b:=v;
+v := False;
+b := v;
 PrintLn(b);
 PrintLn(v);
 
 v := '123.5';
 PrintLn(FloatToStr(v));
-v := {$ifdef JS_CODEGEN}'12.35'{$else}'12,35'{$endif};
+v := {$IFDEF JS_CODEGEN}'12.35'{$ELSE}'12,35'{$ENDIF};
 PrintLn(FloatToStr(v));
 
 v := Null;
 PrintLn(IntToStr(v));
 v := False;
 PrintLn(IntToStr(v));
-

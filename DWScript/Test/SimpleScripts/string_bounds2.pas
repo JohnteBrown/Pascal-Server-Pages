@@ -1,3 +1,3 @@
-var s = 'string';
+var
+s = 'string';
 PrintLn(s[0]);
-

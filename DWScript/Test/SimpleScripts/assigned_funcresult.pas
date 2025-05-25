@@ -1,24 +1,24 @@
-function Test(o : TObject) : TObject;
+function Test(o: TObject): TObject;
 begin
-   Result:=o;
+  Result := o;
 end;
 
-function TestNil : TObject;
+function TestNil: TObject;
 begin
-   Result:=nil;
+  Result := nil;
 end;
 
 if not Assigned(TObject.Create) then
-   PrintLn('bug 1');
+  PrintLn('bug 1');
 
 if not Assigned(Test(TObject.Create)) then
-   PrintLn('bug 2');
+  PrintLn('bug 2');
 
 if Assigned(Test(nil)) then
-   PrintLn('bug 3');
+  PrintLn('bug 3');
 
 if Assigned(TestNil) then
-   PrintLn('bug 4');
+  PrintLn('bug 4');
 
 if Assigned(ExceptObject) then
-   PrintLn('bug 5');
+  PrintLn('bug 5');

@@ -1,24 +1,25 @@
 type
-   TMyObject = class
-   public
-      function getText : String; virtual;
-   end;
+  TMyObject = class
+  public
+    function getText: String; virtual;
+  end;
 
-function tMyObject.getText : String;
+function TMyObject.getText: String;
 begin
-   result:='We can ';
+  result := 'We can ';
 end;
 
 type
-   TSecond = class(tMyObject)
-   public
-     function getText:String; override;
-   End;
+  TSecond = class(TMyObject)
+  public
+    function getText: String; override;
+  End;
 
-function TSecond.getText:String;
+function TSecond.getText: String;
 begin
-   result:=inherited getText + 'do it!';
+  result := inherited getText + 'do it!';
 end;
 
-var o := TSecond.Create;
+var
+o := TSecond.Create;
 PrintLn(o.getText);

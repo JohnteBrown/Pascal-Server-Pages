@@ -1,15 +1,16 @@
-var v : Variant = 5;
+var
+  v: Variant = 5;
 
 PrintLn(v);
 
-v += 1;
+v + = 1;
 
 PrintLn(v);
 
-v *= 2;
+v * = 2;
 
 PrintLn(v);
 
-v -= 3;
+v - = 3;
 
 PrintLn(v);

@@ -1,17 +1,9 @@
 PrintLn('''
-   hello world
-   ''');
-PrintLn('''
-no indent
-''');
-PrintLn('''
-      three indents
-   ''');
+   hello world '''); PrintLn('''
+no indent '''); PrintLn('''
+      three indents ''');
 
-PrintLn(
-		'''
+  PrintLn('''
+ empty lines
 
-		empty lines
-
-		''');
-PrintLn('---');
+  '''); PrintLn('---');

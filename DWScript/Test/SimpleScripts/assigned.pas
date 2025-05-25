@@ -1,53 +1,59 @@
 type
-   TMyObj = class
-      Field : Integer;
-      procedure Proc;
-      procedure ProcVirtual; virtual;
-   end;
+  TMyObj = class
+    Field: Integer;
+    procedure Proc;
+    procedure ProcVirtual; virtual;
+  end;
 
 procedure TMyObj.Proc;
 begin
-   PrintLn('Proc');
-   PrintLn(Field);
+  PrintLn('Proc');
+  PrintLn(Field);
 end;
 
 procedure TMyObj.ProcVirtual;
 begin
-   PrintLn('ProcVirtual');
-   PrintLn(Field);
+  PrintLn('ProcVirtual');
+  PrintLn(Field);
 end;
 
-var o : TMyObj;
+var
+  o: TMyObj;
 
-if Assigned(o) then PrintLn('bug');
+if Assigned(o) then
+  PrintLn('bug');
 
-o:=TMyObj.Create;
+o := TMyObj.Create;
 
-if Assigned(o) then PrintLn('Assigned');
+if Assigned(o) then
+  PrintLn('Assigned');
 
-o.Field:=1234;
+o.Field := 1234;
 o.Proc;
 o.ProcVirtual;
 
-o:=nil;
+o := nil;
 
-if not Assigned(o) then PrintLn('not Assigned');
+if not Assigned(o) then
+  PrintLn('not Assigned');
 
 try
-   o.Field:=456;
+  o.Field := 456;
 except
-   on E : Exception do PrintLn(E.Message);
+  on E: Exception do
+    PrintLn(E.Message);
 end;
 
 try
-   o.Proc;
+  o.Proc;
 except
-   on E : Exception do PrintLn(E.Message);
+  on E: Exception do
+    PrintLn(E.Message);
 end;
 
 try
-   o.ProcVirtual;
+  o.ProcVirtual;
 except
-   on E : Exception do PrintLn(E.Message);
+  on E: Exception do
+    PrintLn(E.Message);
 end;
-

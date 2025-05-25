@@ -1,17 +1,19 @@
 type
-   TParent = record
-      A : string;
-      Sub : record
-			B : String;
-		end;
-   end;
+  TParent = record
+    A: string;
 
-var r1, r2 : TParent;
+    Sub: record
+      B: String;
+    end;
+  end;
 
-r1.A:='hello';
-r1.Sub.B:='world';
+var
+  r1, r2: TParent;
 
-r2:=r1;
+r1.A := 'hello';
+r1.Sub.B := 'world';
+
+r2 := r1;
 
 PrintLn(r2.A);
 PrintLn(r2.Sub.B);

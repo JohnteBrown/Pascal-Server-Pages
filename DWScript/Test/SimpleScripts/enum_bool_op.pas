@@ -1,15 +1,16 @@
-type TEnum = flags (Alpha, Beta, Gamma);
+type
+  TEnum = flags(Alpha, Beta, Gamma);
 
-procedure PrintInt(i : Integer);
+procedure PrintInt(i: Integer);
 begin
-	Print('int ');
-	PrintLn(i);
+  Print('int ');
+  PrintLn(i);
 end;
 
-procedure PrintEnum(e : TEnum);
+procedure PrintEnum(e: TEnum);
 begin
-	Print('enum ');
-	PrintLn(e);
+  Print('enum ');
+  PrintLn(e);
 end;
 
 PrintInt(TEnum.Alpha);

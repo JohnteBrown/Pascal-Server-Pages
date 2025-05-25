@@ -1,14 +1,18 @@
-type TEnumOne = (eOne=1, eTwo, eThree);
-type TEnumAlpha = (eAlpha = Ord('A'), eBeta, eGamma);
+type
+  TEnumOne = (eOne = 1, eTwo, eThree);
 
-type 
-   TConvert = class
-      class function Get(i : Integer) : String;
-      begin
-         Result:=Chr(i);
-      end;
-      property Prop[i : Integer] : String read Get;
-   end;
+type
+  TEnumAlpha = (eAlpha = Ord('A'), eBeta, eGamma);
+
+type
+  TConvert = class
+    class function Get(i: Integer): String;
+
+    begin
+      Result := Chr(i);
+    end;
+    property Prop[i: Integer]: String read Get;
+  end;
 
 PrintLn(Ord(eOne));
 PrintLn(eTwo);
@@ -20,5 +24,7 @@ PrintLn(TConvert.Prop[eGamma]);
 
 PrintLn(eOne.Value);
 PrintLn(TEnumOne.eTwo.Value.ToString);
-var three : TEnumOne := eThree;
+
+var
+  three: TEnumOne := eThree;
 PrintLn(three.Value);

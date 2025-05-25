@@ -1,5 +1,8 @@
-var a := '123 ABC';
-var i : Integer;
+var
+a := '123 ABC';
 
-for i:=Low(a) to High(a) do
-   PrintLn(Ord(a[i]));
+var
+  i: Integer;
+
+for i := Low(a) to High(a) do
+  PrintLn(Ord(a[i]));

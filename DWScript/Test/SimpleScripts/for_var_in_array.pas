@@ -1,19 +1,21 @@
-var a := [1, 2, 3];
+var
+a := [1, 2, 3];
 
 for var i in a do
-	PrintLn(i);
+  PrintLn(i);
 
-var ad : array of String;
+var
+  ad: array of String;
 
 ad.Add('one', 'two');
 for var i in ad do
-	PrintLn(i);
+  PrintLn(i);
 
-procedure PrintThem(const oa : array of const);
+procedure PrintThem(const oa: array of const);
 begin
-	PrintLn(oa.Length);
-	for var i in oa do
-		PrintLn(i);
+  PrintLn(oa.Length);
+  for var i in oa do
+    PrintLn(i);
 end;
 
 PrintThem([]);

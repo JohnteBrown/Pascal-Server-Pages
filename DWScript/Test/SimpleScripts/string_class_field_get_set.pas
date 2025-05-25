@@ -1,20 +1,21 @@
 type
-   TTest = class
-      F : String := 'hello';
-   end;
+  TTest = class
+    F: String := 'hello';
+  end;
 
-var o := new TTest;
+var
+o := new TTest;
 
-function Get : TTest;
+function Get: TTest;
 begin
-   Result := o;
+  Result := o;
 end;
 
 PrintLn(o.F);
 PrintLn(o.F[3]);
-o.F[3]:='z';
+o.F[3] := 'z';
 PrintLn(o.F);
 PrintLn(o.F[3]);
-Get.F[3]:='y';
+Get.F[3] := 'y';
 PrintLn(Get.F);
 PrintLn(Get.F[3]);

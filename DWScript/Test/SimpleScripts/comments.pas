@@ -1,20 +1,17 @@
 PrintLn('a');
-//PrintLn('b');
-PrintLn//
-('c');
+// PrintLn('b');
+PrintLn //
+  ('c');
 (*
-PrintLn('d');
+  PrintLn('d');
 *)
 PrintLn('e');
 {
-PrintLn('f');
+  PrintLn('f');
 }
 PrintLn('g');
-/*
-PrintLn('h');
-*/
-PrintLn('i');
-//(*
+/ * PrintLn('h');
+* / PrintLn('i');
+// (*
 PrintLn('j');
-//*)
-
+// *)

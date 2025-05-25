@@ -1,35 +1,40 @@
 type
-   TMyClass = class
-      constructor Build(i : Integer = -1); default;
-   end;
+  TMyClass = class
+    constructor Build(i: Integer = -1);
+    default;
+  end;
 
 type
-   TSubClass = class(TMyClass)
-   end;
-   
-type TClassRef = class of TMyClass;
+  TSubClass = class(TMyClass)
+  end;
 
-constructor TMyClass.Build(i : Integer = -1);
+type
+  TClassRef = class of TMyClass;
+
+constructor TMyClass.Build(i: Integer = -1);
 begin
-   Print(ClassName);
-   PrintLn(i);
+  Print(ClassName);
+  PrintLn(i);
 end;
 
-function GetAClass(r : TClassRef) : TClassRef;
+function GetAClass(r: TClassRef): TClassRef;
 begin
-   Result:=r;
+  Result := r;
 end;
 
-var o1 := new TMyClass;
-var o2 := new (TMyClass)(1);
+var
+o1 := new TMyClass;
 
-var r := TSubClass;
+var
+o2 := new(TMyClass)(1);
+
+var
+r := TSubClass;
 
 new r;
 new r(1);
-new (r)(2);
+new(r)(2);
 
-o1:=new (GetAClass(TMyClass));
-o1:=new (GetAClass(r))();
-o1:=new (GetAClass(TSubClass))(3);
-
+o1 := new(GetAClass(TMyClass));
+o1 := new(GetAClass(r))();
+o1 := new(GetAClass(TSubClass))(3);

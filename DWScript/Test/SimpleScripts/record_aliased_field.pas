@@ -1,40 +1,39 @@
 type
-   TMyInt1 = Integer;
-   
+  TMyInt1 = Integer;
+
 type
-   TMyInt2 = TMyInt1;
-   
+  TMyInt2 = TMyInt1;
+
 type
-   TOther = record
-      i : TMyInt2;
-   end;
-   
-type 
-   TSub = TOther;
+  TOther = record
+    i: TMyInt2;
+  end;
 
-type 
-   TPoint = record
-      x : TMyInt1;
-      y : TSub;
-      procedure P;
-      begin 
-         Print(x); 
-         Print(', ');
-         PrintLn(y.i);
-      end;
-   end;
+type
+  TSub = TOther;
 
-var p, p2 : TPoint;
-p2.x:=1;
-p2.y.i:=2;
+type
+  TPoint = record
+    x: TMyInt1;
+    y: TSub;
+    procedure P;
 
-p.P;
+    begin
+      Print(x);
+      Print(', ');
+      PrintLn(y.i);
+    end;
+  end;
 
-p:=p2;
-p.P;
+var
+  P, p2: TPoint;
+p2.x := 1;
+p2.y.i := 2;
 
-p.x:=p.y.i;
-p.P;
+P.P;
 
+P := p2;
+P.P;
 
-
+P.x := P.y.i;
+P.P;

@@ -3,1271 +3,1302 @@ unit UdwsUnitTests;
 interface
 
 uses
-   System.Classes, System.SysUtils, System.Types,
-   dwsXPlatformTests, dwsComp, dwsCompiler, dwsExprs, dwsDataContext, dwsInfo,
-   dwsExprList, dwsTokenTypes, dwsSymbols, dwsUtils, dwsStack, dwsCompilerContext,
-   dwsErrors;
+  System.Classes, System.SysUtils, System.Types,
+  dwsXPlatformTests, dwsComp, dwsCompiler, dwsExprs, dwsDataContext, dwsInfo,
+  dwsExprList, dwsTokenTypes, dwsSymbols, dwsUtils, dwsStack,
+  dwsCompilerContext,
+  dwsErrors;
 
 type
 
-   TdwsUnitTestsContext = class
-      protected
-         FCompiler : TDelphiWebScript;
-         FUnit : TdwsUnit;
-         FMagicVar : String;
+  TdwsUnitTestsContext = class
+  protected
+    FCompiler: TDelphiWebScript;
+    FUnit: TdwsUnit;
+    FMagicVar: String;
 
-         procedure SetupUnit;
+    procedure SetupUnit;
 
-      public
-         destructor Destroy; override;
+  public
+    destructor Destroy; override;
 
-         procedure DeclareTestEnumerate;
-         procedure DeclareTestSet;
-         procedure DeclareTestFuncs;
-         procedure DeclareTestClasses;
-         procedure DeclareTestVars;
-         procedure DeclareTestArrays;
-         procedure DeclareTestRecords;
-         procedure DeclareTestOperators;
-         procedure DeclareTestInterface;
+    procedure DeclareTestEnumerate;
+    procedure DeclareTestSet;
+    procedure DeclareTestFuncs;
+    procedure DeclareTestClasses;
+    procedure DeclareTestVars;
+    procedure DeclareTestArrays;
+    procedure DeclareTestRecords;
+    procedure DeclareTestOperators;
+    procedure DeclareTestInterface;
 
-         procedure Func1Eval(Info: TProgramInfo);
-         procedure FuncOneEval(Info: TProgramInfo);
-         procedure FuncOneDotFiveEval(Info: TProgramInfo);
-         procedure FuncTrueEval(Info: TProgramInfo);
-         procedure FuncIncEval(Info: TProgramInfo);
-         procedure FuncIncNEval(Info: TProgramInfo);
-         procedure FuncEnumEval(Info: TProgramInfo);
-         procedure FuncSetEval(Info: TProgramInfo);
-         procedure FuncVariantEval(Info: TProgramInfo);
-         procedure FuncVariantDateEval(Info: TProgramInfo);
-         procedure FuncVarEval(Info: TProgramInfo);
-         procedure FuncFloatEval(Info: TProgramInfo);
-         procedure FuncPointEval(Info: TProgramInfo);
-         procedure FuncPointVarParamEval(Info: TProgramInfo);
-         procedure FuncPointVarParamCallerEval(Info: TProgramInfo);
-         procedure FuncPointArrayEval(Info: TProgramInfo);
-         procedure FuncPointArraySwapXYEval(Info: TProgramInfo);
-         procedure FuncCallbackFuncNameEval(Info: TProgramInfo);
-         procedure FuncClassNameEval(Info: TProgramInfo);
-         procedure FuncMetaClassNameEval(Info: TProgramInfo);
-         procedure FuncOpenArrayEval(Info: TProgramInfo);
-         procedure FuncOverloadIntEval(Info: TProgramInfo);
-         procedure FuncOverloadStrEval(Info: TProgramInfo);
-         function  FuncFastEval(const args : TExprBaseListExec) : Variant;
-         function  FuncFastPointEval(const args : TExprBaseListExec) : Variant;
-         procedure ProcCallLevelsEval(Info: TProgramInfo);
-         procedure FuncReturnStrings(Info: TProgramInfo);
-         procedure FuncReturnStrings2(Info: TProgramInfo);
-         procedure FuncReturnVirtCreate(Info: TProgramInfo);
-         procedure FuncNil(Info: TProgramInfo);
-         procedure FuncInternalClass(Info: TProgramInfo);
+    procedure Func1Eval(Info: TProgramInfo);
+    procedure FuncOneEval(Info: TProgramInfo);
+    procedure FuncOneDotFiveEval(Info: TProgramInfo);
+    procedure FuncTrueEval(Info: TProgramInfo);
+    procedure FuncIncEval(Info: TProgramInfo);
+    procedure FuncIncNEval(Info: TProgramInfo);
+    procedure FuncEnumEval(Info: TProgramInfo);
+    procedure FuncSetEval(Info: TProgramInfo);
+    procedure FuncVariantEval(Info: TProgramInfo);
+    procedure FuncVariantDateEval(Info: TProgramInfo);
+    procedure FuncVarEval(Info: TProgramInfo);
+    procedure FuncFloatEval(Info: TProgramInfo);
+    procedure FuncPointEval(Info: TProgramInfo);
+    procedure FuncPointVarParamEval(Info: TProgramInfo);
+    procedure FuncPointVarParamCallerEval(Info: TProgramInfo);
+    procedure FuncPointArrayEval(Info: TProgramInfo);
+    procedure FuncPointArraySwapXYEval(Info: TProgramInfo);
+    procedure FuncCallbackFuncNameEval(Info: TProgramInfo);
+    procedure FuncClassNameEval(Info: TProgramInfo);
+    procedure FuncMetaClassNameEval(Info: TProgramInfo);
+    procedure FuncOpenArrayEval(Info: TProgramInfo);
+    procedure FuncOverloadIntEval(Info: TProgramInfo);
+    procedure FuncOverloadStrEval(Info: TProgramInfo);
+    function FuncFastEval(const args: TExprBaseListExec): Variant;
+    function FuncFastPointEval(const args: TExprBaseListExec): Variant;
+    procedure ProcCallLevelsEval(Info: TProgramInfo);
+    procedure FuncReturnStrings(Info: TProgramInfo);
+    procedure FuncReturnStrings2(Info: TProgramInfo);
+    procedure FuncReturnVirtCreate(Info: TProgramInfo);
+    procedure FuncNil(Info: TProgramInfo);
+    procedure FuncInternalClass(Info: TProgramInfo);
 
-         procedure ClassConstructor(Info: TProgramInfo; var ExtObject: TObject);
-         procedure ClassVirtConstructor(Info: TProgramInfo; var ExtObject: TObject);
-         procedure ClassConstructorInit(Info: TProgramInfo; var ExtObject: TObject);
-         procedure ClassCleanup(ExternalObject: TObject);
-         procedure ClassDestructor(Info: TProgramInfo; ExtObject: TObject);
-         procedure MethodPrintEval(Info: TProgramInfo; ExtObject: TObject);
-         procedure MethodPrintExternalEval(Info: TProgramInfo; ExtObject: TObject);
-         procedure MethodGetIntEval(Info: TProgramInfo; ExtObject: TObject);
-         procedure MethodSetIntEval(Info: TProgramInfo; ExtObject: TObject);
-         function  MethodFastGetIntEval(baseExpr : TTypedExpr; const args : TExprBaseListExec) : Variant;
-         procedure MethodGetArrayIntEval(Info: TProgramInfo; ExtObject: TObject);
-         procedure MethodOverloadIntEval(Info: TProgramInfo; ExtObject: TObject);
-         procedure MethodOverloadStrEval(Info: TProgramInfo; ExtObject: TObject);
+    procedure ClassConstructor(Info: TProgramInfo; var ExtObject: TObject);
+    procedure ClassVirtConstructor(Info: TProgramInfo; var ExtObject: TObject);
+    procedure ClassConstructorInit(Info: TProgramInfo; var ExtObject: TObject);
+    procedure ClassCleanup(ExternalObject: TObject);
+    procedure ClassDestructor(Info: TProgramInfo; ExtObject: TObject);
+    procedure MethodPrintEval(Info: TProgramInfo; ExtObject: TObject);
+    procedure MethodPrintExternalEval(Info: TProgramInfo; ExtObject: TObject);
+    procedure MethodGetIntEval(Info: TProgramInfo; ExtObject: TObject);
+    procedure MethodSetIntEval(Info: TProgramInfo; ExtObject: TObject);
+    function MethodFastGetIntEval(baseExpr: TTypedExpr;
+      const args: TExprBaseListExec): Variant;
+    procedure MethodGetArrayIntEval(Info: TProgramInfo; ExtObject: TObject);
+    procedure MethodOverloadIntEval(Info: TProgramInfo; ExtObject: TObject);
+    procedure MethodOverloadStrEval(Info: TProgramInfo; ExtObject: TObject);
 
-         procedure FuncExceptionEval(Info: TProgramInfo);
+    procedure FuncExceptionEval(Info: TProgramInfo);
 
-         procedure DoReadVar(info: TProgramInfo; var value : Variant);
-         procedure DoWriteVar(info: TProgramInfo; const value : Variant);
-         procedure DoReadVar42(info: TProgramInfo; var value : Variant);
-         procedure DoReadVarIncMagic(info: TProgramInfo; var value : Variant);
-         procedure DoReadVarDateTime(info: TProgramInfo; var value : Variant);
-   end;
+    procedure DoReadVar(Info: TProgramInfo; var value: Variant);
+    procedure DoWriteVar(Info: TProgramInfo; const value: Variant);
+    procedure DoReadVar42(Info: TProgramInfo; var value: Variant);
+    procedure DoReadVarIncMagic(Info: TProgramInfo; var value: Variant);
+    procedure DoReadVarDateTime(Info: TProgramInfo; var value: Variant);
+  end;
 
+  TdwsUnitTests = class(TTestCase)
+  protected
+    FContext: TdwsUnitTestsContext;
+    FCompiler: TDelphiWebScript;
+    FUnit: TdwsUnit;
 
-   TdwsUnitTests = class (TTestCase)
-      protected
-         FContext : TdwsUnitTestsContext;
-         FCompiler : TDelphiWebScript;
-         FUnit : TdwsUnit;
+  public
+    procedure SetUp; override;
+    procedure TearDown; override;
 
-      public
-         procedure SetUp; override;
-         procedure TearDown; override;
+    procedure CompilationExecution(execute: Boolean);
 
-         procedure CompilationExecution(execute : Boolean);
+  published
 
-      published
+    procedure DesignTimeDisplayValues;
+    procedure CompiledDescriptions;
 
-         procedure DesignTimeDisplayValues;
-         procedure CompiledDescriptions;
+    procedure CompilationNormal;
+    procedure CompilationWithMapAndSymbols;
+    procedure ExecutionNonOptimized;
+    procedure ExecutionOptimized;
 
-         procedure CompilationNormal;
-         procedure CompilationWithMapAndSymbols;
-         procedure ExecutionNonOptimized;
-         procedure ExecutionOptimized;
+    procedure DelphiException;
+    procedure DelphiExceptionReRaise;
+    procedure ListOrdAutoEnum;
+    procedure CallFunc;
+    procedure CallFuncVarParam;
+    procedure CallFuncPointVarParam;
+    procedure CallFuncPointVarParamCaller;
+    procedure CallFuncPointArray;
+    procedure PredefinedVar;
+    procedure VarDateTime;
+    procedure AssignTest;
+    procedure PredefinedArray;
+    procedure PredefinedRecord;
+    procedure DynamicArray;
+    procedure DynamicArrayResult;
+    procedure DynamicArrayResult2;
+    procedure ClassPropertyInfo;
+    procedure ClassInit;
+    procedure DestructorAndExternalObject;
+    procedure ExternalObject;
+    procedure CustomDestructor;
+    procedure Delegates;
+    procedure Operators;
+    procedure OpenArray;
+    procedure CallPrint;
+    procedure CreateExternally;
+    procedure DeprecatedProp;
+    procedure ReservedNameMethod;
+    procedure CallInNested;
+    procedure OverloadedFunc;
+    procedure FastEvalTest;
+    procedure FastMethodEvalTest;
+    procedure FastMethodEvalExceptTest;
+    procedure ArrayOfObjects;
+    procedure FuncVariantTest;
+    procedure FuncVariantCastTest;
+    procedure FuncVariantDateTest;
+    procedure FuncNilTest;
+    procedure SetTest;
+    procedure ClassNameTest;
+    procedure VirtCreateFunc;
+    procedure CallbackFuncNameTest;
 
-         procedure DelphiException;
-         procedure DelphiExceptionReRaise;
-         procedure ListOrdAutoEnum;
-         procedure CallFunc;
-         procedure CallFuncVarParam;
-         procedure CallFuncPointVarParam;
-         procedure CallFuncPointVarParamCaller;
-         procedure CallFuncPointArray;
-         procedure PredefinedVar;
-         procedure VarDateTime;
-         procedure AssignTest;
-         procedure PredefinedArray;
-         procedure PredefinedRecord;
-         procedure DynamicArray;
-         procedure DynamicArrayResult;
-         procedure DynamicArrayResult2;
-         procedure ClassPropertyInfo;
-         procedure ClassInit;
-         procedure DestructorAndExternalObject;
-         procedure ExternalObject;
-         procedure CustomDestructor;
-         procedure Delegates;
-         procedure Operators;
-         procedure OpenArray;
-         procedure CallPrint;
-         procedure CreateExternally;
-         procedure DeprecatedProp;
-         procedure ReservedNameMethod;
-         procedure CallInNested;
-         procedure OverloadedFunc;
-         procedure FastEvalTest;
-         procedure FastMethodEvalTest;
-         procedure FastMethodEvalExceptTest;
-         procedure ArrayOfObjects;
-         procedure FuncVariantTest;
-         procedure FuncVariantCastTest;
-         procedure FuncVariantDateTest;
-         procedure FuncNilTest;
-         procedure SetTest;
-         procedure ClassNameTest;
-         procedure VirtCreateFunc;
-         procedure CallbackFuncNameTest;
+    procedure ParseNameTests;
 
-         procedure ParseNameTests;
+    procedure ExplicitUses;
 
-         procedure ExplicitUses;
+    procedure UnknownUnit;
+    procedure CircularUnit;
+    procedure DuplicateUnit;
 
-         procedure UnknownUnit;
-         procedure CircularUnit;
-         procedure DuplicateUnit;
+    procedure CallLevels;
 
-         procedure CallLevels;
+    procedure InfoExceptions;
 
-         procedure InfoExceptions;
+    procedure InternalClassStatic;
+    procedure InternalClassDynamic;
 
-         procedure InternalClassStatic;
-         procedure InternalClassDynamic;
+    procedure InterfaceTest;
 
-         procedure InterfaceTest;
+    procedure PropertyVisibilityPromotion;
+  end;
 
-         procedure PropertyVisibilityPromotion;
-   end;
+  EDelphiException = class(Exception)
+  end;
 
-   EDelphiException = class (Exception)
-   end;
-
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
 implementation
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
 const
-   cFuncsTestsSource =
-       'if Func1<>1 then PrintLn(''Func1 failed'');'#13#10
-      +'if FuncOne<>''One'' then PrintLn(''FuncOne failed'');'#13#10
-      +'if FuncOneDotFive<>1.5 then PrintLn(''FuncOneDotFive failed'');'#13#10
-      +'if FuncTrue<>True then PrintLn(''FuncTrue failed'');'#13#10
-      +'if FuncEnum<>1 then PrintLn(''FuncEnum default failed'');'#13#10
-      +'if FuncEnum(meTen)<>10 then PrintLn(''FuncEnum meTen failed'');'#13#10
-      +'if FuncSet([meOne])<>2 then PrintLn(''FuncSet default failed'');'#13#10
-      +'if FuncSet([meOne, meTen])<>1026 then PrintLn(''FuncSet default failed'');'#13#10
-      +'var i=1; FuncVar(i); if i<>2 then PrintLn(''FuncVar def failed'');'#13#10
-      +'FuncVar(i, 10); if i<>12 then PrintLn(''FuncVar 10 failed'');'#13#10
-      +'FuncVar(i, i); if i<>24 then PrintLn(''FuncVar i failed'');'#13#10
-      +'if FuncFloat(10)<>10.5 then PrintLn(''FuncFloat def failed'');'#13#10
-      +'if FuncFloat(5.1, 4.2)<>9.3 then PrintLn(''FuncFloat failed'');'#13#10
-      +'if TTestClass.cTest<>''My class const'' then PrintLn(''class const failed'');'#13#10
-      ;
+  cFuncsTestsSource = 'if Func1<>1 then PrintLn(''Func1 failed'');'#13#10 +
+    'if FuncOne<>''One'' then PrintLn(''FuncOne failed'');'#13#10 +
+    'if FuncOneDotFive<>1.5 then PrintLn(''FuncOneDotFive failed'');'#13#10 +
+    'if FuncTrue<>True then PrintLn(''FuncTrue failed'');'#13#10 +
+    'if FuncEnum<>1 then PrintLn(''FuncEnum default failed'');'#13#10 +
+    'if FuncEnum(meTen)<>10 then PrintLn(''FuncEnum meTen failed'');'#13#10 +
+    'if FuncSet([meOne])<>2 then PrintLn(''FuncSet default failed'');'#13#10 +
+    'if FuncSet([meOne, meTen])<>1026 then PrintLn(''FuncSet default failed'');'#13#10
+    + 'var i=1; FuncVar(i); if i<>2 then PrintLn(''FuncVar def failed'');'#13#10
+    + 'FuncVar(i, 10); if i<>12 then PrintLn(''FuncVar 10 failed'');'#13#10 +
+    'FuncVar(i, i); if i<>24 then PrintLn(''FuncVar i failed'');'#13#10 +
+    'if FuncFloat(10)<>10.5 then PrintLn(''FuncFloat def failed'');'#13#10 +
+    'if FuncFloat(5.1, 4.2)<>9.3 then PrintLn(''FuncFloat failed'');'#13#10 +
+    'if TTestClass.cTest<>''My class const'' then PrintLn(''class const failed'');'#13#10;
 
 type
-   TdwsFunctionCracker = class (TdwsFunction)
-   end;
+  TdwsFunctionCracker = class(TdwsFunction)
+  end;
 
-   TdwsClassCracker = class (TdwsClass)
-   end;
+  TdwsClassCracker = class(TdwsClass)
+  end;
 
-   TdwsPropertyCracker = class (TdwsProperty)
-   end;
+  TdwsPropertyCracker = class(TdwsProperty)
+  end;
 
-   TdwsMethodCracker = class (TdwsMethod)
-   end;
+  TdwsMethodCracker = class(TdwsMethod)
+  end;
 
-   TdwsClassConstantCracker = class (TdwsClassConstant)
-   end;
+  TdwsClassConstantCracker = class(TdwsClassConstant)
+  end;
 
-   TdwsEnumerationCracker = class (TdwsEnumeration)
-   end;
+  TdwsEnumerationCracker = class(TdwsEnumeration)
+  end;
 
-   TdwsOperatorCracker = class (TdwsOperator)
-   end;
+  TdwsOperatorCracker = class(TdwsOperator)
+  end;
 
-// ------------------
-// ------------------ TdwsUnitTestsContext ------------------
-// ------------------
+  // ------------------
+  // ------------------ TdwsUnitTestsContext ------------------
+  // ------------------
 
-// SetupUnit
-//
+  // SetupUnit
+  //
 procedure TdwsUnitTestsContext.SetupUnit;
 begin
-   FCompiler:=TDelphiWebScript.Create(nil);
+  FCompiler := TDelphiWebScript.Create(nil);
 
-   FUnit:=TdwsUnit.Create(nil);
-   FUnit.UnitName:='Test';
-   FUnit.Script:=FCompiler;
+  FUnit := TdwsUnit.Create(nil);
+  FUnit.UnitName := 'Test';
+  FUnit.Script := FCompiler;
 
-   DeclareTestEnumerate;
-   DeclareTestSet;
-   DeclareTestRecords;
-   DeclareTestClasses;
-   DeclareTestVars;
-   DeclareTestArrays;
-   DeclareTestFuncs;
-   DeclareTestOperators;
-   DeclareTestInterface;
+  DeclareTestEnumerate;
+  DeclareTestSet;
+  DeclareTestRecords;
+  DeclareTestClasses;
+  DeclareTestVars;
+  DeclareTestArrays;
+  DeclareTestFuncs;
+  DeclareTestOperators;
+  DeclareTestInterface;
 end;
 
 // Destroy
 //
 destructor TdwsUnitTestsContext.Destroy;
 begin
-   inherited;
-   FUnit.Free;
-   FCompiler.Free;
+  inherited;
+  FUnit.Free;
+  FCompiler.Free;
 end;
 
 // DeclareTestEnumerate
 //
 procedure TdwsUnitTestsContext.DeclareTestEnumerate;
 var
-   i : Integer;
-   enum : TdwsEnumeration;
-   elem : TdwsElement;
+  i: Integer;
+  enum: TdwsEnumeration;
+  elem: TdwsElement;
 begin
-   enum:=FUnit.Enumerations.Add;
-   enum.Name:='TMyEnum';
-   elem:=enum.Elements.Add;
-   elem.Name:='meOne';
-   elem.UserDefValue:=1;
-   elem:=enum.Elements.Add;
-   elem.Name:='meTen';
-   elem.UserDefValue:=10;
+  enum := FUnit.Enumerations.Add;
+  enum.Name := 'TMyEnum';
+  elem := enum.Elements.Add;
+  elem.Name := 'meOne';
+  elem.UserDefValue := 1;
+  elem := enum.Elements.Add;
+  elem.Name := 'meTen';
+  elem.UserDefValue := 10;
 
-   enum:=FUnit.Enumerations.Add;
-   enum.Name:='TAutoEnum';
-   for i:=1 to 9 do begin
-      elem:=enum.Elements.Add;
-      elem.Name:='aeVal'+IntToStr(10-i);
-   end;
+  enum := FUnit.Enumerations.Add;
+  enum.Name := 'TAutoEnum';
+  for i := 1 to 9 do
+  begin
+    elem := enum.Elements.Add;
+    elem.Name := 'aeVal' + IntToStr(10 - i);
+  end;
 end;
 
 // DeclareTestSet
 //
 procedure TdwsUnitTestsContext.DeclareTestSet;
 var
-   s : TdwsSet;
+  s: TdwsSet;
 begin
-   s:=FUnit.Sets.Add;
-   s.Name:='TMyEnums';
-   s.BaseType:='TMyEnum';
+  s := FUnit.Sets.Add;
+  s.Name := 'TMyEnums';
+  s.BaseType := 'TMyEnum';
 end;
 
 // DeclareTestFuncs
 //
 procedure TdwsUnitTestsContext.DeclareTestFuncs;
 var
-   func : TdwsFunction;
-   param : TdwsParameter;
+  func: TdwsFunction;
+  param: TdwsParameter;
 begin
-   func:=FUnit.Functions.Add;
-   func.Name:='Func1';
-   func.ResultType:='Integer';
-   func.OnEval:=Func1Eval;
+  func := FUnit.Functions.Add;
+  func.Name := 'Func1';
+  func.ResultType := 'Integer';
+  func.OnEval := Func1Eval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncOne';
-   func.ResultType:='String';
-   func.OnEval:=FuncOneEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncOne';
+  func.ResultType := 'String';
+  func.OnEval := FuncOneEval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncOneDotFive';
-   func.ResultType:='Float';
-   func.OnEval:=FuncOneDotFiveEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncOneDotFive';
+  func.ResultType := 'Float';
+  func.OnEval := FuncOneDotFiveEval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncTrue';
-   func.ResultType:='Boolean';
-   func.OnEval:=FuncTrueEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncTrue';
+  func.ResultType := 'Boolean';
+  func.OnEval := FuncTrueEval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncException';
-   func.ResultType:='';
-   func.OnEval:=FuncExceptionEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncException';
+  func.ResultType := '';
+  func.OnEval := FuncExceptionEval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncInc';
-   func.ResultType:='Integer';
-   func.OnEval:=FuncIncEval;
-   param:=func.Parameters.Add;
-   param.Name:='v';
-   param.DataType:='Integer';
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncInc';
+  func.ResultType := 'Integer';
+  func.OnEval := FuncIncEval;
+  param := func.Parameters.Add;
+  param.Name := 'v';
+  param.DataType := 'Integer';
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncIncN';
-   func.ResultType:='Integer';
-   func.OnEval:=FuncIncNEval;
-   param:=func.Parameters.Add;
-   param.Name:='v';
-   param.DataType:='Integer';
-   param:=func.Parameters.Add;
-   param.Name:='n';
-   param.DataType:='Integer';
-   param.DefaultValue:='1';
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncIncN';
+  func.ResultType := 'Integer';
+  func.OnEval := FuncIncNEval;
+  param := func.Parameters.Add;
+  param.Name := 'v';
+  param.DataType := 'Integer';
+  param := func.Parameters.Add;
+  param.Name := 'n';
+  param.DataType := 'Integer';
+  param.DefaultValue := '1';
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncEnum';
-   func.ResultType:='Integer';
-   func.OnEval:=FuncEnumEval;
-   param:=func.Parameters.Add;
-   param.Name:='e';
-   param.DataType:='TMyEnum';
-   param.DefaultValue:='meOne';
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncEnum';
+  func.ResultType := 'Integer';
+  func.OnEval := FuncEnumEval;
+  param := func.Parameters.Add;
+  param.Name := 'e';
+  param.DataType := 'TMyEnum';
+  param.DefaultValue := 'meOne';
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncSet';
-   func.ResultType:='Integer';
-   func.OnEval:=FuncSetEval;
-   param:=func.Parameters.Add;
-   param.Name:='s';
-   param.DataType:='TMyEnums';
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncSet';
+  func.ResultType := 'Integer';
+  func.OnEval := FuncSetEval;
+  param := func.Parameters.Add;
+  param.Name := 's';
+  param.DataType := 'TMyEnums';
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncVar';
-   func.OnEval:=FuncVarEval;
-   param:=func.Parameters.Add;
-   param.Name:='i';
-   param.DataType:='Integer';
-   param.IsVarParam:=True;
-   param.IsWritable:=True;
-   param:=func.Parameters.Add;
-   param.Name:='n';
-   param.DataType:='Integer';
-   param.DefaultValue:='1';
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncVar';
+  func.OnEval := FuncVarEval;
+  param := func.Parameters.Add;
+  param.Name := 'i';
+  param.DataType := 'Integer';
+  param.IsVarParam := True;
+  param.IsWritable := True;
+  param := func.Parameters.Add;
+  param.Name := 'n';
+  param.DataType := 'Integer';
+  param.DefaultValue := '1';
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncFloat';
-   func.OnEval:=FuncFloatEval;
-   func.ResultType:='Float';
-   param:=func.Parameters.Add;
-   param.Name:='a';
-   param.DataType:='Float';
-   param:=func.Parameters.Add;
-   param.Name:='b';
-   param.DataType:='Float';
-   param.DefaultValue:='0.5';
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncFloat';
+  func.OnEval := FuncFloatEval;
+  func.ResultType := 'Float';
+  param := func.Parameters.Add;
+  param.Name := 'a';
+  param.DataType := 'Float';
+  param := func.Parameters.Add;
+  param.Name := 'b';
+  param.DataType := 'Float';
+  param.DefaultValue := '0.5';
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncVariant';
-   func.ResultType:='Variant';
-   func.OnEval:=FuncVariantEval;
-   param:=func.Parameters.Add;
-   param.Name:='v';
-   param.DataType:='Variant';
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncVariant';
+  func.ResultType := 'Variant';
+  func.OnEval := FuncVariantEval;
+  param := func.Parameters.Add;
+  param.Name := 'v';
+  param.DataType := 'Variant';
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncVariantDate';
-   func.ResultType:='Variant';
-   func.OnEval:=FuncVariantDateEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncVariantDate';
+  func.ResultType := 'Variant';
+  func.OnEval := FuncVariantDateEval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncPoint';
-   func.ResultType:='TPoint';
-   func.OnEval:=FuncPointEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncPoint';
+  func.ResultType := 'TPoint';
+  func.OnEval := FuncPointEval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncPointVarParam';
-   param:=func.Parameters.Add;
-   param.Name:='pIn';
-   param.DataType:='TPoint';
-   param:=func.Parameters.Add;
-   param.Name:='pOut';
-   param.DataType:='TPoint';
-   param.IsVarParam:=True;
-   func.OnEval:=FuncPointVarParamEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncPointVarParam';
+  param := func.Parameters.Add;
+  param.Name := 'pIn';
+  param.DataType := 'TPoint';
+  param := func.Parameters.Add;
+  param.Name := 'pOut';
+  param.DataType := 'TPoint';
+  param.IsVarParam := True;
+  func.OnEval := FuncPointVarParamEval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncPointVarParamCaller';
-   param:=func.Parameters.Add;
-   param.Name:='pIn';
-   param.DataType:='TPoint';
-   param:=func.Parameters.Add;
-   param.Name:='pOut';
-   param.DataType:='TPoint';
-   param.IsVarParam:=True;
-   func.OnEval:=FuncPointVarParamCallerEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncPointVarParamCaller';
+  param := func.Parameters.Add;
+  param.Name := 'pIn';
+  param.DataType := 'TPoint';
+  param := func.Parameters.Add;
+  param.Name := 'pOut';
+  param.DataType := 'TPoint';
+  param.IsVarParam := True;
+  func.OnEval := FuncPointVarParamCallerEval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncPointArray';
-   param:=func.Parameters.Add;
-   param.Name:='a';
-   param.DataType:='TPoints';
-   func.OnEval:=FuncPointArrayEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncPointArray';
+  param := func.Parameters.Add;
+  param.Name := 'a';
+  param.DataType := 'TPoints';
+  func.OnEval := FuncPointArrayEval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncPointArraySwapXY';
-   param:=func.Parameters.Add;
-   param.Name:='a';
-   param.DataType:='TPoints';
-   func.OnEval:=FuncPointArraySwapXYEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncPointArraySwapXY';
+  param := func.Parameters.Add;
+  param.Name := 'a';
+  param.DataType := 'TPoints';
+  func.OnEval := FuncPointArraySwapXYEval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncClassName';
-   func.ResultType:='String';
-   param:=func.Parameters.Add;
-   param.Name:='obj';
-   param.DataType:='TObject';
-   param.DefaultValue:=IUnknown(nil);
-   func.OnEval:=FuncClassNameEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncClassName';
+  func.ResultType := 'String';
+  param := func.Parameters.Add;
+  param.Name := 'obj';
+  param.DataType := 'TObject';
+  param.DefaultValue := IUnknown(nil);
+  func.OnEval := FuncClassNameEval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncMetaClassName';
-   func.ResultType:='String';
-   param:=func.Parameters.Add;
-   param.Name:='cls';
-   param.DataType:='TClass';
-   func.OnEval:=FuncMetaClassNameEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncMetaClassName';
+  func.ResultType := 'String';
+  param := func.Parameters.Add;
+  param.Name := 'cls';
+  param.DataType := 'TClass';
+  func.OnEval := FuncMetaClassNameEval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncOpenArray';
-   func.ResultType:='String';
-   param:=func.Parameters.Add;
-   param.Name:='p';
-   param.DataType:='array of const';
-   func.OnEval:=FuncOpenArrayEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncOpenArray';
+  func.ResultType := 'String';
+  param := func.Parameters.Add;
+  param.Name := 'p';
+  param.DataType := 'array of const';
+  func.OnEval := FuncOpenArrayEval;
 
-   FUnit.Delegates.Add.Name := 'TProcedure';
-   func := FUnit.Functions.Add;
-   func.Name := 'FuncCallbackFuncName';
-   func.ResultType := 'String';
-   param := func.Parameters.Add;
-   param.Name := 'cb';
-   param.DataType := 'TProcedure';
-   param.DefaultValue := IUnknown(nil);
-   func.OnEval := FuncCallbackFuncNameEval;
+  FUnit.Delegates.Add.Name := 'TProcedure';
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncCallbackFuncName';
+  func.ResultType := 'String';
+  param := func.Parameters.Add;
+  param.Name := 'cb';
+  param.DataType := 'TProcedure';
+  param.DefaultValue := IUnknown(nil);
+  func.OnEval := FuncCallbackFuncNameEval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncOverload';
-   func.ResultType:='String';
-   func.Overloaded:=True;
-   func.Parameters.Add('v', 'Integer');
-   func.OnEval:=FuncOverloadIntEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncOverload';
+  func.ResultType := 'String';
+  func.Overloaded := True;
+  func.Parameters.Add('v', 'Integer');
+  func.OnEval := FuncOverloadIntEval;
 
-   func:=FUnit.Functions.Add;
-   func.Name:='FuncOverload';
-   func.ResultType:='String';
-   func.Overloaded:=True;
-   func.Parameters.Add('v', 'String');
-   func.OnEval:=FuncOverloadStrEval;
+  func := FUnit.Functions.Add;
+  func.Name := 'FuncOverload';
+  func.ResultType := 'String';
+  func.Overloaded := True;
+  func.Parameters.Add('v', 'String');
+  func.OnEval := FuncOverloadStrEval;
 
-   func:=FUnit.Functions.Add('FuncFast', 'Integer');
-   func.Parameters.Add('v', 'String');
-   func.OnFastEval:=FuncFastEval;
+  func := FUnit.Functions.Add('FuncFast', 'Integer');
+  func.Parameters.Add('v', 'String');
+  func.OnFastEval := FuncFastEval;
 
-   func:=FUnit.Functions.Add('FuncFastPoint', 'TPoint');
-   func.Parameters.Add('i', 'Integer');
-   func.OnFastEval:=FuncFastPointEval;
+  func := FUnit.Functions.Add('FuncFastPoint', 'TPoint');
+  func.Parameters.Add('i', 'Integer');
+  func.OnFastEval := FuncFastPointEval;
 
-   func:=FUnit.Functions.Add('FuncStrings', 'TStringArray');
-   func.Parameters.Add('i', 'Integer');
-   func.OnEval:=FuncReturnStrings;
+  func := FUnit.Functions.Add('FuncStrings', 'TStringArray');
+  func.Parameters.Add('i', 'Integer');
+  func.OnEval := FuncReturnStrings;
 
-   func:=FUnit.Functions.Add('FuncStrings2', 'TStringArray');
-   func.Parameters.Add('i', 'Integer');
-   func.OnEval:=FuncReturnStrings2;
+  func := FUnit.Functions.Add('FuncStrings2', 'TStringArray');
+  func.Parameters.Add('i', 'Integer');
+  func.OnEval := FuncReturnStrings2;
 
-   func:=FUnit.Functions.Add('FuncReturnVirtCreate', 'TTestClass');
-   func.OnEval:=FuncReturnVirtCreate;
+  func := FUnit.Functions.Add('FuncReturnVirtCreate', 'TTestClass');
+  func.OnEval := FuncReturnVirtCreate;
 
-   func:=FUnit.Functions.Add('FuncNil', 'TObject');
-   func.OnEval:=FuncNil;
+  func := FUnit.Functions.Add('FuncNil', 'TObject');
+  func.OnEval := FuncNil;
 
-   func := FUnit.Functions.Add('FuncInternalClass', 'TInternalClass');
-   func.OnEval := FuncInternalClass;
+  func := FUnit.Functions.Add('FuncInternalClass', 'TInternalClass');
+  func.OnEval := FuncInternalClass;
 end;
 
 // DeclareTestClasses
 //
 procedure TdwsUnitTestsContext.DeclareTestClasses;
 var
-   cls : TdwsClass;
-   cst : TdwsConstructor;
-   meth : TdwsMethod;
-   fld : TdwsField;
-   prop : TdwsProperty;
-   param : TdwsParameter;
-   constant : TdwsConstant;
-   child : TdwsClass;
+  cls: TdwsClass;
+  cst: TdwsConstructor;
+  meth: TdwsMethod;
+  fld: TdwsField;
+  prop: TdwsProperty;
+  param: TdwsParameter;
+  constant: TdwsConstant;
+  child: TdwsClass;
 begin
-   cls:=FUnit.Classes.Add;
-   cls.Name:='TTestClass';
-   cls.OnCleanUp:=ClassCleanup;
+  cls := FUnit.Classes.Add;
+  cls.Name := 'TTestClass';
+  cls.OnCleanUp := ClassCleanup;
 
-   cst:=cls.Constructors.Add;
-   cst.Name:='MyCreate';
-   param:=cst.Parameters.Add;
-   param.DataType:='String';
-   param.Name:='v';
-   cst.OnEval:=ClassConstructor;
+  cst := cls.Constructors.Add;
+  cst.Name := 'MyCreate';
+  param := cst.Parameters.Add;
+  param.DataType := 'String';
+  param.Name := 'v';
+  cst.OnEval := ClassConstructor;
 
-   cst:=cls.Constructors.Add;
-   cst.Name:='MyCreateInit';
-   cst.OnEval:=ClassConstructorInit;
+  cst := cls.Constructors.Add;
+  cst.Name := 'MyCreateInit';
+  cst.OnEval := ClassConstructorInit;
 
-   cst:=cls.Constructors.Add;
-   cst.Name:='VirtCreate';
-   cst.Attributes:=[maVirtual];
-   cst.OnEval:=ClassVirtConstructor;
+  cst := cls.Constructors.Add;
+  cst.Name := 'VirtCreate';
+  cst.Attributes := [maVirtual];
+  cst.OnEval := ClassVirtConstructor;
 
-   meth:=cls.Methods.Add;
-   meth.Name:='MyDestroy';
-   meth.Kind:=mkDestructor;
-   meth.OnEval:=ClassDestructor;
+  meth := cls.Methods.Add;
+  meth.Name := 'MyDestroy';
+  meth.Kind := mkDestructor;
+  meth.OnEval := ClassDestructor;
 
-   meth:=cls.Methods.Add;
-   meth.Name:='Print';
-   meth.OnEval:=MethodPrintEval;
+  meth := cls.Methods.Add;
+  meth.Name := 'Print';
+  meth.OnEval := MethodPrintEval;
 
-   meth:=cls.Methods.Add;
-   meth.Name:='PrintExternal';
-   meth.OnEval:=MethodPrintExternalEval;
+  meth := cls.Methods.Add;
+  meth.Name := 'PrintExternal';
+  meth.OnEval := MethodPrintExternalEval;
 
-   fld:=cls.Fields.Add;
-   fld.Name:='FField';
-   fld.DataType:='Integer';
+  fld := cls.Fields.Add;
+  fld.Name := 'FField';
+  fld.DataType := 'Integer';
 
-   meth:=cls.Methods.Add;
-   meth.Name:='GetMyProp';
-   meth.ResultType:='Integer';
-   meth.OnEval:=MethodGetIntEval;
+  meth := cls.Methods.Add;
+  meth.Name := 'GetMyProp';
+  meth.ResultType := 'Integer';
+  meth.OnEval := MethodGetIntEval;
 
-   meth:=cls.Methods.Add;
-   meth.Name:='SetMyProp';
-   param:=meth.Parameters.Add;
-   param.DataType:='Integer';
-   param.Name:='v';
-   meth.OnEval:=MethodSetIntEval;
+  meth := cls.Methods.Add;
+  meth.Name := 'SetMyProp';
+  param := meth.Parameters.Add;
+  param.DataType := 'Integer';
+  param.Name := 'v';
+  meth.OnEval := MethodSetIntEval;
 
-   meth:=cls.Methods.Add;
-   meth.Name:='Function';
-   meth.ResultType:='Integer';
-   meth.OnEval:=MethodGetIntEval;
+  meth := cls.Methods.Add;
+  meth.Name := 'Function';
+  meth.ResultType := 'Integer';
+  meth.OnEval := MethodGetIntEval;
 
-   meth:=cls.Methods.Add;
-   meth.Name:='FastGetInt';
-   meth.ResultType:='Integer';
-   meth.OnFastEval:=MethodFastGetIntEval;
+  meth := cls.Methods.Add;
+  meth.Name := 'FastGetInt';
+  meth.ResultType := 'Integer';
+  meth.OnFastEval := MethodFastGetIntEval;
 
-   meth:=cls.Methods.Add;
-   meth.Name:='GetArrayProp';
-   meth.ResultType:='Integer';
-   param:=meth.Parameters.Add;
-   param.DataType:='String';
-   param.Name:='v';
-   meth.OnEval:=MethodGetArrayIntEval;
+  meth := cls.Methods.Add;
+  meth.Name := 'GetArrayProp';
+  meth.ResultType := 'Integer';
+  param := meth.Parameters.Add;
+  param.DataType := 'String';
+  param.Name := 'v';
+  meth.OnEval := MethodGetArrayIntEval;
 
-   meth:=cls.Methods.Add('MethOverload', 'String');
-   meth.Parameters.Add('v', 'Integer');
-   meth.Overloaded:=True;
-   meth.OnEval:=MethodOverloadIntEval;
+  meth := cls.Methods.Add('MethOverload', 'String');
+  meth.Parameters.Add('v', 'Integer');
+  meth.Overloaded := True;
+  meth.OnEval := MethodOverloadIntEval;
 
-   meth:=cls.Methods.Add('MethOverload', 'String');
-   meth.Parameters.Add('v', 'String');
-   meth.Overloaded:=True;
-   meth.OnEval:=MethodOverloadStrEval;
+  meth := cls.Methods.Add('MethOverload', 'String');
+  meth.Parameters.Add('v', 'String');
+  meth.Overloaded := True;
+  meth.OnEval := MethodOverloadStrEval;
 
-   meth:=cls.Methods.Add;
-   meth.Name:='VirtGetArrayProp';
-   meth.ResultType:='Integer';
-   meth.Overloaded:=True;
-   meth.Attributes:=[maVirtual];
-   param:=meth.Parameters.Add;
-   param.DataType:='String';
-   param.Name:='v';
-   meth.OnEval:=MethodGetArrayIntEval;
+  meth := cls.Methods.Add;
+  meth.Name := 'VirtGetArrayProp';
+  meth.ResultType := 'Integer';
+  meth.Overloaded := True;
+  meth.Attributes := [maVirtual];
+  param := meth.Parameters.Add;
+  param.DataType := 'String';
+  param.Name := 'v';
+  meth.OnEval := MethodGetArrayIntEval;
 
-   meth:=cls.Methods.Add('VirtOverload', 'String');
-   meth.Parameters.Add('v', 'Integer');
-   meth.Overloaded:=True;
-   meth.Attributes:=[maVirtual];
-   meth.OnEval:=MethodOverloadIntEval;
+  meth := cls.Methods.Add('VirtOverload', 'String');
+  meth.Parameters.Add('v', 'Integer');
+  meth.Overloaded := True;
+  meth.Attributes := [maVirtual];
+  meth.OnEval := MethodOverloadIntEval;
 
-   meth:=cls.Methods.Add('VirtOverload', 'String');
-   meth.Parameters.Add('v', 'String');
-   meth.Overloaded:=True;
-   meth.Attributes:=[maVirtual];
-   meth.OnEval:=MethodOverloadStrEval;
+  meth := cls.Methods.Add('VirtOverload', 'String');
+  meth.Parameters.Add('v', 'String');
+  meth.Overloaded := True;
+  meth.Attributes := [maVirtual];
+  meth.OnEval := MethodOverloadStrEval;
 
-   prop:=cls.Properties.Add;
-   prop.Name:='MyReadOnlyProp';
-   prop.DataType:='Integer';
-   prop.ReadAccess:='GetMyProp';
+  prop := cls.Properties.Add;
+  prop.Name := 'MyReadOnlyProp';
+  prop.DataType := 'Integer';
+  prop.ReadAccess := 'GetMyProp';
 
-   prop:=cls.Properties.Add;
-   prop.Name:='MyWriteOnlyProp';
-   prop.DataType:='Integer';
-   prop.WriteAccess:='SetMyProp';
+  prop := cls.Properties.Add;
+  prop.Name := 'MyWriteOnlyProp';
+  prop.DataType := 'Integer';
+  prop.WriteAccess := 'SetMyProp';
 
-   prop:=cls.Properties.Add;
-   prop.Name:='MyReadWriteProp';
-   prop.DataType:='Integer';
-   prop.ReadAccess:='FField';
-   prop.WriteAccess:='FField';
+  prop := cls.Properties.Add;
+  prop.Name := 'MyReadWriteProp';
+  prop.DataType := 'Integer';
+  prop.ReadAccess := 'FField';
+  prop.WriteAccess := 'FField';
 
-   prop:=cls.Properties.Add;
-   prop.Name:='ArrayProp';
-   prop.DataType:='Integer';
-   prop.ReadAccess:='GetArrayProp';
-   param:=prop.Parameters.Add;
-   param.DataType:='String';
-   param.Name:='v';
+  prop := cls.Properties.Add;
+  prop.Name := 'ArrayProp';
+  prop.DataType := 'Integer';
+  prop.ReadAccess := 'GetArrayProp';
+  param := prop.Parameters.Add;
+  param.DataType := 'String';
+  param.Name := 'v';
 
-   prop:=cls.Properties.Add;
-   prop.Name:='DeprecatedProp';
-   prop.DataType:='Integer';
-   prop.ReadAccess:='FField';
-   prop.Deprecated:='Obsolete';
+  prop := cls.Properties.Add;
+  prop.Name := 'DeprecatedProp';
+  prop.DataType := 'Integer';
+  prop.ReadAccess := 'FField';
+  prop.Deprecated := 'Obsolete';
 
-   constant:=cls.Constants.Add;
-   constant.Name:='cTest';
-   constant.DataType:='String';
-   constant.Value:='My class const';
+  constant := cls.Constants.Add;
+  constant.Name := 'cTest';
+  constant.DataType := 'String';
+  constant.value := 'My class const';
 
-   child:=FUnit.Classes.Add;
-   child.Name:='TTestChildClass';
-   child.Ancestor:='TTestClass';
-   child.OnCleanUp:=ClassCleanup;
+  child := FUnit.Classes.Add;
+  child.Name := 'TTestChildClass';
+  child.Ancestor := 'TTestClass';
+  child.OnCleanUp := ClassCleanup;
 
-   meth:=child.Methods.Add;
-   meth.Name:='VirtGetArrayProp';
-   meth.ResultType:='Integer';
-   param:=meth.Parameters.Add;
-   param.DataType:='String';
-   param.Name:='v';
-   meth.Attributes:=[maOverride];
-   meth.OnEval:=MethodGetArrayIntEval;
+  meth := child.Methods.Add;
+  meth.Name := 'VirtGetArrayProp';
+  meth.ResultType := 'Integer';
+  param := meth.Parameters.Add;
+  param.DataType := 'String';
+  param.Name := 'v';
+  meth.Attributes := [maOverride];
+  meth.OnEval := MethodGetArrayIntEval;
 
-   meth:=child.Methods.Add('VirtOverload', 'String');
-   meth.Parameters.Add('v', 'Integer');
-   meth.Overloaded:=True;
-   meth.Attributes:=[maOverride];
-   meth.OnEval:=MethodOverloadIntEval;
+  meth := child.Methods.Add('VirtOverload', 'String');
+  meth.Parameters.Add('v', 'Integer');
+  meth.Overloaded := True;
+  meth.Attributes := [maOverride];
+  meth.OnEval := MethodOverloadIntEval;
 
-   meth:=child.Methods.Add('VirtOverload', 'String');
-   meth.Parameters.Add('v', 'String');
-   meth.Attributes:=[maOverride];
-   meth.Overloaded:=True;
-   meth.OnEval:=MethodOverloadStrEval;
+  meth := child.Methods.Add('VirtOverload', 'String');
+  meth.Parameters.Add('v', 'String');
+  meth.Attributes := [maOverride];
+  meth.Overloaded := True;
+  meth.OnEval := MethodOverloadStrEval;
 
-   cls := FUnit.Classes.Add;
-   cls.Name := 'TInternalClass';
-   cls.IsInternal := True;
+  cls := FUnit.Classes.Add;
+  cls.Name := 'TInternalClass';
+  cls.IsInternal := True;
 end;
 
 // DeclareTestVars
 //
 procedure TdwsUnitTestsContext.DeclareTestVars;
 var
-   v : TdwsGlobal;
+  v: TdwsGlobal;
 begin
-   v:=FUnit.Variables.Add;
-   v.Name:='xyzVar';
-   v.DataType:='String';
+  v := FUnit.Variables.Add;
+  v.Name := 'xyzVar';
+  v.DataType := 'String';
 
-   v:=FUnit.Variables.Add;
-   v.Name:='magicVar';
-   v.DataType:='String';
-   v.OnReadVar:=DoReadVar;
-   v.OnWriteVar:=DoWriteVar;
+  v := FUnit.Variables.Add;
+  v.Name := 'magicVar';
+  v.DataType := 'String';
+  v.OnReadVar := DoReadVar;
+  v.OnWriteVar := DoWriteVar;
 
-   v:=FUnit.Variables.Add;
-   v.Name:='magicVarInc';
-   v.DataType:='String';
-   v.OnReadVar:=DoReadVarIncMagic;
+  v := FUnit.Variables.Add;
+  v.Name := 'magicVarInc';
+  v.DataType := 'String';
+  v.OnReadVar := DoReadVarIncMagic;
 
-   v:=FUnit.Variables.Add;
-   v.Name:='LifeUniverseEverything';
-   v.DataType:='Integer';
-   v.OnReadVar:=DoReadVar42;
+  v := FUnit.Variables.Add;
+  v.Name := 'LifeUniverseEverything';
+  v.DataType := 'Integer';
+  v.OnReadVar := DoReadVar42;
 
-   v:=FUnit.Variables.Add;
-   v.Name:='vDateTime';
-   v.DataType:='Variant';
-   v.OnReadVar:=DoReadVarDateTime;
+  v := FUnit.Variables.Add;
+  v.Name := 'vDateTime';
+  v.DataType := 'Variant';
+  v.OnReadVar := DoReadVarDateTime;
 end;
 
 // DeclareTestArrays
 //
 procedure TdwsUnitTestsContext.DeclareTestArrays;
 var
-   a : TdwsArray;
+  a: TdwsArray;
 begin
-   a:=FUnit.Arrays.Add;
-   a.Name:='array_5_10';
-   a.DataType:='Integer';
-   a.LowBound:=5;
-   a.HighBound:=10;
+  a := FUnit.Arrays.Add;
+  a.Name := 'array_5_10';
+  a.DataType := 'Integer';
+  a.LowBound := 5;
+  a.HighBound := 10;
 
-   a:=FUnit.Arrays.Add;
-   a.Name:='TPoints';
-   a.IsDynamic:=True;
-   a.DataType:='TPoint';
+  a := FUnit.Arrays.Add;
+  a.Name := 'TPoints';
+  a.IsDynamic := True;
+  a.DataType := 'TPoint';
 
-   a:=FUnit.Arrays.Add;
-   a.Name:='TDynObjects';
-   a.IsDynamic:=True;
-   a.DataType:='TTestClass';
+  a := FUnit.Arrays.Add;
+  a.Name := 'TDynObjects';
+  a.IsDynamic := True;
+  a.DataType := 'TTestClass';
 
-   a:=FUnit.Arrays.Add;
-   a.Name:='TStaticObjects';
-   a.LowBound:=0;
-   a.HighBound:=1;
-   a.DataType:='TTestClass';
+  a := FUnit.Arrays.Add;
+  a.Name := 'TStaticObjects';
+  a.LowBound := 0;
+  a.HighBound := 1;
+  a.DataType := 'TTestClass';
 
-   a:=FUnit.Arrays.Add;
-   a.Name:='TStringArray';
-   a.IsDynamic:=True;
-   a.DataType:='String';
+  a := FUnit.Arrays.Add;
+  a.Name := 'TStringArray';
+  a.IsDynamic := True;
+  a.DataType := 'String';
 end;
 
 // DeclareTestRecords
 //
 procedure TdwsUnitTestsContext.DeclareTestRecords;
 var
-   r : TdwsRecord;
-   m : TdwsMember;
+  r: TdwsRecord;
+  m: TdwsMember;
 begin
-   r:=FUnit.Records.Add as TdwsRecord;
-   r.Name:='TPoint';
+  r := FUnit.Records.Add as TdwsRecord;
+  r.Name := 'TPoint';
 
-   m:=r.Members.Add as TdwsMember;
-   m.Name:='X';
-   m.DataType:='Integer';
+  m := r.Members.Add as TdwsMember;
+  m.Name := 'X';
+  m.DataType := 'Integer';
 
-   m:=r.Members.Add as TdwsMember;
-   m.Name:='Y';
-   m.DataType:='Integer';
+  m := r.Members.Add as TdwsMember;
+  m.Name := 'Y';
+  m.DataType := 'Integer';
 end;
 
 // DeclareTestOperators
 //
 procedure TdwsUnitTestsContext.DeclareTestOperators;
 var
-   o : TdwsOperator;
+  o: TdwsOperator;
 begin
-   o:=FUnit.Operators.Add;
-   o.Operator:=ttCARET;
+  o := FUnit.Operators.Add;
+  o.Operator := ttCARET;
 
-   o.Params.Add.Name:='Float';
-   o.Params.Add.Name:='Float';
-   o.ResultType:='Float';
+  o.Params.Add.Name := 'Float';
+  o.Params.Add.Name := 'Float';
+  o.ResultType := 'Float';
 
-   o.UsesAccess:='FuncFloat';
+  o.UsesAccess := 'FuncFloat';
 end;
 
 // DeclareTestInterface
 //
 procedure TdwsUnitTestsContext.DeclareTestInterface;
 var
-   i : TdwsInterface;
-   meth : TdwsMethod;
-   prop : TdwsProperty;
+  i: TdwsInterface;
+  meth: TdwsMethod;
+  prop: TdwsProperty;
 begin
-   i := FUnit.Interfaces.Add;
-   i.Name := 'IHello';
+  i := FUnit.Interfaces.Add;
+  i.Name := 'IHello';
 
-   meth := i.Methods.Add;
-   meth.Name := 'GetHello';
-   meth.ResultType := 'String';
+  meth := i.Methods.Add;
+  meth.Name := 'GetHello';
+  meth.ResultType := 'String';
 
-   prop := i.Properties.Add;
-   prop.DataType := 'String';
-   prop.Name := 'Hello';
-   prop.ReadAccess := meth.Name;
+  prop := i.Properties.Add;
+  prop.DataType := 'String';
+  prop.Name := 'Hello';
+  prop.ReadAccess := meth.Name;
 end;
 
 // Func1Eval
 //
 procedure TdwsUnitTestsContext.Func1Eval(Info: TProgramInfo);
 begin
-   Info.ResultAsInteger:=1;
+  Info.ResultAsInteger := 1;
 end;
 
 // FuncOneEval
 //
 procedure TdwsUnitTestsContext.FuncOneEval(Info: TProgramInfo);
 begin
-   Info.ResultAsString:='One';
+  Info.ResultAsString := 'One';
 end;
 
 // FuncOneDotFiveEval
 //
 procedure TdwsUnitTestsContext.FuncOneDotFiveEval(Info: TProgramInfo);
 begin
-   Info.ResultAsFloat:=1.5;
+  Info.ResultAsFloat := 1.5;
 end;
 
 // FuncTrueEval
 //
 procedure TdwsUnitTestsContext.FuncTrueEval(Info: TProgramInfo);
 begin
-   Info.ResultAsBoolean:=True;
+  Info.ResultAsBoolean := True;
 end;
 
 // FuncIncEval
 //
 procedure TdwsUnitTestsContext.FuncIncEval(Info: TProgramInfo);
 begin
-   Info.ResultAsInteger:=Info.ValueAsInteger['v']+1;
+  Info.ResultAsInteger := Info.ValueAsInteger['v'] + 1;
 end;
 
 // FuncIncNEval
 //
 procedure TdwsUnitTestsContext.FuncIncNEval(Info: TProgramInfo);
 begin
-   Info.ResultAsInteger:=Info.ValueAsInteger['v']+Info.ValueAsInteger['n'];
+  Info.ResultAsInteger := Info.ValueAsInteger['v'] + Info.ValueAsInteger['n'];
 end;
 
 // FuncEnumEval
 //
 procedure TdwsUnitTestsContext.FuncEnumEval(Info: TProgramInfo);
 begin
-   Info.ResultAsInteger:=Info.ValueAsInteger['e'];
+  Info.ResultAsInteger := Info.ValueAsInteger['e'];
 end;
 
 // FuncVariantEval
 //
 procedure TdwsUnitTestsContext.FuncVariantEval(Info: TProgramInfo);
 begin
-   Info.ResultAsVariant:=Info.ParamAsVariant[0];
+  Info.ResultAsVariant := Info.ParamAsVariant[0];
 end;
 
 // FuncVariantDateEval
 //
 procedure TdwsUnitTestsContext.FuncVariantDateEval(Info: TProgramInfo);
 begin
-   Info.ResultAsVariant:=Now;
+  Info.ResultAsVariant := Now;
 end;
 
 // FuncVarEval
 //
 procedure TdwsUnitTestsContext.FuncVarEval(Info: TProgramInfo);
 begin
-   Info.ValueAsInteger['i']:=Info.ParamAsInteger[0]+Info.ParamAsInteger[1];
+  Info.ValueAsInteger['i'] := Info.ParamAsInteger[0] + Info.ParamAsInteger[1];
 end;
 
 // FuncFloatEval
 //
 procedure TdwsUnitTestsContext.FuncFloatEval(Info: TProgramInfo);
 begin
-   Info.ResultAsFloat:=Info.ParamAsFloat[0]+Info.ValueAsFloat['b'];
+  Info.ResultAsFloat := Info.ParamAsFloat[0] + Info.ValueAsFloat['b'];
 end;
 
 // FuncPointEval
 //
 procedure TdwsUnitTestsContext.FuncPointEval(Info: TProgramInfo);
 begin
-   Info.Vars['Result'].Member['x'].Value:=12;
-   Info.Vars['Result'].Member['y'].Value:=24;
+  Info.Vars['Result'].Member['x'].value := 12;
+  Info.Vars['Result'].Member['y'].value := 24;
 end;
 
 // FuncPointVarParamEval
 //
 procedure TdwsUnitTestsContext.FuncPointVarParamEval(Info: TProgramInfo);
 var
-   pIn, pOut : IInfo;
+  pIn, pOut: IInfo;
 begin
-   pIn:=Info.Vars['pIn'];
-   pOut:=Info.Vars['pOut'];
-   pOut.Member['x'].Value:=pIn.Member['x'].Value+1;
-   pOut.Member['y'].Value:=pIn.Member['y'].Value+2;
+  pIn := Info.Vars['pIn'];
+  pOut := Info.Vars['pOut'];
+  pOut.Member['x'].value := pIn.Member['x'].value + 1;
+  pOut.Member['y'].value := pIn.Member['y'].value + 2;
 end;
 
 // FuncPointVarParamCallerEval
 //
 procedure TdwsUnitTestsContext.FuncPointVarParamCallerEval(Info: TProgramInfo);
 var
-   f : IInfo;
+  f: IInfo;
 begin
-   f := Info.Func['FuncPointVarParam'];
-   f.Parameter['pIn'].Data := Info.Vars['pIn'].Data;
-   f.Parameter['pOut'].Data := Info.Vars['pOut'].Data;
-   f.Call;
-   Info.Vars['pOut'].Data := f.Parameter['pOut'].Data;
+  f := Info.func['FuncPointVarParam'];
+  f.Parameter['pIn'].Data := Info.Vars['pIn'].Data;
+  f.Parameter['pOut'].Data := Info.Vars['pOut'].Data;
+  f.Call;
+  Info.Vars['pOut'].Data := f.Parameter['pOut'].Data;
 end;
 
 // FuncPointArrayEval
 //
 procedure TdwsUnitTestsContext.FuncPointArrayEval(Info: TProgramInfo);
 var
-   a : IInfo;
-   item : IInfo;
+  a: IInfo;
+  item: IInfo;
 begin
-   a:=Info.Vars['a'];
+  a := Info.Vars['a'];
 
-   a.Member['length'].Value:=2;
+  a.Member['length'].value := 2;
 
-   item:=a.Element([0]);
-   item.Member['x'].Value:=1;
-   item.Member['y'].Value:=2;
+  item := a.Element([0]);
+  item.Member['x'].value := 1;
+  item.Member['y'].value := 2;
 
-   item:=a.Element([1]);
-   item.Member['x'].Value:=3;
-   item.Member['y'].Value:=4;
+  item := a.Element([1]);
+  item.Member['x'].value := 3;
+  item.Member['y'].value := 4;
 end;
 
 // FuncPointArraySwapXYEval
 //
 procedure TdwsUnitTestsContext.FuncPointArraySwapXYEval(Info: TProgramInfo);
 var
-   a : IInfo;
-   data : TData;
-   i, tmp : Integer;
+  a: IInfo;
+  Data: TData;
+  i, tmp: Integer;
 begin
-   a := Info.Vars['a'];
-   data := a.Data;
+  a := Info.Vars['a'];
+  Data := a.Data;
 
-   i := 0;
-   while i <= High(data)-1 do begin
-      tmp := data[i];
-      data[i] := data[i+1];
-      data[i+1] := tmp;
-      Inc(i, 2);
-   end;
+  i := 0;
+  while i <= High(Data) - 1 do
+  begin
+    tmp := Data[i];
+    Data[i] := Data[i + 1];
+    Data[i + 1] := tmp;
+    Inc(i, 2);
+  end;
 
-   a.Data := data;
+  a.Data := Data;
 end;
 
 // FuncCallbackFuncNameEval
 //
 procedure TdwsUnitTestsContext.FuncCallbackFuncNameEval(Info: TProgramInfo);
 var
-   a : IInfo;
+  a: IInfo;
 begin
-   a := Info.Params[0];
+  a := Info.Params[0];
 
-   if a.ValueIsEmpty then
-      Info.ResultAsString := '-'
-   else Info.ResultAsString := IFuncPointer(IUnknown(a.Value)).GetFuncExpr.FuncSym.Name;
+  if a.ValueIsEmpty then
+    Info.ResultAsString := '-'
+  else
+    Info.ResultAsString := IFuncPointer(IUnknown(a.value))
+      .GetFuncExpr.FuncSym.Name;
 end;
 
 // FuncClassNameEval
 //
 procedure TdwsUnitTestsContext.FuncClassNameEval(Info: TProgramInfo);
 var
-   o : IInfo;
+  o: IInfo;
 begin
-   o:=Info.Vars['obj'];
-   if o.ScriptObj=nil then
-      Info.ResultAsString:=''
-   else Info.ResultAsString:=o.ScriptObj.ClassSym.Name;
+  o := Info.Vars['obj'];
+  if o.ScriptObj = nil then
+    Info.ResultAsString := ''
+  else
+    Info.ResultAsString := o.ScriptObj.ClassSym.Name;
 end;
 
 // FuncMetaClassNameEval
 //
 procedure TdwsUnitTestsContext.FuncMetaClassNameEval(Info: TProgramInfo);
 var
-   c : IInfo;
+  c: IInfo;
 begin
-   c:=Info.Vars['cls'];
-   Info.ResultAsString:=c.Method['ClassName'].Call.ValueAsString;
+  c := Info.Vars['cls'];
+  Info.ResultAsString := c.Method['ClassName'].Call.ValueAsString;
 end;
 
 // FuncOpenArrayEval
 //
 procedure TdwsUnitTestsContext.FuncOpenArrayEval(Info: TProgramInfo);
 var
-   p : IInfo;
-   r : String;
-   i : Integer;
+  p: IInfo;
+  r: String;
+  i: Integer;
 begin
-   p:=Info.Vars['p'];
-   r:=IntToStr(p.Member['length'].ValueAsInteger)+':';
-   for i:=p.Member['low'].ValueAsInteger to p.Member['high'].ValueAsInteger do begin
-      if i>0 then r:=r+',';
-      r:=r+p.Element([i]).ValueAsString;
-   end;
-   Info.ResultAsString:=r;
+  p := Info.Vars['p'];
+  r := IntToStr(p.Member['length'].ValueAsInteger) + ':';
+  for i := p.Member['low'].ValueAsInteger to p.Member['high'].ValueAsInteger do
+  begin
+    if i > 0 then
+      r := r + ',';
+    r := r + p.Element([i]).ValueAsString;
+  end;
+  Info.ResultAsString := r;
 end;
 
 // FuncOverloadIntEval
 //
 procedure TdwsUnitTestsContext.FuncOverloadIntEval(Info: TProgramInfo);
 begin
-   Info.ResultAsString:=IntToStr(Info.ParamAsInteger[0]*2);
+  Info.ResultAsString := IntToStr(Info.ParamAsInteger[0] * 2);
 end;
 
 // FuncOverloadStrEval
 //
 procedure TdwsUnitTestsContext.FuncOverloadStrEval(Info: TProgramInfo);
 begin
-   Info.ResultAsString:='('+Info.ParamAsString[0]+')';
+  Info.ResultAsString := '(' + Info.ParamAsString[0] + ')';
 end;
 
 // FuncFastEval
 //
-function TdwsUnitTestsContext.FuncFastEval(const args : TExprBaseListExec) : Variant;
+function TdwsUnitTestsContext.FuncFastEval(const args
+  : TExprBaseListExec): Variant;
 begin
-   Result:=Length(args.AsString[0]);
+  Result := Length(args.AsString[0]);
 end;
 
 // FuncFastPointEval
 //
-function TdwsUnitTestsContext.FuncFastPointEval(const args : TExprBaseListExec) : Variant;
+function TdwsUnitTestsContext.FuncFastPointEval
+  (const args: TExprBaseListExec): Variant;
 var
-   rec : TData;
+  rec: TData;
 begin
-   SetLength(rec, 2);
-   rec[0]:=args.AsInteger[0];
-   rec[1]:=rec[0]+1;
-   Result:=IDataContext(args.Exec.Stack.CreateDataContext(rec, 0));
+  SetLength(rec, 2);
+  rec[0] := args.AsInteger[0];
+  rec[1] := rec[0] + 1;
+  Result := IDataContext(args.Exec.Stack.CreateDataContext(rec, 0));
 end;
 
 // ProcCallLevelsEval
 //
 procedure TdwsUnitTestsContext.ProcCallLevelsEval(Info: TProgramInfo);
 begin
-   Info.Execution.ProgramInfo.Func['CallMe'].Call([]);
+  Info.Execution.ProgramInfo.func['CallMe'].Call([]);
 end;
 
 // FuncReturnStrings
 //
 procedure TdwsUnitTestsContext.FuncReturnStrings(Info: TProgramInfo);
 var
-   result : IInfo;
-   i : Integer;
+  Result: IInfo;
+  i: Integer;
 begin
-   result:=Info.ResultVars;
-   i:=Info.ParamAsInteger[0];
-   result.Member['Count'].ValueAsInteger:=i;
-   while i>0 do begin
-      Dec(i);
-      result.Element([i]).ValueAsString:=IntToStr(i);
-   end;
+  Result := Info.ResultVars;
+  i := Info.ParamAsInteger[0];
+  Result.Member['Count'].ValueAsInteger := i;
+  while i > 0 do
+  begin
+    Dec(i);
+    Result.Element([i]).ValueAsString := IntToStr(i);
+  end;
 end;
 
 // FuncReturnStrings2
 //
 procedure TdwsUnitTestsContext.FuncReturnStrings2(Info: TProgramInfo);
 var
-   a : TStringDynArray;
-   i, n : Integer;
+  a: TStringDynArray;
+  i, n: Integer;
 begin
-   n:=Info.ParamAsInteger[0];
-   SetLength(a, n);
-   for i:=0 to n-1 do
-      a[i]:=IntToStr(i*2);
-   Info.ResultAsStringArray:=a;
+  n := Info.ParamAsInteger[0];
+  SetLength(a, n);
+  for i := 0 to n - 1 do
+    a[i] := IntToStr(i * 2);
+  Info.ResultAsStringArray := a;
 end;
 
 // FuncReturnVirtCreate
 //
 procedure TdwsUnitTestsContext.FuncReturnVirtCreate(Info: TProgramInfo);
 begin
-   Info.ResultAsVariant := Info.Vars['TTestClass'].GetConstructor('VirtCreate', Pointer(-1)).Call.Value;
+  Info.ResultAsVariant := Info.Vars['TTestClass'].GetConstructor('VirtCreate',
+    Pointer(-1)).Call.value;
 
-   end;
+end;
+
 // FuncSetEval
 //
 procedure TdwsUnitTestsContext.FuncSetEval(Info: TProgramInfo);
 begin
-   Info.ResultAsInteger:=Info.ValueAsInteger['s'];
+  Info.ResultAsInteger := Info.ValueAsInteger['s'];
 end;
 
 // FuncNil
 //
 procedure TdwsUnitTestsContext.FuncNil(Info: TProgramInfo);
 begin
-   Info.ResultAsVariant:=IScriptObj(nil);
+  Info.ResultAsVariant := IScriptObj(nil);
 end;
 
 // FuncInternalClass
 //
 procedure TdwsUnitTestsContext.FuncInternalClass(Info: TProgramInfo);
 begin
-   Info.Execution.BeginInternalExecution;
-   try
-      Info.ResultAsVariant := Info.Vars['TInternalClass'].GetConstructor('Create', nil).Call.Value;
-   finally
-      Info.Execution.EndInternalExecution;
-   end;
+  Info.Execution.BeginInternalExecution;
+  try
+    Info.ResultAsVariant := Info.Vars['TInternalClass'].GetConstructor('Create',
+      nil).Call.value;
+  finally
+    Info.Execution.EndInternalExecution;
+  end;
 end;
 
 // ClassConstructor
 //
-procedure TdwsUnitTestsContext.ClassConstructor(Info: TProgramInfo; var ExtObject: TObject);
+procedure TdwsUnitTestsContext.ClassConstructor(Info: TProgramInfo;
+  var ExtObject: TObject);
 begin
-   FMagicVar:=Info.ParamAsString[0];
-   ExtObject:=TObject.Create;
+  FMagicVar := Info.ParamAsString[0];
+  ExtObject := TObject.Create;
 end;
 
 // ClassVirtConstructor
 //
-procedure TdwsUnitTestsContext.ClassVirtConstructor(Info: TProgramInfo; var ExtObject: TObject);
+procedure TdwsUnitTestsContext.ClassVirtConstructor(Info: TProgramInfo;
+  var ExtObject: TObject);
 begin
-   FMagicVar:=IntToStr(NativeInt(ExtObject));
+  FMagicVar := IntToStr(NativeInt(ExtObject));
 end;
 
 // ClassConstructorInit
 //
-procedure TdwsUnitTestsContext.ClassConstructorInit(Info: TProgramInfo; var ExtObject: TObject);
+procedure TdwsUnitTestsContext.ClassConstructorInit(Info: TProgramInfo;
+  var ExtObject: TObject);
 begin
-   ExtObject:=TObject.Create;
-   Info.ValueAsInteger['FField']:=789456;
+  ExtObject := TObject.Create;
+  Info.ValueAsInteger['FField'] := 789456;
 end;
 
 // ClassCleanup
 //
 procedure TdwsUnitTestsContext.ClassCleanup(ExternalObject: TObject);
 begin
-   if ExternalObject<>Pointer(-1) then begin
-      FMagicVar:='cleaned up';
-      ExternalObject.Free;
-   end;
+  if ExternalObject <> Pointer(-1) then
+  begin
+    FMagicVar := 'cleaned up';
+    ExternalObject.Free;
+  end;
 end;
 
 // ClassDestructor
 //
-procedure TdwsUnitTestsContext.ClassDestructor(Info: TProgramInfo; ExtObject: TObject);
+procedure TdwsUnitTestsContext.ClassDestructor(Info: TProgramInfo;
+  ExtObject: TObject);
 begin
-   Info.Execution.Result.AddString('my destructor'#13#10);
+  Info.Execution.Result.AddString('my destructor'#13#10);
 end;
 
 // MethodPrintEval
 //
-procedure TdwsUnitTestsContext.MethodPrintEval(Info: TProgramInfo; ExtObject: TObject);
+procedure TdwsUnitTestsContext.MethodPrintEval(Info: TProgramInfo;
+  ExtObject: TObject);
 begin
-   Info.Execution.Result.AddString(FMagicVar+#13#10);
+  Info.Execution.Result.AddString(FMagicVar + #13#10);
 end;
 
 // MethodPrintExternalEval
 //
-procedure TdwsUnitTestsContext.MethodPrintExternalEval(Info: TProgramInfo; ExtObject: TObject);
+procedure TdwsUnitTestsContext.MethodPrintExternalEval(Info: TProgramInfo;
+  ExtObject: TObject);
 begin
-   Info.Execution.Result.AddString(ExtObject.ToString+#13#10);
+  Info.Execution.Result.AddString(ExtObject.ToString + #13#10);
 end;
 
 // MethodGetIntEval
 //
-procedure TdwsUnitTestsContext.MethodGetIntEval(Info: TProgramInfo; ExtObject: TObject);
+procedure TdwsUnitTestsContext.MethodGetIntEval(Info: TProgramInfo;
+  ExtObject: TObject);
 begin
-   Info.ResultAsInteger:=Info.ValueAsInteger['FField']*10;
+  Info.ResultAsInteger := Info.ValueAsInteger['FField'] * 10;
 end;
 
 // MethodSetIntEval
 //
-procedure TdwsUnitTestsContext.MethodSetIntEval(Info: TProgramInfo; ExtObject: TObject);
+procedure TdwsUnitTestsContext.MethodSetIntEval(Info: TProgramInfo;
+  ExtObject: TObject);
 begin
-   Info.ValueAsInteger['FField']:=Info.ValueAsInteger['v'] div 10;
+  Info.ValueAsInteger['FField'] := Info.ValueAsInteger['v'] div 10;
 end;
 
 // MethodFastGetIntEval
 //
-function TdwsUnitTestsContext.MethodFastGetIntEval(baseExpr : TTypedExpr; const args : TExprBaseListExec) : Variant;
+function TdwsUnitTestsContext.MethodFastGetIntEval(baseExpr: TTypedExpr;
+  const args: TExprBaseListExec): Variant;
 var
-   obj : IScriptObj;
-   sym : TSymbol;
+  obj: IScriptObj;
+  sym: TSymbol;
 begin
-   baseExpr.EvalAsSafeScriptObj(args.Exec, obj);
-   sym := obj.ClassSym.Members.FindSymbol('FField', cvMagic);
-   Result := obj.AsInteger[ (sym as TFieldSymbol).Offset ];
+  baseExpr.EvalAsSafeScriptObj(args.Exec, obj);
+  sym := obj.ClassSym.Members.FindSymbol('FField', cvMagic);
+  Result := obj.AsInteger[(sym as TFieldSymbol).Offset];
 end;
 
 // MethodGetArrayIntEval
 //
-procedure TdwsUnitTestsContext.MethodGetArrayIntEval(Info: TProgramInfo; ExtObject: TObject);
+procedure TdwsUnitTestsContext.MethodGetArrayIntEval(Info: TProgramInfo;
+  ExtObject: TObject);
 begin
-   Info.ResultAsInteger:=StrToInt(Info.ValueAsString['v'])*2;
+  Info.ResultAsInteger := StrToInt(Info.ValueAsString['v']) * 2;
 end;
 
 // MethodOverloadIntEval
 //
-procedure TdwsUnitTestsContext.MethodOverloadIntEval(Info: TProgramInfo; ExtObject: TObject);
+procedure TdwsUnitTestsContext.MethodOverloadIntEval(Info: TProgramInfo;
+  ExtObject: TObject);
 begin
-   FuncOverloadIntEval(Info);
+  FuncOverloadIntEval(Info);
 end;
 
 // MethodOverloadStrEval
 //
-procedure TdwsUnitTestsContext.MethodOverloadStrEval(Info: TProgramInfo; ExtObject: TObject);
+procedure TdwsUnitTestsContext.MethodOverloadStrEval(Info: TProgramInfo;
+  ExtObject: TObject);
 begin
-   FuncOverloadStrEval(Info);
+  FuncOverloadStrEval(Info);
 end;
 
 // FuncExceptionEval
 //
 procedure TdwsUnitTestsContext.FuncExceptionEval(Info: TProgramInfo);
 begin
-   raise EDelphiException.Create('Hello, Delphi Exception here!');
+  raise EDelphiException.Create('Hello, Delphi Exception here!');
 end;
 
 // DoReadVar
 //
-procedure TdwsUnitTestsContext.DoReadVar(info: TProgramInfo; var value : Variant);
+procedure TdwsUnitTestsContext.DoReadVar(Info: TProgramInfo;
+  var value: Variant);
 begin
-   value:=FMagicVar;
+  value := FMagicVar;
 end;
 
 // DoWriteVar
 //
-procedure TdwsUnitTestsContext.DoWriteVar(info: TProgramInfo; const value : Variant);
+procedure TdwsUnitTestsContext.DoWriteVar(Info: TProgramInfo;
+  const value: Variant);
 begin
-   FMagicVar:=value;
+  FMagicVar := value;
 end;
 
 // DoReadVar42
 //
-procedure TdwsUnitTestsContext.DoReadVar42(info: TProgramInfo; var value : Variant);
+procedure TdwsUnitTestsContext.DoReadVar42(Info: TProgramInfo;
+  var value: Variant);
 begin
-   value:=Int64(42);
+  value := Int64(42);
 end;
 
 // DoReadVarIncMagic
 //
-procedure TdwsUnitTestsContext.DoReadVarIncMagic(info: TProgramInfo; var value : Variant);
+procedure TdwsUnitTestsContext.DoReadVarIncMagic(Info: TProgramInfo;
+  var value: Variant);
 begin
-   FMagicVar:=FMagicVar+'+1';
-   value:=FMagicVar;
+  FMagicVar := FMagicVar + '+1';
+  value := FMagicVar;
 end;
 
 // DoReadVarDateTime
 //
-procedure TdwsUnitTestsContext.DoReadVarDateTime(info: TProgramInfo; var value : Variant);
+procedure TdwsUnitTestsContext.DoReadVarDateTime(Info: TProgramInfo;
+  var value: Variant);
 var
-   t : TDateTime;
+  t: TDateTime;
 begin
-   t:=Now;
-   value:=t;
+  t := Now;
+  value := t;
 end;
 
 // ------------------
@@ -1278,1796 +1309,1732 @@ end;
 //
 procedure TdwsUnitTests.SetUp;
 begin
-   if FContext=nil then begin
-      FContext:=TdwsUnitTestsContext.Create;
-      FContext.SetupUnit;
-   end;
-   FCompiler:=FContext.FCompiler;
-   FUnit:=FContext.FUnit;
+  if FContext = nil then
+  begin
+    FContext := TdwsUnitTestsContext.Create;
+    FContext.SetupUnit;
+  end;
+  FCompiler := FContext.FCompiler;
+  FUnit := FContext.FUnit;
 end;
 
 // TearDown
 //
 procedure TdwsUnitTests.TearDown;
 begin
-   FCompiler:=nil;
-   FUnit:=nil;
-   FreeAndNil(FContext);
+  FCompiler := nil;
+  FUnit := nil;
+  FreeAndNil(FContext);
 end;
 
 // CompilationExecution
 //
-procedure TdwsUnitTests.CompilationExecution(execute : Boolean);
+procedure TdwsUnitTests.CompilationExecution(execute: Boolean);
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   prog:=FCompiler.Compile(cFuncsTestsSource);
+  prog := FCompiler.Compile(cFuncsTestsSource);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'FuncsTest compile');
-   if execute then begin
-      exec:=prog.Execute;
-      CheckEquals('', exec.Result.ToString, 'FuncsTest result');
-      CheckEquals('', exec.Msgs.AsInfo, 'FuncsTest Msgs');
-   end;
+  CheckEquals('', prog.Msgs.AsInfo, 'FuncsTest compile');
+  if execute then
+  begin
+    Exec := prog.execute;
+    CheckEquals('', Exec.Result.ToString, 'FuncsTest result');
+    CheckEquals('', Exec.Msgs.AsInfo, 'FuncsTest Msgs');
+  end;
 end;
 
 // DesignTimeDisplayValues
 //
 procedure TdwsUnitTests.DesignTimeDisplayValues;
 
-   function FuncByName(const aName : String) : TdwsFunctionCracker;
-   var
-      i : Integer;
-   begin
-      i:=FUnit.Functions.IndexOf(aName);
-      Result:=TdwsFunctionCracker(FUnit.Functions.Items[i] as TdwsFunction);
-   end;
+  function FuncByName(const aName: String): TdwsFunctionCracker;
+  var
+    i: Integer;
+  begin
+    i := FUnit.Functions.IndexOf(aName);
+    Result := TdwsFunctionCracker(FUnit.Functions.Items[i] as TdwsFunction);
+  end;
 
-   function ClassByName(const aName : String) : TdwsClassCracker;
-   var
-      i : Integer;
-   begin
-      i:=FUnit.Classes.IndexOf(aName);
-      Result:=TdwsClassCracker(FUnit.Classes.Items[i] as TdwsClass);
-   end;
+  function ClassByName(const aName: String): TdwsClassCracker;
+  var
+    i: Integer;
+  begin
+    i := FUnit.Classes.IndexOf(aName);
+    Result := TdwsClassCracker(FUnit.Classes.Items[i] as TdwsClass);
+  end;
 
-   function PropertyByName(cls : TdwsClass; const aName : String) : TdwsPropertyCracker;
-   var
-      i : Integer;
-   begin
-      i:=cls.Properties.IndexOf(aName);
-      Result:=TdwsPropertyCracker(cls.Properties.Items[i] as TdwsProperty);
-   end;
+  function PropertyByName(cls: TdwsClass; const aName: String)
+    : TdwsPropertyCracker;
+  var
+    i: Integer;
+  begin
+    i := cls.Properties.IndexOf(aName);
+    Result := TdwsPropertyCracker(cls.Properties.Items[i] as TdwsProperty);
+  end;
 
-   function MethodByName(cls : TdwsClass; const aName : String) : TdwsMethodCracker;
-   var
-      i : Integer;
-   begin
-      i:=cls.Methods.IndexOf(aName);
-      Result:=TdwsMethodCracker(cls.Methods.Items[i] as TdwsMethod);
-   end;
+  function MethodByName(cls: TdwsClass; const aName: String): TdwsMethodCracker;
+  var
+    i: Integer;
+  begin
+    i := cls.Methods.IndexOf(aName);
+    Result := TdwsMethodCracker(cls.Methods.Items[i] as TdwsMethod);
+  end;
 
-   function ConstByName(cls : TdwsClass; const aName : String) : TdwsClassConstantCracker;
-   var
-      i : Integer;
-   begin
-      i:=cls.Constants.IndexOf(aName);
-      Result:=TdwsClassConstantCracker(cls.Constants.Items[i] as TdwsConstant);
-   end;
+  function ConstByName(cls: TdwsClass; const aName: String)
+    : TdwsClassConstantCracker;
+  var
+    i: Integer;
+  begin
+    i := cls.Constants.IndexOf(aName);
+    Result := TdwsClassConstantCracker(cls.Constants.Items[i] as TdwsConstant);
+  end;
 
-   function EnumByName(const aName : String) : TdwsEnumerationCracker;
-   var
-      i : Integer;
-   begin
-      i:=FUnit.Enumerations.IndexOf(aName);
-      Result:=TdwsEnumerationCracker(FUnit.Enumerations.Items[i] as TdwsEnumeration);
-   end;
+  function EnumByName(const aName: String): TdwsEnumerationCracker;
+  var
+    i: Integer;
+  begin
+    i := FUnit.Enumerations.IndexOf(aName);
+    Result := TdwsEnumerationCracker(FUnit.Enumerations.Items[i]
+      as TdwsEnumeration);
+  end;
 
 var
-   cls : TdwsClassCracker;
+  cls: TdwsClassCracker;
 begin
-   CheckEquals('function Func1 : Integer;', FuncByName('Func1').GetDisplayName);
-   CheckEquals('function FuncOne : String;', FuncByName('FuncOne').GetDisplayName);
-   CheckEquals('function FuncOneDotFive : Float;', FuncByName('FuncOneDotFive').GetDisplayName);
-   CheckEquals('function FuncTrue : Boolean;', FuncByName('FuncTrue').GetDisplayName);
-   CheckEquals('procedure FuncException;', FuncByName('FuncException').GetDisplayName);
-   CheckEquals('function FuncInc(v : Integer) : Integer;', FuncByName('FuncInc').GetDisplayName);
+  CheckEquals('function Func1 : Integer;', FuncByName('Func1').GetDisplayName);
+  CheckEquals('function FuncOne : String;', FuncByName('FuncOne')
+    .GetDisplayName);
+  CheckEquals('function FuncOneDotFive : Float;', FuncByName('FuncOneDotFive')
+    .GetDisplayName);
+  CheckEquals('function FuncTrue : Boolean;', FuncByName('FuncTrue')
+    .GetDisplayName);
+  CheckEquals('procedure FuncException;', FuncByName('FuncException')
+    .GetDisplayName);
+  CheckEquals('function FuncInc(v : Integer) : Integer;',
+    FuncByName('FuncInc').GetDisplayName);
 
-   CheckEquals('TMyEnum = (meOne = 1, meTen = 10);', EnumByName('TMyEnum').GetDisplayName);
-   CheckEquals('TAutoEnum = (aeVal9, aeVal8, aeVal7, aeVal6, aeVal5, aeVal4, aeVal3, aeVal2, aeVal1);',
-               EnumByName('TAutoEnum').GetDisplayName);
+  CheckEquals('TMyEnum = (meOne = 1, meTen = 10);', EnumByName('TMyEnum')
+    .GetDisplayName);
+  CheckEquals
+    ('TAutoEnum = (aeVal9, aeVal8, aeVal7, aeVal6, aeVal5, aeVal4, aeVal3, aeVal2, aeVal1);',
+    EnumByName('TAutoEnum').GetDisplayName);
 
-   cls:=ClassByName('TTestClass');
-   CheckEquals('TTestClass (TObject)', cls.GetDisplayName);
-   CheckEquals('public property MyReadOnlyProp: Integer read GetMyProp;', PropertyByName(cls, 'MyReadOnlyProp').GetDisplayName);
-   CheckEquals('public function GetMyProp : Integer;', MethodByName(cls, 'GetMyProp').GetDisplayName);
-   CheckEquals('public procedure SetMyProp(v : Integer);', MethodByName(cls, 'SetMyProp').GetDisplayName);
-   CheckEquals('public property ArrayProp[v : String]: Integer read GetArrayProp;', PropertyByName(cls, 'ArrayProp').GetDisplayName);
-   CheckEquals('public property MyReadOnlyProp: Integer read GetMyProp;', PropertyByName(cls, 'MyReadOnlyProp').GetDisplayName);
-   CheckEquals('public property MyWriteOnlyProp: Integer write SetMyProp;', PropertyByName(cls, 'MyWriteOnlyProp').GetDisplayName);
-   CheckEquals('public const cTest: String = ''My class const'';', ConstByName(cls, 'cTest').GetDisplayName);
+  cls := ClassByName('TTestClass');
+  CheckEquals('TTestClass (TObject)', cls.GetDisplayName);
+  CheckEquals('public property MyReadOnlyProp: Integer read GetMyProp;',
+    PropertyByName(cls, 'MyReadOnlyProp').GetDisplayName);
+  CheckEquals('public function GetMyProp : Integer;',
+    MethodByName(cls, 'GetMyProp').GetDisplayName);
+  CheckEquals('public procedure SetMyProp(v : Integer);',
+    MethodByName(cls, 'SetMyProp').GetDisplayName);
+  CheckEquals
+    ('public property ArrayProp[v : String]: Integer read GetArrayProp;',
+    PropertyByName(cls, 'ArrayProp').GetDisplayName);
+  CheckEquals('public property MyReadOnlyProp: Integer read GetMyProp;',
+    PropertyByName(cls, 'MyReadOnlyProp').GetDisplayName);
+  CheckEquals('public property MyWriteOnlyProp: Integer write SetMyProp;',
+    PropertyByName(cls, 'MyWriteOnlyProp').GetDisplayName);
+  CheckEquals('public const cTest: String = ''My class const'';',
+    ConstByName(cls, 'cTest').GetDisplayName);
 
-   CheckEquals('operator ^ (Float, Float) : Float uses FuncFloat', TdwsOperatorCracker(FUnit.Operators.Items[0]).GetDisplayName);
+  CheckEquals('operator ^ (Float, Float) : Float uses FuncFloat',
+    TdwsOperatorCracker(FUnit.Operators.Items[0]).GetDisplayName);
 end;
 
 // CompiledDescriptions
 //
 procedure TdwsUnitTests.CompiledDescriptions;
 var
-   prog : IdwsProgram;
-   sym : TSymbol;
-   symClass : TClassSymbol;
+  prog: IdwsProgram;
+  sym: TSymbol;
+  symClass: TClassSymbol;
 begin
-   prog:=FCompiler.Compile('var aaa : array [String] of Integer;');
+  prog := FCompiler.Compile('var aaa : array [String] of Integer;');
 
-   sym:=prog.Table.FindSymbol('Func1', cvMagic);
-   CheckEquals('function Func1(): Integer', sym.Description);
-   CheckEquals('function Func1: Integer', sym.Caption);
-   sym:=prog.Table.FindSymbol('FuncOne', cvMagic);
-   CheckEquals('function FuncOne(): String', sym.Description);
-   sym:=prog.Table.FindSymbol('FuncOneDotFive', cvMagic);
-   CheckEquals('function FuncOneDotFive(): Float', sym.Description);
-   sym:=prog.Table.FindSymbol('FuncTrue', cvMagic);
-   CheckEquals('function FuncTrue(): Boolean', sym.Description);
-   sym:=prog.Table.FindSymbol('FuncException', cvMagic);
-   CheckEquals('procedure FuncException()', sym.Description);
-   sym:=prog.Table.FindSymbol('FuncInc', cvMagic);
-   CheckEquals('function FuncInc(v: Integer): Integer', sym.Description);
-   CheckEquals('function FuncInc(Integer): Integer', sym.Caption);
-   sym:=prog.Table.FindSymbol('FuncIncN', cvMagic);
-   CheckEquals('function FuncIncN(v: Integer; n: Integer = 1): Integer', sym.Description);
-   CheckEquals('function FuncIncN(Integer, Integer): Integer', sym.Caption);
-   sym:=prog.Table.FindSymbol('FuncClassName', cvMagic);
-   CheckEquals('function FuncClassName(obj: TObject = nil): String', sym.Description);
-   CheckEquals('function FuncClassName(TObject): String', sym.Caption);
-   sym:=prog.Table.FindSymbol('FuncMetaClassName', cvMagic);
-   CheckEquals('function FuncMetaClassName(cls: TClass): String', sym.Description);
-   CheckEquals('function FuncMetaClassName(TClass): String', sym.Caption);
+  sym := prog.Table.FindSymbol('Func1', cvMagic);
+  CheckEquals('function Func1(): Integer', sym.Description);
+  CheckEquals('function Func1: Integer', sym.Caption);
+  sym := prog.Table.FindSymbol('FuncOne', cvMagic);
+  CheckEquals('function FuncOne(): String', sym.Description);
+  sym := prog.Table.FindSymbol('FuncOneDotFive', cvMagic);
+  CheckEquals('function FuncOneDotFive(): Float', sym.Description);
+  sym := prog.Table.FindSymbol('FuncTrue', cvMagic);
+  CheckEquals('function FuncTrue(): Boolean', sym.Description);
+  sym := prog.Table.FindSymbol('FuncException', cvMagic);
+  CheckEquals('procedure FuncException()', sym.Description);
+  sym := prog.Table.FindSymbol('FuncInc', cvMagic);
+  CheckEquals('function FuncInc(v: Integer): Integer', sym.Description);
+  CheckEquals('function FuncInc(Integer): Integer', sym.Caption);
+  sym := prog.Table.FindSymbol('FuncIncN', cvMagic);
+  CheckEquals('function FuncIncN(v: Integer; n: Integer = 1): Integer',
+    sym.Description);
+  CheckEquals('function FuncIncN(Integer, Integer): Integer', sym.Caption);
+  sym := prog.Table.FindSymbol('FuncClassName', cvMagic);
+  CheckEquals('function FuncClassName(obj: TObject = nil): String',
+    sym.Description);
+  CheckEquals('function FuncClassName(TObject): String', sym.Caption);
+  sym := prog.Table.FindSymbol('FuncMetaClassName', cvMagic);
+  CheckEquals('function FuncMetaClassName(cls: TClass): String',
+    sym.Description);
+  CheckEquals('function FuncMetaClassName(TClass): String', sym.Caption);
 
-   sym:=prog.Table.FindSymbol('TAutoEnum', cvMagic);
-   CheckEquals('(aeVal9, aeVal8, aeVal7, aeVal6, aeVal5, aeVal4, aeVal3, aeVal2, aeVal1)', sym.Description);
+  sym := prog.Table.FindSymbol('TAutoEnum', cvMagic);
+  CheckEquals
+    ('(aeVal9, aeVal8, aeVal7, aeVal6, aeVal5, aeVal4, aeVal3, aeVal2, aeVal1)',
+    sym.Description);
 
-   symClass:=prog.Table.FindSymbol('TTestClass', cvMagic) as TClassSymbol;
-   sym:=symClass.Members.FindLocal('MyReadOnlyProp');
-   CheckEquals('property MyReadOnlyProp: Integer read GetMyProp', sym.Description);
-   CheckEquals('property MyReadOnlyProp: Integer read GetMyProp', sym.Caption);
-   sym:=symClass.Members.FindLocal('GetMyProp');
-   CheckEquals('function GetMyProp(): Integer', sym.Description);
-   sym:=symClass.Members.FindLocal('SetMyProp');
-   CheckEquals('procedure SetMyProp(v: Integer)', sym.Description);
-   sym:=symClass.Members.FindLocal('ArrayProp');
-   CheckEquals('property ArrayProp[v: String]: Integer read GetArrayProp', sym.Description);
-   CheckEquals('property ArrayProp[v: String]: Integer read GetArrayProp', sym.Caption);
+  symClass := prog.Table.FindSymbol('TTestClass', cvMagic) as TClassSymbol;
+  sym := symClass.Members.FindLocal('MyReadOnlyProp');
+  CheckEquals('property MyReadOnlyProp: Integer read GetMyProp',
+    sym.Description);
+  CheckEquals('property MyReadOnlyProp: Integer read GetMyProp', sym.Caption);
+  sym := symClass.Members.FindLocal('GetMyProp');
+  CheckEquals('function GetMyProp(): Integer', sym.Description);
+  sym := symClass.Members.FindLocal('SetMyProp');
+  CheckEquals('procedure SetMyProp(v: Integer)', sym.Description);
+  sym := symClass.Members.FindLocal('ArrayProp');
+  CheckEquals('property ArrayProp[v: String]: Integer read GetArrayProp',
+    sym.Description);
+  CheckEquals('property ArrayProp[v: String]: Integer read GetArrayProp',
+    sym.Caption);
 
-   sym:=prog.Table.FindSymbol('aaa', cvMagic);
-   CheckEquals('array [String] of Integer', sym.Typ.Description);
-   CheckEquals('aaa: array [String] of Integer', sym.Description);
+  sym := prog.Table.FindSymbol('aaa', cvMagic);
+  CheckEquals('array [String] of Integer', sym.Typ.Description);
+  CheckEquals('aaa: array [String] of Integer', sym.Description);
 end;
 
 // CompilationNormal
 //
 procedure TdwsUnitTests.CompilationNormal;
 begin
-   FCompiler.Config.CompilerOptions:=[coOptimize];
-   CompilationExecution(False);
+  FCompiler.Config.CompilerOptions := [coOptimize];
+  CompilationExecution(False);
 end;
 
 // CompilationWithMapAndSymbols
 //
 procedure TdwsUnitTests.CompilationWithMapAndSymbols;
 begin
-   FCompiler.Config.CompilerOptions:=[coSymbolDictionary, coContextMap, coAssertions];
-   CompilationExecution(False);
+  FCompiler.Config.CompilerOptions := [coSymbolDictionary, coContextMap,
+    coAssertions];
+  CompilationExecution(False);
 end;
 
 // ExecutionNonOptimized
 //
 procedure TdwsUnitTests.ExecutionNonOptimized;
 begin
-   FCompiler.Config.CompilerOptions:=[coAssertions];
-   CompilationExecution(True);
+  FCompiler.Config.CompilerOptions := [coAssertions];
+  CompilationExecution(True);
 end;
 
 // ExecutionOptimized
 //
 procedure TdwsUnitTests.ExecutionOptimized;
 begin
-   FCompiler.Config.CompilerOptions:=[coOptimize, coAssertions];
-   CompilationExecution(True);
+  FCompiler.Config.CompilerOptions := [coOptimize, coAssertions];
+  CompilationExecution(True);
 end;
 
 // DelphiException
 //
 procedure TdwsUnitTests.DelphiException;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   prog:=FCompiler.Compile('FuncException;');
+  prog := FCompiler.Compile('FuncException;');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
-   exec:=prog.Execute;
-   CheckEquals('Runtime Error: Hello, Delphi Exception here! in FuncException [line: 1, column: 1]'#13#10,
-               exec.Msgs.AsInfo, 'Execute Msgs');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  Exec := prog.execute;
+  CheckEquals
+    ('Runtime Error: Hello, Delphi Exception here! in FuncException [line: 1, column: 1]'#13#10,
+    Exec.Msgs.AsInfo, 'Execute Msgs');
 end;
 
 // DelphiExceptionReRaise
 //
 procedure TdwsUnitTests.DelphiExceptionReRaise;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   prog:=FCompiler.Compile( 'try'#13#10
-                           +#9'FuncException;'#13#10
-                           +'except'#13#10
-                           +#9'raise;'#13#10
-                           +'end;'#13#10
-                           );
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
-   exec:=prog.Execute;
-   CheckEquals('Runtime Error: Hello, Delphi Exception here! in FuncException [line: 2, column: 2]'#13#10,
-               exec.Msgs.AsInfo, 'Execute Msgs');
+  prog := FCompiler.Compile('try'#13#10 + #9'FuncException;'#13#10 +
+    'except'#13#10 + #9'raise;'#13#10 + 'end;'#13#10);
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  Exec := prog.execute;
+  CheckEquals
+    ('Runtime Error: Hello, Delphi Exception here! in FuncException [line: 2, column: 2]'#13#10,
+    Exec.Msgs.AsInfo, 'Execute Msgs');
 end;
 
 // ListOrdAutoEnum
 //
 procedure TdwsUnitTests.ListOrdAutoEnum;
 var
-   i : Integer;
-   script : String;
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  i: Integer;
+  Script: String;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   script:='';
-   for i:=1 to 9 do begin
-      script:=script+'Print(Ord(aeVal'+IntToStr(i)+'));'#13#10;
-   end;
-   prog:=FCompiler.Compile(script);
+  Script := '';
+  for i := 1 to 9 do
+  begin
+    Script := Script + 'Print(Ord(aeVal' + IntToStr(i) + '));'#13#10;
+  end;
+  prog := FCompiler.Compile(Script);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
-   exec:=prog.Execute;
-   CheckEquals('876543210', exec.Result.ToString, 'Enums Ord');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  Exec := prog.execute;
+  CheckEquals('876543210', Exec.Result.ToString, 'Enums Ord');
 end;
 
 // ParseNameTests
 //
 procedure TdwsUnitTests.ParseNameTests;
 var
-   func: TdwsFunction;
-   cls: TdwsClass;
-   meth: TdwsMethod;
-   fld: TdwsField;
-   prty: TdwsProperty;
-   setof : TdwsSet;
+  func: TdwsFunction;
+  cls: TdwsClass;
+  meth: TdwsMethod;
+  fld: TdwsField;
+  prty: TdwsProperty;
+  setof: TdwsSet;
 begin
-   FUnit.ParseName:=pnAlways;
+  FUnit.ParseName := pnAlways;
 
-   // test parsing name of a simple function
-   func := FUnit.Functions.Add;
-   try
-      func.Name := 'TestRetValue: String;';
-      CheckEquals('TestRetValue', func.Name,
-         'Check function name');
-      CheckEquals('String', func.ResultType,
-         'Check function result type');
-   finally
-      FUnit.Functions.Delete(func.Index);
-   end;
+  // test parsing name of a simple function
+  func := FUnit.Functions.Add;
+  try
+    func.Name := 'TestRetValue: String;';
+    CheckEquals('TestRetValue', func.Name, 'Check function name');
+    CheckEquals('String', func.ResultType, 'Check function result type');
+  finally
+    FUnit.Functions.Delete(func.Index);
+  end;
 
-   // test parsing name of a simple function (without ending semicolon)
-   func := FUnit.Functions.Add;
-   try
-      func.Name := 'TestRetValue: Integer';
-      CheckEquals('TestRetValue', func.Name,
-         'Check function name');
-      CheckEquals('Integer', func.ResultType,
-         'Check function result type');
-   finally
-      FUnit.Functions.Delete(func.Index);
-   end;
+  // test parsing name of a simple function (without ending semicolon)
+  func := FUnit.Functions.Add;
+  try
+    func.Name := 'TestRetValue: Integer';
+    CheckEquals('TestRetValue', func.Name, 'Check function name');
+    CheckEquals('Integer', func.ResultType, 'Check function result type');
+  finally
+    FUnit.Functions.Delete(func.Index);
+  end;
 
-   // test parsing name of a simple procedure with a var parameter
-   func := FUnit.Functions.Add;
-   try
-      func.Name := 'TestParam(var a: Integer)';
-      CheckEquals('TestParam', func.Name,
-         'Check function name');
-      CheckEquals('a', TdwsParameter(func.Parameters.Items[0]).Name,
-         'Check function parameter name');
-      CheckEquals(True, TdwsParameter(func.Parameters.Items[0]).IsVarParam,
-         'Check function parameter is var');
-      CheckEquals(True, TdwsParameter(func.Parameters.Items[0]).IsWritable,
-         'Check function parameter is writable');
-      CheckEquals('Integer', TdwsParameter(func.Parameters.Items[0]).DataType,
-         'Check function parameter data type');
-   finally
-      FUnit.Functions.Delete(func.Index);
-   end;
+  // test parsing name of a simple procedure with a var parameter
+  func := FUnit.Functions.Add;
+  try
+    func.Name := 'TestParam(var a: Integer)';
+    CheckEquals('TestParam', func.Name, 'Check function name');
+    CheckEquals('a', TdwsParameter(func.Parameters.Items[0]).Name,
+      'Check function parameter name');
+    CheckEquals(True, TdwsParameter(func.Parameters.Items[0]).IsVarParam,
+      'Check function parameter is var');
+    CheckEquals(True, TdwsParameter(func.Parameters.Items[0]).IsWritable,
+      'Check function parameter is writable');
+    CheckEquals('Integer', TdwsParameter(func.Parameters.Items[0]).DataType,
+      'Check function parameter data type');
+  finally
+    FUnit.Functions.Delete(func.Index);
+  end;
 
-   // test parsing name of a procedure with a default value
-   func := FUnit.Functions.Add;
-   try
-      func.Name := 'TestParam(a: String = ''Test'');';
-      CheckEquals('TestParam', func.Name,
-         'Check function name');
-      CheckEquals('a', TdwsParameter(func.Parameters.Items[0]).Name,
-         'Check function parameter name');
-      CheckEquals('String', TdwsParameter(func.Parameters.Items[0]).DataType,
-         'Check function parameter data type');
-      CheckEquals('Test', TdwsParameter(func.Parameters.Items[0]).DefaultValue,
-         'Check function parameter default value');
-   finally
-      FUnit.Functions.Delete(func.Index);
-   end;
+  // test parsing name of a procedure with a default value
+  func := FUnit.Functions.Add;
+  try
+    func.Name := 'TestParam(a: String = ''Test'');';
+    CheckEquals('TestParam', func.Name, 'Check function name');
+    CheckEquals('a', TdwsParameter(func.Parameters.Items[0]).Name,
+      'Check function parameter name');
+    CheckEquals('String', TdwsParameter(func.Parameters.Items[0]).DataType,
+      'Check function parameter data type');
+    CheckEquals('Test', TdwsParameter(func.Parameters.Items[0]).DefaultValue,
+      'Check function parameter default value');
+  finally
+    FUnit.Functions.Delete(func.Index);
+  end;
 
-   // test parsing name of a procedure with two parameters (one const param.)
-   func := FUnit.Functions.Add;
-   try
-      func.Name := 'TestSeveralParam(a: Float = 2.5; const b: Integer);';
-      CheckEquals('TestSeveralParam', func.Name,
-         'Check function name');
-      CheckEquals('a', TdwsParameter(func.Parameters.Items[0]).Name,
-         'Check function parameter data name');
-      CheckEquals('Float', TdwsParameter(func.Parameters.Items[0]).DataType,
-         'Check function parameter data type');
-      CheckEquals(2.5, TdwsParameter(func.Parameters.Items[0]).DefaultValue,
-         'Check function parameter default value');
-      CheckEquals('b', TdwsParameter(func.Parameters.Items[1]).Name,
-         'Check function parameter name');
-      CheckEquals(True, TdwsParameter(func.Parameters.Items[1]).IsVarParam,
-         'Check function parameter is var');
-      CheckEquals(False, TdwsParameter(func.Parameters.Items[1]).IsWritable,
-         'Check function parameter is writable');
-      CheckEquals('Integer', TdwsParameter(func.Parameters.Items[1]).DataType,
-         'Check function parameter data type');
-   finally
-      FUnit.Functions.Delete(func.Index);
-   end;
+  // test parsing name of a procedure with two parameters (one const param.)
+  func := FUnit.Functions.Add;
+  try
+    func.Name := 'TestSeveralParam(a: Float = 2.5; const b: Integer);';
+    CheckEquals('TestSeveralParam', func.Name, 'Check function name');
+    CheckEquals('a', TdwsParameter(func.Parameters.Items[0]).Name,
+      'Check function parameter data name');
+    CheckEquals('Float', TdwsParameter(func.Parameters.Items[0]).DataType,
+      'Check function parameter data type');
+    CheckEquals(2.5, TdwsParameter(func.Parameters.Items[0]).DefaultValue,
+      'Check function parameter default value');
+    CheckEquals('b', TdwsParameter(func.Parameters.Items[1]).Name,
+      'Check function parameter name');
+    CheckEquals(True, TdwsParameter(func.Parameters.Items[1]).IsVarParam,
+      'Check function parameter is var');
+    CheckEquals(False, TdwsParameter(func.Parameters.Items[1]).IsWritable,
+      'Check function parameter is writable');
+    CheckEquals('Integer', TdwsParameter(func.Parameters.Items[1]).DataType,
+      'Check function parameter data type');
+  finally
+    FUnit.Functions.Delete(func.Index);
+  end;
 
-   // test parsing name of a procedure with empty brackets and semicolon
-   func := FUnit.Functions.Add;
-   try
-      func.Name := 'TestNone();';
-      CheckEquals('TestNone', func.Name, 'Check function name');
-   finally
-      FUnit.Functions.Delete(func.Index);
-   end;
+  // test parsing name of a procedure with empty brackets and semicolon
+  func := FUnit.Functions.Add;
+  try
+    func.Name := 'TestNone();';
+    CheckEquals('TestNone', func.Name, 'Check function name');
+  finally
+    FUnit.Functions.Delete(func.Index);
+  end;
 
-   // test reserved word
-   func := FUnit.Functions.Add;
-   try
-      func.Name := 'function: Integer';
-      // CheckEquals('', func.Name, 'Check function name');
-      // CheckEquals('Integer', func.ResultType, 'Check function result type');
-   finally
-      FUnit.Functions.Delete(func.Index);
-   end;
+  // test reserved word
+  func := FUnit.Functions.Add;
+  try
+    func.Name := 'function: Integer';
+    // CheckEquals('', func.Name, 'Check function name');
+    // CheckEquals('Integer', func.ResultType, 'Check function result type');
+  finally
+    FUnit.Functions.Delete(func.Index);
+  end;
 
-   // select class that is used for testing
-   cls := TdwsClass(FUnit.Classes.Items[0]);
+  // select class that is used for testing
+  cls := TdwsClass(FUnit.Classes.Items[0]);
 
-   // test parsing name of a simple method (function)
-   meth := cls.Methods.Add;
-   try
-      meth.Name := 'TestRetValue: String;';
-      CheckEquals('TestRetValue', meth.Name, 'Check method name');
-      CheckEquals('String', meth.ResultType, 'Check method result type');
-   finally
-      cls.Methods.Delete(meth.Index);
-   end;
+  // test parsing name of a simple method (function)
+  meth := cls.Methods.Add;
+  try
+    meth.Name := 'TestRetValue: String;';
+    CheckEquals('TestRetValue', meth.Name, 'Check method name');
+    CheckEquals('String', meth.ResultType, 'Check method result type');
+  finally
+    cls.Methods.Delete(meth.Index);
+  end;
 
-   cls := TdwsClass(FUnit.Classes.Items[0]);
-   meth := cls.Methods.Add;
-   try
-      // test parsing name of a method (procedure)
-      meth.Name := 'TestParams(const a: Integer = 2; b: ' + cls.Name + ');';
-      CheckEquals(True, TdwsParameter(meth.Parameters.Items[0]).IsVarParam,
-         'Check parameter is var');
-      CheckEquals(False, TdwsParameter(meth.Parameters.Items[0]).IsWritable,
-         'Check parameter is writable');
-      CheckEquals('a', TdwsParameter(meth.Parameters.Items[0]).Name,
-         'Check parameter name');
-      CheckEquals('Integer', TdwsParameter(meth.Parameters.Items[0]).DataType,
-         'Check parameter data type');
-      CheckEquals(2, TdwsParameter(meth.Parameters.Items[0]).DefaultValue,
-         'Check parameter default value');
-      CheckEquals('b', TdwsParameter(meth.Parameters.Items[1]).Name,
-         'Check parameter name');
-      CheckEquals(cls.Name, TdwsParameter(meth.Parameters.Items[1]).DataType,
-         'Check parameter data type');
+  cls := TdwsClass(FUnit.Classes.Items[0]);
+  meth := cls.Methods.Add;
+  try
+    // test parsing name of a method (procedure)
+    meth.Name := 'TestParams(const a: Integer = 2; b: ' + cls.Name + ');';
+    CheckEquals(True, TdwsParameter(meth.Parameters.Items[0]).IsVarParam,
+      'Check parameter is var');
+    CheckEquals(False, TdwsParameter(meth.Parameters.Items[0]).IsWritable,
+      'Check parameter is writable');
+    CheckEquals('a', TdwsParameter(meth.Parameters.Items[0]).Name,
+      'Check parameter name');
+    CheckEquals('Integer', TdwsParameter(meth.Parameters.Items[0]).DataType,
+      'Check parameter data type');
+    CheckEquals(2, TdwsParameter(meth.Parameters.Items[0]).DefaultValue,
+      'Check parameter default value');
+    CheckEquals('b', TdwsParameter(meth.Parameters.Items[1]).Name,
+      'Check parameter name');
+    CheckEquals(cls.Name, TdwsParameter(meth.Parameters.Items[1]).DataType,
+      'Check parameter data type');
 
-      // test parsing name of a parameter
-      TdwsParameter(meth.Parameters.Items[1]).Name := 'a: Integer = 2';
-      CheckEquals('a', TdwsParameter(meth.Parameters.Items[1]).Name,
-         'Check parameter name');
-      CheckEquals('Integer', TdwsParameter(meth.Parameters.Items[1]).DataType,
-         'Check parameter data type');
-      CheckEquals(2, TdwsParameter(meth.Parameters.Items[1]).DefaultValue,
-         'Check parameter default value');
-   finally
-     cls.Methods.Delete(meth.Index);
-   end;
+    // test parsing name of a parameter
+    TdwsParameter(meth.Parameters.Items[1]).Name := 'a: Integer = 2';
+    CheckEquals('a', TdwsParameter(meth.Parameters.Items[1]).Name,
+      'Check parameter name');
+    CheckEquals('Integer', TdwsParameter(meth.Parameters.Items[1]).DataType,
+      'Check parameter data type');
+    CheckEquals(2, TdwsParameter(meth.Parameters.Items[1]).DefaultValue,
+      'Check parameter default value');
+  finally
+    cls.Methods.Delete(meth.Index);
+  end;
 
-   // test parsing name of a field
-   fld := cls.Fields.Add;
-   try
-      fld.Name := 'public field: Integer = 10;';
-      CheckEquals('field', fld.Name, 'Check field name');
-      CheckEquals('Integer', fld.DataType, 'Check field data type');
-      CheckEquals(Integer(cvPublic), Integer(fld.Visibility), 'Check field visibility');
-      CheckEquals(10, fld.DefaultValue, 'Check field default value');
-   finally
-      cls.Fields.Delete(fld.Index);
-   end;
+  // test parsing name of a field
+  fld := cls.Fields.Add;
+  try
+    fld.Name := 'public field: Integer = 10;';
+    CheckEquals('field', fld.Name, 'Check field name');
+    CheckEquals('Integer', fld.DataType, 'Check field data type');
+    CheckEquals(Integer(cvPublic), Integer(fld.Visibility),
+      'Check field visibility');
+    CheckEquals(10, fld.DefaultValue, 'Check field default value');
+  finally
+    cls.Fields.Delete(fld.Index);
+  end;
 
-   // test parsing name of another field
-   fld := cls.Fields.Add;
-   try
-      fld.Name := 'str: String = ''Test'';';
-      CheckEquals('str', fld.Name, 'Check field name');
-      CheckEquals('String', fld.DataType, 'Check field data type');
-      CheckEquals('Test', fld.DefaultValue, 'Check field default value');
-   finally
-      cls.Fields.Delete(fld.Index);
-   end;
+  // test parsing name of another field
+  fld := cls.Fields.Add;
+  try
+    fld.Name := 'str: String = ''Test'';';
+    CheckEquals('str', fld.Name, 'Check field name');
+    CheckEquals('String', fld.DataType, 'Check field data type');
+    CheckEquals('Test', fld.DefaultValue, 'Check field default value');
+  finally
+    cls.Fields.Delete(fld.Index);
+  end;
 
-   // test parsing name of a property
-   prty := cls.Properties.Add;
-   try
-      prty.Name := 'public Test: Integer read GetTest write SetTest;';
-      CheckEquals('Test', prty.Name, 'Check property name');
-      CheckEquals('Integer', prty.DataType, 'Check property data type');
-      CheckEquals(Integer(cvPublic), Integer(prty.Visibility), 'Check property visibility');
-      CheckEquals('GetTest', prty.ReadAccess, 'Check property read access');
-      CheckEquals('SetTest', prty.WriteAccess, 'Check property write access');
-      CheckEquals(False, prty.IsDefault);
-   finally
-      cls.Properties.Delete(prty.Index);
-   end;
+  // test parsing name of a property
+  prty := cls.Properties.Add;
+  try
+    prty.Name := 'public Test: Integer read GetTest write SetTest;';
+    CheckEquals('Test', prty.Name, 'Check property name');
+    CheckEquals('Integer', prty.DataType, 'Check property data type');
+    CheckEquals(Integer(cvPublic), Integer(prty.Visibility),
+      'Check property visibility');
+    CheckEquals('GetTest', prty.ReadAccess, 'Check property read access');
+    CheckEquals('SetTest', prty.WriteAccess, 'Check property write access');
+    CheckEquals(False, prty.IsDefault);
+  finally
+    cls.Properties.Delete(prty.Index);
+  end;
 
-   // test parsing name of a property
-   prty := cls.Properties.Add;
-   try
-      prty.Name := 'TestDef[Index: Integer]: String read GetTest write SetTest; default;';
-      CheckEquals('TestDef', prty.Name, 'Check property name');
-      CheckEquals('String', prty.DataType, 'Check property data type');
-      CheckEquals('GetTest', prty.ReadAccess, 'Check property read access');
-      CheckEquals('SetTest', prty.WriteAccess, 'Check property write access');
-      CheckEquals(True, prty.IsDefault, 'Check property default');
-   finally
-      cls.Properties.Delete(prty.Index);
-   end;
+  // test parsing name of a property
+  prty := cls.Properties.Add;
+  try
+    prty.Name :=
+      'TestDef[Index: Integer]: String read GetTest write SetTest; default;';
+    CheckEquals('TestDef', prty.Name, 'Check property name');
+    CheckEquals('String', prty.DataType, 'Check property data type');
+    CheckEquals('GetTest', prty.ReadAccess, 'Check property read access');
+    CheckEquals('SetTest', prty.WriteAccess, 'Check property write access');
+    CheckEquals(True, prty.IsDefault, 'Check property default');
+  finally
+    cls.Properties.Delete(prty.Index);
+  end;
 
-   // test parsing name of a property
-   prty := cls.Properties.Add;
-   try
-      prty.Name := 'TestDef: Float Index 0 read GetTest write SetTest;';
-      CheckEquals('TestDef', prty.Name);
-      CheckEquals(0, prty.IndexValue, 'Check index value');
-      CheckEquals('Integer', prty.IndexType, 'Check index type');
-      CheckEquals('Float', prty.DataType, 'Check property data type');
-      CheckEquals('GetTest', prty.ReadAccess, 'Check property read access');
-      CheckEquals('SetTest', prty.WriteAccess, 'Check property write access');
-   finally
-      cls.Properties.Delete(prty.Index);
-   end;
+  // test parsing name of a property
+  prty := cls.Properties.Add;
+  try
+    prty.Name := 'TestDef: Float Index 0 read GetTest write SetTest;';
+    CheckEquals('TestDef', prty.Name);
+    CheckEquals(0, prty.IndexValue, 'Check index value');
+    CheckEquals('Integer', prty.IndexType, 'Check index type');
+    CheckEquals('Float', prty.DataType, 'Check property data type');
+    CheckEquals('GetTest', prty.ReadAccess, 'Check property read access');
+    CheckEquals('SetTest', prty.WriteAccess, 'Check property write access');
+  finally
+    cls.Properties.Delete(prty.Index);
+  end;
 
-   setof := FUnit.Sets.Add;
-   try
-      setof.Name := 'TMySet = set of TMyEnum';
-      CheckEquals('TMySet', setof.Name);
-      CheckEquals('TMyEnum', setof.BaseType);
-   finally
-      FUnit.Sets.Delete(setof.Index);
-   end;
+  setof := FUnit.Sets.Add;
+  try
+    setof.Name := 'TMySet = set of TMyEnum';
+    CheckEquals('TMySet', setof.Name);
+    CheckEquals('TMyEnum', setof.BaseType);
+  finally
+    FUnit.Sets.Delete(setof.Index);
+  end;
 end;
 
 // CallFunc
 //
 procedure TdwsUnitTests.CallFunc;
 var
-   prog : IdwsProgram;
-   funcInfo, funcResult : IInfo;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  funcInfo, funcResult: IInfo;
+  Exec: IdwsProgramExecution;
 begin
-   prog:=FCompiler.Compile( 'function Hello(name : String) : String;'
-                           +'begin'
-                           +'   Result:=''Hello ''+name;'
-                           +'end;');
+  prog := FCompiler.Compile('function Hello(name : String) : String;' + 'begin'
+    + '   Result:=''Hello ''+name;' + 'end;');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.BeginNewExecution;
-   try
-      funcInfo:=exec.Info.Func['Func1'];
-      CheckEquals(1, funcInfo.Call.Value, 'Func1 call');
+  Exec := prog.BeginNewExecution;
+  try
+    funcInfo := Exec.Info.func['Func1'];
+    CheckEquals(1, funcInfo.Call.value, 'Func1 call');
 
-      funcInfo:=exec.Info.Func['FuncOne'];
-      CheckEquals('One', funcInfo.Call.Value, 'FuncOne call');
+    funcInfo := Exec.Info.func['FuncOne'];
+    CheckEquals('One', funcInfo.Call.value, 'FuncOne call');
 
-      funcInfo:=exec.Info.Func['FuncPoint'];
-      funcResult:=funcInfo.Call;
-      CheckEquals('12,24', Format('%d,%d', [funcResult.Member['x'].ValueAsInteger,
-                                            funcResult.Member['y'].ValueAsInteger]),
-                  'FuncPoint call 1');
-      funcResult:=funcInfo.Call([]);
-      CheckEquals('12,24', Format('%d,%d', [funcResult.Member['x'].ValueAsInteger,
-                                            funcResult.Member['y'].ValueAsInteger]),
-                  'FuncPoint call 2');
+    funcInfo := Exec.Info.func['FuncPoint'];
+    funcResult := funcInfo.Call;
+    CheckEquals('12,24', Format('%d,%d', [funcResult.Member['x'].ValueAsInteger,
+      funcResult.Member['y'].ValueAsInteger]), 'FuncPoint call 1');
+    funcResult := funcInfo.Call([]);
+    CheckEquals('12,24', Format('%d,%d', [funcResult.Member['x'].ValueAsInteger,
+      funcResult.Member['y'].ValueAsInteger]), 'FuncPoint call 2');
 
-      funcInfo:=exec.Info.Func['Hello'];
-      CheckEquals('Hello world', funcInfo.Call(['world']).Value, 'Hello world');
-   finally
-      exec.EndProgram;
-   end;
+    funcInfo := Exec.Info.func['Hello'];
+    CheckEquals('Hello world', funcInfo.Call(['world']).value, 'Hello world');
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // CallFuncVarParam
 //
 procedure TdwsUnitTests.CallFuncVarParam;
 var
-   prog : IdwsProgram;
-   funcInfo : IInfo;
-   exec : IdwsProgramExecution;
-   paramString : String;
+  prog: IdwsProgram;
+  funcInfo: IInfo;
+  Exec: IdwsProgramExecution;
+  paramString: String;
 begin
-   prog:=FCompiler.Compile( 'function Hello(var name : String) : String;'
-                           +'begin'
-                           +'   Result:=''was ''+name;'
-                           +'   name:=''world'';'
-                           +'end;');
+  prog := FCompiler.Compile('function Hello(var name : String) : String;' +
+    'begin' + '   Result:=''was ''+name;' + '   name:=''world'';' + 'end;');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.BeginNewExecution;
-   try
-      funcInfo:=exec.Info.Func['FuncVar'];
-      funcInfo.Parameter['i'].Value:=10;
-      funcInfo.Parameter['n'].Value:=3;
-      CheckEquals(10, funcInfo.Parameter['i'].Value, 'FuncVar before call');
-      funcInfo.Call;
-      CheckEquals(13, funcInfo.Parameter['i'].Value, 'FuncVar after call');
+  Exec := prog.BeginNewExecution;
+  try
+    funcInfo := Exec.Info.func['FuncVar'];
+    funcInfo.Parameter['i'].value := 10;
+    funcInfo.Parameter['n'].value := 3;
+    CheckEquals(10, funcInfo.Parameter['i'].value, 'FuncVar before call');
+    funcInfo.Call;
+    CheckEquals(13, funcInfo.Parameter['i'].value, 'FuncVar after call');
 
-      paramString:='Eric';
-      funcInfo:=exec.Info.Func['Hello'];
-      funcInfo.Parameter['name'].Value:=paramString;
-      CheckEquals('was Eric', funcInfo.Call.Value, 'Hello Eric result');
-      paramString:=funcInfo.Parameter['name'].ValueAsString;
-      CheckEquals('world', paramString, 'Hello Eric var');
-   finally
-      exec.EndProgram;
-   end;
+    paramString := 'Eric';
+    funcInfo := Exec.Info.func['Hello'];
+    funcInfo.Parameter['name'].value := paramString;
+    CheckEquals('was Eric', funcInfo.Call.value, 'Hello Eric result');
+    paramString := funcInfo.Parameter['name'].ValueAsString;
+    CheckEquals('world', paramString, 'Hello Eric var');
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // CallFuncPointVarParam
 //
 procedure TdwsUnitTests.CallFuncPointVarParam;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   prog:=FCompiler.Compile( 'var p1, p2 : TPoint;'
-                           +'p1.X:=10; p1.Y:=20;'
-                           +'FuncPointVarParam(p1, p2);'
-                           +'PrintLn(p2.X);'
-                           +'PrintLn(p2.Y);');
+  prog := FCompiler.Compile('var p1, p2 : TPoint;' + 'p1.X:=10; p1.Y:=20;' +
+    'FuncPointVarParam(p1, p2);' + 'PrintLn(p2.X);' + 'PrintLn(p2.Y);');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.Execute;
+  Exec := prog.execute;
 
-   CheckEquals('11'#13#10'22'#13#10, exec.Result.ToString);
+  CheckEquals('11'#13#10'22'#13#10, Exec.Result.ToString);
 end;
 
 // CallFuncPointVarParamCaller
 //
 procedure TdwsUnitTests.CallFuncPointVarParamCaller;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   prog:=FCompiler.Compile( 'var p1, p2 : TPoint;'
-                           +'p1.X:=10; p1.Y:=20;'
-                           +'FuncPointVarParamCaller(p1, p2);'
-                           +'PrintLn(p2.X);'
-                           +'PrintLn(p2.Y);');
+  prog := FCompiler.Compile('var p1, p2 : TPoint;' + 'p1.X:=10; p1.Y:=20;' +
+    'FuncPointVarParamCaller(p1, p2);' + 'PrintLn(p2.X);' + 'PrintLn(p2.Y);');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.Execute;
+  Exec := prog.execute;
 
-   CheckEquals('11'#13#10'22'#13#10, exec.Result.ToString);
+  CheckEquals('11'#13#10'22'#13#10, Exec.Result.ToString);
 end;
 
 // CallFuncPointArray
 //
 procedure TdwsUnitTests.CallFuncPointArray;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   prog:=FCompiler.Compile( 'var a : TPoints;'
-                           +'FuncPointArray(a);'
-                           +'var i : Integer;'
-                           +'for i:=0 to a.High do'
-                           +'   PrintLn(IntToStr(a[i].x)+","+IntToStr(a[i].y));'
-                           +'FuncPointArraySwapXY(a);'
-                           +'for i:=0 to a.High do'
-                           +'   PrintLn(a[i].x.ToString+","+a[i].y.ToString);'
-                           );
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  prog := FCompiler.Compile('var a : TPoints;' + 'FuncPointArray(a);' +
+    'var i : Integer;' + 'for i:=0 to a.High do' +
+    '   PrintLn(IntToStr(a[i].x)+","+IntToStr(a[i].y));' +
+    'FuncPointArraySwapXY(a);' + 'for i:=0 to a.High do' +
+    '   PrintLn(a[i].x.ToString+","+a[i].y.ToString);');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.Execute;
+  Exec := prog.execute;
 
-   CheckEquals('', exec.Msgs.AsInfo, 'Exec');
+  CheckEquals('', Exec.Msgs.AsInfo, 'Exec');
 
-   CheckEquals('1,2'#13#10'3,4'#13#10
-              +'2,1'#13#10'4,3'#13#10, exec.Result.ToString);
+  CheckEquals('1,2'#13#10'3,4'#13#10 + '2,1'#13#10'4,3'#13#10,
+    Exec.Result.ToString);
 end;
 
 // PredefinedVar
 //
 procedure TdwsUnitTests.PredefinedVar;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   prog:=FCompiler.Compile( 'PrintLn(xyzVar); xyzVar:=''XYZ''; PrintLn(xyzVar);'#13#10
-                           +'PrintLn(magicVar); magicVar:=''MAGIC''; PrintLn(magicVar);'#13#10
-                           +'PrintLn(magicVarInc);'#13#10
-                           +'PrintLn(LifeUniverseEverything);'#13#10
-                           );
+  prog := FCompiler.Compile
+    ('PrintLn(xyzVar); xyzVar:=''XYZ''; PrintLn(xyzVar);'#13#10 +
+    'PrintLn(magicVar); magicVar:=''MAGIC''; PrintLn(magicVar);'#13#10 +
+    'PrintLn(magicVarInc);'#13#10 + 'PrintLn(LifeUniverseEverything);'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.BeginNewExecution;
-   try
-      exec.Info.ValueAsString['xyzVar']:='xyz';
-      FContext.FMagicVar:='magic';
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.Info.ValueAsString['xyzVar'] := 'xyz';
+    FContext.FMagicVar := 'magic';
 
-      exec.RunProgram(0);
+    Exec.RunProgram(0);
 
-      CheckEquals( 'xyz'#13#10'XYZ'#13#10
-                  +'magic'#13#10'MAGIC'#13#10
-                  +'MAGIC+1'#13#10
-                  +'42'#13#10, exec.Result.ToString, 'Result');
-      CheckEquals('XYZ', exec.Info.ValueAsString['xyzVar'], 'xyz var value');
-      CheckEquals('MAGIC+1', FContext.FMagicVar, 'magic var value');
-      CheckEquals(42, exec.Info.ValueAsInteger['LifeUniverseEverything'], '42 var value');
-   finally
-      exec.EndProgram;
-   end;
+    CheckEquals('xyz'#13#10'XYZ'#13#10 + 'magic'#13#10'MAGIC'#13#10 +
+      'MAGIC+1'#13#10 + '42'#13#10, Exec.Result.ToString, 'Result');
+    CheckEquals('XYZ', Exec.Info.ValueAsString['xyzVar'], 'xyz var value');
+    CheckEquals('MAGIC+1', FContext.FMagicVar, 'magic var value');
+    CheckEquals(42, Exec.Info.ValueAsInteger['LifeUniverseEverything'],
+      '42 var value');
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // VarDateTime
 //
 procedure TdwsUnitTests.VarDateTime;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   prog:=FCompiler.Compile( 'var t := Now;'#13#10
-                           +'PrintLn(Round(t-vDateTime));'#13#10
-                           +'if vDateTime>t+1 then PrintLn("bug1");'#13#10
-                           +'if vDateTime<t-1 then PrintLn("bug2");'#13#10
-                           +'var v := vDateTime;'#13#10
-                           +'PrintLn(Round(t-v));'#13#10
-                           +'if v>t+1 then PrintLn("bug3");'#13#10
-                           +'if v<t-1 then PrintLn("bug4");'#13#10
-                           );
+  prog := FCompiler.Compile('var t := Now;'#13#10 +
+    'PrintLn(Round(t-vDateTime));'#13#10 +
+    'if vDateTime>t+1 then PrintLn("bug1");'#13#10 +
+    'if vDateTime<t-1 then PrintLn("bug2");'#13#10 + 'var v := vDateTime;'#13#10
+    + 'PrintLn(Round(t-v));'#13#10 + 'if v>t+1 then PrintLn("bug3");'#13#10 +
+    'if v<t-1 then PrintLn("bug4");'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.Execute;
+  Exec := prog.execute;
 
-   CheckEquals('0'#13#10'0'#13#10, exec.Result.ToString, 'Result');
+  CheckEquals('0'#13#10'0'#13#10, Exec.Result.ToString, 'Result');
 end;
 
 // AssignTest
 //
 procedure TdwsUnitTests.AssignTest;
 var
-   otherUnit : TdwsUnit;
+  otherUnit: TdwsUnit;
 begin
-   otherUnit:=TdwsUnit.Create(nil);
-   try
-      otherUnit.Arrays:=FUnit.Arrays;
-      otherUnit.Classes:=FUnit.Classes;
-      otherUnit.Constants:=FUnit.Constants;
-      otherUnit.Enumerations:=FUnit.Enumerations;
-      otherUnit.Forwards:=FUnit.Forwards;
-      otherUnit.Functions:=FUnit.Functions;
-      otherUnit.Instances:=FUnit.Instances;
-      otherUnit.Records:=FUnit.Records;
-      otherUnit.Synonyms:=FUnit.Synonyms;
-      otherUnit.Variables:=FUnit.Variables;
-      CheckTrue(True, '');
-   finally
-      otherUnit.Free;
-   end;
+  otherUnit := TdwsUnit.Create(nil);
+  try
+    otherUnit.Arrays := FUnit.Arrays;
+    otherUnit.Classes := FUnit.Classes;
+    otherUnit.Constants := FUnit.Constants;
+    otherUnit.Enumerations := FUnit.Enumerations;
+    otherUnit.Forwards := FUnit.Forwards;
+    otherUnit.Functions := FUnit.Functions;
+    otherUnit.Instances := FUnit.Instances;
+    otherUnit.Records := FUnit.Records;
+    otherUnit.Synonyms := FUnit.Synonyms;
+    otherUnit.Variables := FUnit.Variables;
+    CheckTrue(True, '');
+  finally
+    otherUnit.Free;
+  end;
 end;
 
 // PredefinedArray
 //
 procedure TdwsUnitTests.PredefinedArray;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   i : Integer;
-   a : IInfo;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
+  i: Integer;
+  a: IInfo;
 begin
-   prog:=FCompiler.Compile( 'var i : Integer;'#13#10
-                           +'var a : array_5_10;'#13#10
-                           +'for i:=Low(array_5_10) to High(a) do Print(a[i]);');
+  prog := FCompiler.Compile('var i : Integer;'#13#10 +
+    'var a : array_5_10;'#13#10 +
+    'for i:=Low(array_5_10) to High(a) do Print(a[i]);');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.BeginNewExecution;
-   try
-      a:=exec.Info.Vars['a'];
-      for i:=a.Member['low'].Value to a.Member['high'].Value do
-         a.Element([i]).Value:=100+i;
-      a:=nil;
+  Exec := prog.BeginNewExecution;
+  try
+    a := Exec.Info.Vars['a'];
+    for i := a.Member['low'].value to a.Member['high'].value do
+      a.Element([i]).value := 100 + i;
+    a := nil;
 
-      exec.RunProgram(0);
+    Exec.RunProgram(0);
 
-      CheckEquals( '105106107108109110', exec.Result.ToString, 'Result');
-   finally
-      exec.EndProgram;
-   end;
+    CheckEquals('105106107108109110', Exec.Result.ToString, 'Result');
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // PredefinedRecord
 //
 procedure TdwsUnitTests.PredefinedRecord;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   p : IInfo;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
+  p: IInfo;
 begin
-   prog:=FCompiler.Compile( 'var p : TPoint;'#13#10
-                           +'Print(Format(''%d, %d'', [p.X, p.Y]));'#13#10
-                           +'p.X:=p.Y; p.Y:=789;'#13#10
-                           );
+  prog := FCompiler.Compile('var p : TPoint;'#13#10 +
+    'Print(Format(''%d, %d'', [p.X, p.Y]));'#13#10 +
+    'p.X:=p.Y; p.Y:=789;'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.BeginNewExecution;
-   try
-      p:=exec.Info.Vars['p'];
-      CheckEquals('X,Y', p.FieldMemberNames.CommaText, 'Fields 1');
-      CheckEquals('X,Y', p.FieldMemberNames.CommaText, 'Fields 2');
+  Exec := prog.BeginNewExecution;
+  try
+    p := Exec.Info.Vars['p'];
+    CheckEquals('X,Y', p.FieldMemberNames.CommaText, 'Fields 1');
+    CheckEquals('X,Y', p.FieldMemberNames.CommaText, 'Fields 2');
 
-      p.Member['x'].Value:=123;
-      p.Member['y'].Value:=456;
-      p:=nil;
+    p.Member['x'].value := 123;
+    p.Member['y'].value := 456;
+    p := nil;
 
-      exec.RunProgram(0);
+    Exec.RunProgram(0);
 
-      CheckEquals( '123, 456', exec.Result.ToString, 'Result');
+    CheckEquals('123, 456', Exec.Result.ToString, 'Result');
 
-      p:=exec.Info.Vars['p'];
-      CheckEquals(456, p.Member['x'].Value, 'After exec Fields 1');
-      CheckEquals(789, p.Member['y'].Value, 'After exec Fields 2');
-   finally
-      exec.EndProgram;
-   end;
+    p := Exec.Info.Vars['p'];
+    CheckEquals(456, p.Member['x'].value, 'After exec Fields 1');
+    CheckEquals(789, p.Member['y'].value, 'After exec Fields 2');
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // DynamicArray
 //
 procedure TdwsUnitTests.DynamicArray;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   astr : IInfo;
-   data : TData;
-   myData : TData;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
+  astr: IInfo;
+  Data: TData;
+  myData: TData;
 begin
-   prog:=FCompiler.Compile( 'var astr : array of String;'#13#10
-                           +'astr.Add("hello");'#13#10
-                           +'astr.Add("world");'#13#10
-                           +'procedure MyTest; begin Print(astr.Length); Print(astr[0]); end;'#13#10
-                           );
+  prog := FCompiler.Compile('var astr : array of String;'#13#10 +
+    'astr.Add("hello");'#13#10 + 'astr.Add("world");'#13#10 +
+    'procedure MyTest; begin Print(astr.Length); Print(astr[0]); end;'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.RunProgram(0);
 
-      astr:=exec.Info.Vars['astr'];
+    astr := Exec.Info.Vars['astr'];
 
-      CheckEquals('array of String', astr.ValueAsString, 'as string');
+    CheckEquals('array of String', astr.ValueAsString, 'as string');
 
-      CheckEquals(0, astr.Member['low'].ValueAsInteger, 'low');
-      CheckEquals(1, astr.Member['high'].ValueAsInteger, 'high');
-      CheckEquals(2, astr.Member['length'].ValueAsInteger, 'length');
+    CheckEquals(0, astr.Member['low'].ValueAsInteger, 'low');
+    CheckEquals(1, astr.Member['high'].ValueAsInteger, 'high');
+    CheckEquals(2, astr.Member['length'].ValueAsInteger, 'length');
 
-      CheckEquals('hello', astr.Element([0]).ValueAsString, 'item 0');
-      CheckEquals('world', astr.Element([1]).ValueAsString, 'item 1');
+    CheckEquals('hello', astr.Element([0]).ValueAsString, 'item 0');
+    CheckEquals('world', astr.Element([1]).ValueAsString, 'item 1');
 
-      data:=astr.Data;
-      CheckEquals(2, Length(data), 'data length');
-      CheckEquals('hello', data[0], 'data 0');
-      CheckEquals('world', data[1], 'data 1');
+    Data := astr.Data;
+    CheckEquals(2, Length(Data), 'data length');
+    CheckEquals('hello', Data[0], 'data 0');
+    CheckEquals('world', Data[1], 'data 1');
 
-      SetLength(myData, 1);
-      myData[0]:='byebye';
-      astr.Data:=myData;
+    SetLength(myData, 1);
+    myData[0] := 'byebye';
+    astr.Data := myData;
 
-      exec.Info.Func['MyTest'].Call;
+    Exec.Info.func['MyTest'].Call;
 
-      CheckEquals('1byebye', exec.Result.ToString, 'after setdata');
-   finally
-      exec.EndProgram;
-   end;
+    CheckEquals('1byebye', Exec.Result.ToString, 'after setdata');
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // DynamicArrayResult
 //
 procedure TdwsUnitTests.DynamicArrayResult;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   prog:=FCompiler.Compile( 'var astr := FuncStrings(2);'#13#10
-                           +'PrintLn(astr.Join("-"));'#13#10
-                           +'astr := FuncStrings(0);'#13#10
-                           +'PrintLn(astr.Join("-"));'#13#10
-                           +'astr := FuncStrings(3);'#13#10
-                           +'PrintLn(astr.Join("/"));'#13#10
-                           );
+  prog := FCompiler.Compile('var astr := FuncStrings(2);'#13#10 +
+    'PrintLn(astr.Join("-"));'#13#10 + 'astr := FuncStrings(0);'#13#10 +
+    'PrintLn(astr.Join("-"));'#13#10 + 'astr := FuncStrings(3);'#13#10 +
+    'PrintLn(astr.Join("/"));'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.RunProgram(0);
 
-      CheckEquals('', exec.Msgs.AsInfo, 'Run');
+    CheckEquals('', Exec.Msgs.AsInfo, 'Run');
 
-      CheckEquals('0-1'#13#10#13#10'0/1/2'#13#10, exec.Result.ToString);
-   finally
-      exec.EndProgram;
-   end;
+    CheckEquals('0-1'#13#10#13#10'0/1/2'#13#10, Exec.Result.ToString);
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // DynamicArrayResult2
 //
 procedure TdwsUnitTests.DynamicArrayResult2;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   prog:=FCompiler.Compile( 'var astr := FuncStrings2(2);'#13#10
-                           +'PrintLn(astr.Join("-"));'#13#10
-                           +'astr := FuncStrings2(0);'#13#10
-                           +'PrintLn(astr.Join("-"));'#13#10
-                           +'astr := FuncStrings2(3);'#13#10
-                           +'PrintLn(astr.Join("/"));'#13#10
-                           );
+  prog := FCompiler.Compile('var astr := FuncStrings2(2);'#13#10 +
+    'PrintLn(astr.Join("-"));'#13#10 + 'astr := FuncStrings2(0);'#13#10 +
+    'PrintLn(astr.Join("-"));'#13#10 + 'astr := FuncStrings2(3);'#13#10 +
+    'PrintLn(astr.Join("/"));'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.RunProgram(0);
 
-      CheckEquals('', exec.Msgs.AsInfo, 'Run');
+    CheckEquals('', Exec.Msgs.AsInfo, 'Run');
 
-      CheckEquals('0-2'#13#10#13#10'0/2/4'#13#10, exec.Result.ToString);
-   finally
-      exec.EndProgram;
-   end;
+    CheckEquals('0-2'#13#10#13#10'0/2/4'#13#10, Exec.Result.ToString);
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // ClassPropertyInfo
 //
 procedure TdwsUnitTests.ClassPropertyInfo;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   p, p2 : IInfo;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
+  p, p2: IInfo;
 begin
-   prog:=FCompiler.Compile( 'var o := TTestClass.Create;');
+  prog := FCompiler.Compile('var o := TTestClass.Create;');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.BeginNewExecution;
-   try
-      p:=exec.Info.Vars['o'];
-      CheckEquals('(nil)', p.ValueAsString, 'ClassInfo before run');
+  Exec := prog.BeginNewExecution;
+  try
+    p := Exec.Info.Vars['o'];
+    CheckEquals('(nil)', p.ValueAsString, 'ClassInfo before run');
 
-      exec.RunProgram(0);
+    Exec.RunProgram(0);
 
-      p:=exec.Info.Vars['o'];
-      CheckEquals('TTestClass', p.ValueAsString, 'ClassInfo after init');
+    p := Exec.Info.Vars['o'];
+    CheckEquals('TTestClass', p.ValueAsString, 'ClassInfo after init');
 
-      CheckTrue(p.ExternalObject=nil, 'External object');
+    CheckTrue(p.ExternalObject = nil, 'External object');
 
-      p.Member['MyReadWriteProp'].Value:=123;
-      CheckEquals(123, p.Member['MyReadWriteProp'].Value, 'RW Prop');
-      CheckEquals(1230, p.Member['MyReadOnlyProp'].Value, 'RO Prop');
+    p.Member['MyReadWriteProp'].value := 123;
+    CheckEquals(123, p.Member['MyReadWriteProp'].value, 'RW Prop');
+    CheckEquals(1230, p.Member['MyReadOnlyProp'].value, 'RO Prop');
 
-      p.Member['MyWriteOnlyProp'].Value:=123;
-      CheckEquals(12, p.Member['FField'].Value, 'direct field');
-      CheckEquals('FField', p.FieldMemberNames.CommaText, 'MemberNames 1');
-      CheckEquals('FField', p.FieldMemberNames.CommaText, 'MemberNames 2');
+    p.Member['MyWriteOnlyProp'].value := 123;
+    CheckEquals(12, p.Member['FField'].value, 'direct field');
+    CheckEquals('FField', p.FieldMemberNames.CommaText, 'MemberNames 1');
+    CheckEquals('FField', p.FieldMemberNames.CommaText, 'MemberNames 2');
 
-      p2:=p.Member['ArrayProp'];
-      p2.Parameter['v'].Value:='12';
-      CheckEquals(24, p2.ValueAsInteger, 'Array prop read');
+    p2 := p.Member['ArrayProp'];
+    p2.Parameter['v'].value := '12';
+    CheckEquals(24, p2.ValueAsInteger, 'Array prop read');
 
-      p.Method['Free'].Call;
-      CheckEquals('destroyed TTestClass', p.ValueAsString, 'ClassInfo after destroy');
-   finally
-      exec.EndProgram;
-   end;
+    p.Method['Free'].Call;
+    CheckEquals('destroyed TTestClass', p.ValueAsString,
+      'ClassInfo after destroy');
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // ClassInit
 //
 procedure TdwsUnitTests.ClassInit;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   prog:=FCompiler.Compile( 'var o := TTestClass.MyCreateInit; Print(o.FField);');
-   exec:=prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
-      CheckEquals('789456', exec.Result.ToString);
-   finally
-      exec.EndProgram;
-   end;
+  prog := FCompiler.Compile
+    ('var o := TTestClass.MyCreateInit; Print(o.FField);');
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.RunProgram(0);
+    CheckEquals('789456', Exec.Result.ToString);
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // DestructorAndExternalObject
 //
 procedure TdwsUnitTests.DestructorAndExternalObject;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   FContext.FMagicVar:='';
-   prog:=FCompiler.Compile( 'var o := TTestClass.MyCreate(''hello'');'
-                           +'o.Print;'
-                           +'o.Free;'
-                           +'PrintLn(magicVar);'
-                           +'o.Print;');
+  FContext.FMagicVar := '';
+  prog := FCompiler.Compile('var o := TTestClass.MyCreate(''hello'');' +
+    'o.Print;' + 'o.Free;' + 'PrintLn(magicVar);' + 'o.Print;');
 
-   exec:=prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.RunProgram(0);
 
-      CheckEquals( 'hello'#13#10'cleaned up'#13#10
-                  +'Runtime Error: Object already destroyed [line: 1, column: 74]'#13#10,
-                  exec.Result.ToString+exec.Msgs.AsInfo);
-   finally
-      exec.EndProgram;
-   end;
+    CheckEquals('hello'#13#10'cleaned up'#13#10 +
+      'Runtime Error: Object already destroyed [line: 1, column: 74]'#13#10,
+      Exec.Result.ToString + Exec.Msgs.AsInfo);
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // ExternalObject
 //
 procedure TdwsUnitTests.ExternalObject;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   p : IInfo;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
+  p: IInfo;
 begin
-   FContext.FMagicVar:='';
-   prog:=FCompiler.Compile( 'var o := TTestClass.MyCreate(''hello'');');
+  FContext.FMagicVar := '';
+  prog := FCompiler.Compile('var o := TTestClass.MyCreate(''hello'');');
 
-   exec:=prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.RunProgram(0);
 
-      p:=exec.Info.Vars['o'];
-      CheckEquals('TObject', p.ExternalObject.ClassName, 'External object');
-      p.ExternalObject.Free;
-      p.ExternalObject:=nil;
-      CheckTrue(p.ExternalObject=nil, 'External object cleared');
-   finally
-      exec.EndProgram;
-   end;
+    p := Exec.Info.Vars['o'];
+    CheckEquals('TObject', p.ExternalObject.ClassName, 'External object');
+    p.ExternalObject.Free;
+    p.ExternalObject := nil;
+    CheckTrue(p.ExternalObject = nil, 'External object cleared');
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // CustomDestructor
 //
 procedure TdwsUnitTests.CustomDestructor;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   FContext.FMagicVar:='';
-   prog:=FCompiler.Compile( 'var o := TTestClass.MyCreate(''hello'');'
-                           +'o.Print;'
-                           +'o.MyDestroy;'
-                           +'PrintLn(magicVar);'
-                           +'o.Print;');
+  FContext.FMagicVar := '';
+  prog := FCompiler.Compile('var o := TTestClass.MyCreate(''hello'');' +
+    'o.Print;' + 'o.MyDestroy;' + 'PrintLn(magicVar);' + 'o.Print;');
 
-   exec:=prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.RunProgram(0);
 
-      CheckEquals( 'hello'#13#10'my destructor'#13#10'cleaned up'#13#10
-                  +'Runtime Error: Object already destroyed [line: 1, column: 79]'#13#10,
-                  exec.Result.ToString+exec.Msgs.AsInfo);
-   finally
-      exec.EndProgram;
-   end;
+    CheckEquals('hello'#13#10'my destructor'#13#10'cleaned up'#13#10 +
+      'Runtime Error: Object already destroyed [line: 1, column: 79]'#13#10,
+      Exec.Result.ToString + Exec.Msgs.AsInfo);
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // Delegates
 //
 procedure TdwsUnitTests.Delegates;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   func : IInfo;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
+  func: IInfo;
 begin
-   FContext.FMagicVar:='';
-   prog:=FCompiler.Compile( 'type TFunc = function (i : Integer) : Integer;'
-                           +'var v1 : TFunc = FuncInc;'
-                           +'function MyFunc(i : Integer) : Integer; begin Result:=i+10; end;'
-                           +'var v2 : TFunc = MyFunc;'
-                           +'PrintLn(v1(1));'
-                           +'PrintLn(v2(1));');
+  FContext.FMagicVar := '';
+  prog := FCompiler.Compile('type TFunc = function (i : Integer) : Integer;' +
+    'var v1 : TFunc = FuncInc;' +
+    'function MyFunc(i : Integer) : Integer; begin Result:=i+10; end;' +
+    'var v2 : TFunc = MyFunc;' + 'PrintLn(v1(1));' + 'PrintLn(v2(1));');
 
-   exec:=prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.RunProgram(0);
 
-      CheckEquals( '2'#13#10'11'#13#10,
-                  exec.Result.ToString);
+    CheckEquals('2'#13#10'11'#13#10, Exec.Result.ToString);
 
-      CheckEquals(124, exec.Info.Vars['v1'].Call([123]).Value, 'Call unit func direct');
-      CheckEquals(133, exec.Info.Vars['v2'].Call([123]).Value, 'Call source func direct');
+    CheckEquals(124, Exec.Info.Vars['v1'].Call([123]).value,
+      'Call unit func direct');
+    CheckEquals(133, Exec.Info.Vars['v2'].Call([123]).value,
+      'Call source func direct');
 
-      func:=exec.Info.Vars['v1'];
-      func.Parameter['i'].Value:=456;
-      CheckEquals(457, func.Call.Value, 'Call unit func with params');
+    func := Exec.Info.Vars['v1'];
+    func.Parameter['i'].value := 456;
+    CheckEquals(457, func.Call.value, 'Call unit func with params');
 
-      func:=exec.Info.Vars['v2'];
-      func.Parameter['i'].Value:=789;
-      CheckEquals(799, func.Call.Value, 'Call source func with params');
-   finally
-      exec.EndProgram;
-   end;
+    func := Exec.Info.Vars['v2'];
+    func.Parameter['i'].value := 789;
+    CheckEquals(799, func.Call.value, 'Call source func with params');
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // Operators
 //
 procedure TdwsUnitTests.Operators;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   FContext.FMagicVar:='';
-   prog:=FCompiler.Compile( 'var f := 1.0 ^ 2.5;'
-                           +'PrintLn(f);'
-                           +'PrintLn(f^(-1.5));');
+  FContext.FMagicVar := '';
+  prog := FCompiler.Compile('var f := 1.0 ^ 2.5;' + 'PrintLn(f);' +
+    'PrintLn(f^(-1.5));');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.RunProgram(0);
 
-      CheckEquals( '3.5'#13#10'2'#13#10,
-                  exec.Result.ToString+exec.Msgs.AsInfo);
-   finally
-      exec.EndProgram;
-   end;
+    CheckEquals('3.5'#13#10'2'#13#10, Exec.Result.ToString + Exec.Msgs.AsInfo);
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // OpenArray
 //
 procedure TdwsUnitTests.OpenArray;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   FContext.FMagicVar:='';
-   prog:=FCompiler.Compile( 'PrintLn(FuncOpenArray(["one","two"]));'#13#10
-                           +'PrintLn(FuncOpenArray([]));');
+  FContext.FMagicVar := '';
+  prog := FCompiler.Compile('PrintLn(FuncOpenArray(["one","two"]));'#13#10 +
+    'PrintLn(FuncOpenArray([]));');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.RunProgram(0);
 
-      CheckEquals( '2:one,two'#13#10'0:'#13#10,
-                  exec.Result.ToString+exec.Msgs.AsInfo);
-   finally
-      exec.EndProgram;
-   end;
+    CheckEquals('2:one,two'#13#10'0:'#13#10, Exec.Result.ToString +
+      Exec.Msgs.AsInfo);
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // CallPrint
 //
 procedure TdwsUnitTests.CallPrint;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   print : IInfo;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
+  print: IInfo;
 begin
-   FContext.FMagicVar:='';
-   prog:=FCompiler.Compile( 'PrintLn("Hello");');
+  FContext.FMagicVar := '';
+  prog := FCompiler.Compile('PrintLn("Hello");');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
-      print:=exec.Info.Func['Print'];
-      print.Call(['world']);
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.RunProgram(0);
+    print := Exec.Info.func['Print'];
+    print.Call(['world']);
 
-      CheckEquals( 'Hello'#13#10'world',
-                  exec.Result.ToString+exec.Msgs.AsInfo);
-   finally
-      exec.EndProgram;
-   end;
+    CheckEquals('Hello'#13#10'world', Exec.Result.ToString + Exec.Msgs.AsInfo);
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // CreateExternally
 //
 procedure TdwsUnitTests.CreateExternally;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   printit : IInfo;
-   v : IInfo;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
+  printit: IInfo;
+  v: IInfo;
 begin
-   FContext.FMagicVar:='';
-   prog:=FCompiler.Compile( 'procedure PrintIt(o : TTestClass);'#13#10
-                           +'begin o.PrintExternal end');
+  FContext.FMagicVar := '';
+  prog := FCompiler.Compile('procedure PrintIt(o : TTestClass);'#13#10 +
+    'begin o.PrintExternal end');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   exec:=prog.BeginNewExecution;
-   try
-      v:=exec.Info.Vars['TTestClass'].Method['Create'].Call();
-      v.ScriptObj.ExternalObject:=TObject.Create;
+  Exec := prog.BeginNewExecution;
+  try
+    v := Exec.Info.Vars['TTestClass'].Method['Create'].Call();
+    v.ScriptObj.ExternalObject := TObject.Create;
 
-      printit:=exec.Info.Func['PrintIt'];
-      printit.Call([v.Value]);
+    printit := Exec.Info.func['PrintIt'];
+    printit.Call([v.value]);
 
-      CheckEquals('TObject'#13#10,
-                  exec.Result.ToString+exec.Msgs.AsInfo);
-   finally
-      exec.EndProgram;
-   end;
+    CheckEquals('TObject'#13#10, Exec.Result.ToString + Exec.Msgs.AsInfo);
+  finally
+    Exec.EndProgram;
+  end;
 end;
 
 // DeprecatedProp
 //
 procedure TdwsUnitTests.DeprecatedProp;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'var t := new TTestClass;'#13#10
-                           +'var i := t.DeprecatedProp;');
+  prog := FCompiler.Compile('var t := new TTestClass;'#13#10 +
+    'var i := t.DeprecatedProp;');
 
-   CheckEquals('Warning: "DeprecatedProp" has been deprecated: Obsolete [line: 2, column: 12]'#13#10,
-               prog.Msgs.AsInfo, 'Compile');
+  CheckEquals
+    ('Warning: "DeprecatedProp" has been deprecated: Obsolete [line: 2, column: 12]'#13#10,
+    prog.Msgs.AsInfo, 'Compile');
 end;
 
 // ReservedNameMethod
 //
 procedure TdwsUnitTests.ReservedNameMethod;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'var t := new TTestClass;'#13#10
-                           +'var i := t.Function;');
+  prog := FCompiler.Compile('var t := new TTestClass;'#13#10 +
+    'var i := t.Function;');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 end;
 
 // CallInNested
 //
 procedure TdwsUnitTests.CallInNested;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'function Test1 : Integer; begin;'#13#10
-                           +'procedure Test2; begin;'#13#10
-                           +'Result := Func1;'#13#10
-                           +'end; Test2; end;'#13#10
-                           +'Print(Test1);');
+  prog := FCompiler.Compile('function Test1 : Integer; begin;'#13#10 +
+    'procedure Test2; begin;'#13#10 + 'Result := Func1;'#13#10 +
+    'end; Test2; end;'#13#10 + 'Print(Test1);');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   CheckEquals('1', prog.Execute.Result.ToString, 'exec');
+  CheckEquals('1', prog.execute.Result.ToString, 'exec');
 end;
 
 // OverloadedFunc
 //
 procedure TdwsUnitTests.OverloadedFunc;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'Print(FuncOverload(123));'#13#10
-                           +'Print(FuncOverload("123"));'#13#10
-                           +'var t := TTestClass.Create;'#13#10
-                           +'Print(t.MethOverload(234));'#13#10
-                           +'Print(t.MethOverload("234"));');
+  prog := FCompiler.Compile('Print(FuncOverload(123));'#13#10 +
+    'Print(FuncOverload("123"));'#13#10 + 'var t := TTestClass.Create;'#13#10 +
+    'Print(t.MethOverload(234));'#13#10 + 'Print(t.MethOverload("234"));');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   CheckEquals('246(123)468(234)', prog.Execute.Result.ToString, 'exec');
+  CheckEquals('246(123)468(234)', prog.execute.Result.ToString, 'exec');
 end;
 
 // FastEvalTest
 //
 procedure TdwsUnitTests.FastEvalTest;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'Print(FuncFast("hello"));'#13#10
-                           +'var f := @FuncFast;'#13#10
-                           +'Print(f("test"));');
+  prog := FCompiler.Compile('Print(FuncFast("hello"));'#13#10 +
+    'var f := @FuncFast;'#13#10 + 'Print(f("test"));');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile 1');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile 1');
 
-   CheckEquals('54', prog.Execute.Result.ToString, 'exec 1');
+  CheckEquals('54', prog.execute.Result.ToString, 'exec 1');
 
-   prog:=FCompiler.Compile( 'var p := FuncFastPoint(2);'#13#10
-                           +'PrintLn(p.X);'#13#10
-                           +'PrintLn(p.Y);');
+  prog := FCompiler.Compile('var p := FuncFastPoint(2);'#13#10 +
+    'PrintLn(p.X);'#13#10 + 'PrintLn(p.Y);');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile 2');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile 2');
 
-   CheckEquals('2'#13#10'3'#13#10, prog.Execute.Result.ToString, 'exec 2');
+  CheckEquals('2'#13#10'3'#13#10, prog.execute.Result.ToString, 'exec 2');
 end;
 
 // FastMethodEvalTest
 //
 procedure TdwsUnitTests.FastMethodEvalTest;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'var o  := new TTestClass;'#13#10
-                           +'o.FField := 123;'#13#10
-                           +'Print(o.FastGetInt);');
+  prog := FCompiler.Compile('var o  := new TTestClass;'#13#10 +
+    'o.FField := 123;'#13#10 + 'Print(o.FastGetInt);');
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile 1');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile 1');
 
-   CheckEquals('123', prog.Execute.Result.ToString, 'exec 1');
+  CheckEquals('123', prog.execute.Result.ToString, 'exec 1');
 end;
 
 // FastMethodEvalExceptTest
 //
 procedure TdwsUnitTests.FastMethodEvalExceptTest;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'var o  : TTestClass;'#13#10
-                           +'try Print(o.FastGetInt); except on E: Exception do PrintLn(E.Message) end;'#13#10
-                           +'o := new TTestClass; o.Free;'#13#10
-                           +'try Print(o.FastGetInt); except on E: Exception do PrintLn(E.Message) end;'#13#10
-                           );
+  prog := FCompiler.Compile('var o  : TTestClass;'#13#10 +
+    'try Print(o.FastGetInt); except on E: Exception do PrintLn(E.Message) end;'#13#10
+    + 'o := new TTestClass; o.Free;'#13#10 +
+    'try Print(o.FastGetInt); except on E: Exception do PrintLn(E.Message) end;'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   CheckEquals( 'Object not instantiated [line: 2, column: 11]'#13#10
-               +'Object already destroyed [line: 4, column: 11]'#13#10,
-               prog.Execute.Result.ToString,
-               'exec');
+  CheckEquals('Object not instantiated [line: 2, column: 11]'#13#10 +
+    'Object already destroyed [line: 4, column: 11]'#13#10,
+    prog.execute.Result.ToString, 'exec');
 end;
 
 // ArrayOfObjects
 //
 procedure TdwsUnitTests.ArrayOfObjects;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'var a : TDynObjects; a.SetLength(1);'#13#10
-                           +'a[0] := nil;'#13#10
-                           +'a.Add(nil);'#13#10
-                           +'var s : TStaticObjects;'#13#10
-                           +'s[0] := nil;'#13#10
-                           );
+  prog := FCompiler.Compile('var a : TDynObjects; a.SetLength(1);'#13#10 +
+    'a[0] := nil;'#13#10 + 'a.Add(nil);'#13#10 + 'var s : TStaticObjects;'#13#10
+    + 's[0] := nil;'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile 1');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile 1');
 
-   CheckEquals('', prog.Execute.Msgs.AsInfo, 'exec errs');
-   CheckEquals('', prog.Execute.Result.ToString, 'exec result');
+  CheckEquals('', prog.execute.Msgs.AsInfo, 'exec errs');
+  CheckEquals('', prog.execute.Result.ToString, 'exec result');
 end;
 
 // FuncVariantTest
 //
 procedure TdwsUnitTests.FuncVariantTest;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'var i : Integer; var f : Float; var s : String; var b : Boolean;'#13#10
-                           +'i:=FuncVariant(123);'#13#10
-                           +'Print(i);'#13#10
-                           +'f:=FuncVariant(12.5);'#13#10
-                           +'Print(f);'#13#10
-                           +'f:=FuncVariant(456);'#13#10
-                           +'Print(f);'#13#10
-                           +'s:=FuncVariant("hello");'#13#10
-                           +'Print(s);'#13#10
-                           +'b:=FuncVariant(True);'#13#10
-                           +'Print(b);'#13#10
-                           );
+  prog := FCompiler.Compile
+    ('var i : Integer; var f : Float; var s : String; var b : Boolean;'#13#10 +
+    'i:=FuncVariant(123);'#13#10 + 'Print(i);'#13#10 +
+    'f:=FuncVariant(12.5);'#13#10 + 'Print(f);'#13#10 +
+    'f:=FuncVariant(456);'#13#10 + 'Print(f);'#13#10 +
+    's:=FuncVariant("hello");'#13#10 + 'Print(s);'#13#10 +
+    'b:=FuncVariant(True);'#13#10 + 'Print(b);'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile 1');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile 1');
 
-   CheckEquals('', prog.Execute.Msgs.AsInfo, 'exec errs');
-   CheckEquals('12312.5456helloTrue', prog.Execute.Result.ToString, 'exec result');
+  CheckEquals('', prog.execute.Msgs.AsInfo, 'exec errs');
+  CheckEquals('12312.5456helloTrue', prog.execute.Result.ToString,
+    'exec result');
 end;
 
 // FuncVariantCastTest
 //
 procedure TdwsUnitTests.FuncVariantCastTest;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'var i : Integer; var f : Float; var s : String;'#13#10
-                           +'i:=FuncVariant("123");'#13#10
-                           +'Print(i);'#13#10
-                           +'i:=FuncInc(4);'#13#10
-                           +'Print(i);'#13#10
-                           +'f:=FuncVariant("12.5");'#13#10
-                           +'Print(f);'#13#10
-                           +'f:=FuncVariant(456);'#13#10
-                           +'Print(f);'#13#10
-                           +'f:=FuncFloat(7);'#13#10
-                           +'Print(f);'#13#10
-                           +'s:=FuncVariant(1);'#13#10
-                           +'Print(s);'#13#10
-                           +'s:=FuncVariant("a");'#13#10
-                           +'PrintLn(s);'#13#10
-                           +'function TestStr : String; begin Result := "hello"; end;'#13#10
-                           +'Print(TestStr);'#13#10
-                           +'function TestInt : Integer; begin Result := 123; end;'#13#10
-                           +'Print(TestInt);'#13#10
-                           );
+  prog := FCompiler.Compile
+    ('var i : Integer; var f : Float; var s : String;'#13#10 +
+    'i:=FuncVariant("123");'#13#10 + 'Print(i);'#13#10 + 'i:=FuncInc(4);'#13#10
+    + 'Print(i);'#13#10 + 'f:=FuncVariant("12.5");'#13#10 + 'Print(f);'#13#10 +
+    'f:=FuncVariant(456);'#13#10 + 'Print(f);'#13#10 + 'f:=FuncFloat(7);'#13#10
+    + 'Print(f);'#13#10 + 's:=FuncVariant(1);'#13#10 + 'Print(s);'#13#10 +
+    's:=FuncVariant("a");'#13#10 + 'PrintLn(s);'#13#10 +
+    'function TestStr : String; begin Result := "hello"; end;'#13#10 +
+    'Print(TestStr);'#13#10 +
+    'function TestInt : Integer; begin Result := 123; end;'#13#10 +
+    'Print(TestInt);'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile 1');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile 1');
 
-   CheckEquals('', prog.Execute.Msgs.AsInfo, 'exec errs');
-   CheckEquals('123512.54567.51a'#13#10'hello123', prog.Execute.Result.ToString, 'exec result');
+  CheckEquals('', prog.execute.Msgs.AsInfo, 'exec errs');
+  CheckEquals('123512.54567.51a'#13#10'hello123', prog.execute.Result.ToString,
+    'exec result');
 end;
 
 // FuncVariantDateTest
 //
 procedure TdwsUnitTests.FuncVariantDateTest;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'var f : Float; var s : String;'#13#10
-                           +'f:=FuncVariantDate;'#13#10
-                           +'if Now-f>1/86400 then Print("bug");'#13#10
-                           +'s:=FuncVariantDate;'#13#10
-                           +'if s="" then Print("rebug");'#13#10
-                           );
+  prog := FCompiler.Compile('var f : Float; var s : String;'#13#10 +
+    'f:=FuncVariantDate;'#13#10 + 'if Now-f>1/86400 then Print("bug");'#13#10 +
+    's:=FuncVariantDate;'#13#10 + 'if s="" then Print("rebug");'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile 1');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile 1');
 
-   CheckEquals('', prog.Execute.Msgs.AsInfo, 'exec errs');
-   CheckEquals('', prog.Execute.Result.ToString, 'exec result');
+  CheckEquals('', prog.execute.Msgs.AsInfo, 'exec errs');
+  CheckEquals('', prog.execute.Result.ToString, 'exec result');
 end;
 
 // FuncNilTest
 //
 procedure TdwsUnitTests.FuncNilTest;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'var o := TObject.Create;'#13#10
-                           +'if o=nil then Print("bug");'#13#10
-                           +'o:=FuncNil;'#13#10
-                           +'if o<>nil then Print("rebug");'#13#10
-                           );
+  prog := FCompiler.Compile('var o := TObject.Create;'#13#10 +
+    'if o=nil then Print("bug");'#13#10 + 'o:=FuncNil;'#13#10 +
+    'if o<>nil then Print("rebug");'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   CheckEquals('', prog.Execute.Msgs.AsInfo, 'exec errs');
-   CheckEquals('', prog.Execute.Result.ToString, 'exec result');
+  CheckEquals('', prog.execute.Msgs.AsInfo, 'exec errs');
+  CheckEquals('', prog.execute.Result.ToString, 'exec result');
 end;
 
 // SetTest
 //
 procedure TdwsUnitTests.SetTest;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'var s : TMyEnums;'#13#10
-                           +'Include(s, meOne);'#13#10
-                           +'if meOne in s then Print("1");'#13#10
-                           +'if meTen in s then Print("A");'#13#10
-                           +'Include(s, meTen);'#13#10
-                           +'if meOne not in s then Print("B");'#13#10
-                           +'if meTen in s then Print("2");'#13#10
-                           +'s.Exclude(meOne);'#13#10
-                           +'if meOne in s then Print("C");'#13#10
-                           +'if meTen in s then Print("3");'#13#10
-                           );
+  prog := FCompiler.Compile('var s : TMyEnums;'#13#10 +
+    'Include(s, meOne);'#13#10 + 'if meOne in s then Print("1");'#13#10 +
+    'if meTen in s then Print("A");'#13#10 + 'Include(s, meTen);'#13#10 +
+    'if meOne not in s then Print("B");'#13#10 +
+    'if meTen in s then Print("2");'#13#10 + 's.Exclude(meOne);'#13#10 +
+    'if meOne in s then Print("C");'#13#10 +
+    'if meTen in s then Print("3");'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   CheckEquals('', prog.Execute.Msgs.AsInfo, 'exec errs');
-   CheckEquals('123', prog.Execute.Result.ToString, 'exec result');
+  CheckEquals('', prog.execute.Msgs.AsInfo, 'exec errs');
+  CheckEquals('123', prog.execute.Result.ToString, 'exec result');
 end;
 
 // ClassNameTest
 //
 procedure TdwsUnitTests.ClassNameTest;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'PrintLn(FuncClassName);'#13#10
-                           +'Print(FuncClassName(TObject.Create));'#13#10
-                           );
+  prog := FCompiler.Compile('PrintLn(FuncClassName);'#13#10 +
+    'Print(FuncClassName(TObject.Create));'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   CheckEquals('', prog.Execute.Msgs.AsInfo, 'exec errs');
-   CheckEquals(#13#10'TObject', prog.Execute.Result.ToString, 'exec result');
+  CheckEquals('', prog.execute.Msgs.AsInfo, 'exec errs');
+  CheckEquals(#13#10'TObject', prog.execute.Result.ToString, 'exec result');
 end;
 
 // VirtCreateFunc
 //
 procedure TdwsUnitTests.VirtCreateFunc;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog:=FCompiler.Compile( 'Print(FuncReturnVirtCreate.ClassName);'#13#10
-                           );
+  prog := FCompiler.Compile('Print(FuncReturnVirtCreate.ClassName);'#13#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   FContext.FMagicVar:='';
+  FContext.FMagicVar := '';
 
-   CheckEquals('', prog.Execute.Msgs.AsInfo, 'exec errs');
-   CheckEquals('TTestClass', prog.Execute.Result.ToString, 'exec result');
-   CheckEquals('-1', FContext.FMagicVar, 'magic');
+  CheckEquals('', prog.execute.Msgs.AsInfo, 'exec errs');
+  CheckEquals('TTestClass', prog.execute.Result.ToString, 'exec result');
+  CheckEquals('-1', FContext.FMagicVar, 'magic');
 end;
 
 // CallbackFuncNameTest
 //
 procedure TdwsUnitTests.CallbackFuncNameTest;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog := FCompiler.Compile(
-       'procedure Hello; begin end;'#10
-      +'procedure World; begin end;'#10
-      +'Print(FuncCallbackFuncName);'#10
-      +'Print(FuncCallbackFuncName(Hello));'#10
-      +'Print(FuncCallbackFuncName(nil));'#10
-      +'var p := @World;'#10
-      +'Print(FuncCallbackFuncName(p));'#10
-   );
+  prog := FCompiler.Compile('procedure Hello; begin end;'#10 +
+    'procedure World; begin end;'#10 + 'Print(FuncCallbackFuncName);'#10 +
+    'Print(FuncCallbackFuncName(Hello));'#10 +
+    'Print(FuncCallbackFuncName(nil));'#10 + 'var p := @World;'#10 +
+    'Print(FuncCallbackFuncName(p));'#10);
 
-   CheckEquals('', prog.Msgs.AsInfo, 'Compile');
+  CheckEquals('', prog.Msgs.AsInfo, 'Compile');
 
-   CheckEquals('', prog.Execute.Msgs.AsInfo, 'exec errs');
-   CheckEquals('-Hello-World', prog.Execute.Result.ToString, 'exec result');
+  CheckEquals('', prog.execute.Msgs.AsInfo, 'exec errs');
+  CheckEquals('-Hello-World', prog.execute.Result.ToString, 'exec result');
 end;
 
 // ExplicitUses
 //
 procedure TdwsUnitTests.ExplicitUses;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   FCompiler.Config.CompilerOptions:=FCompiler.Config.CompilerOptions+[coExplicitUnitUses];
-   try
-      prog:=FCompiler.Compile( 'var f := Func1;');
+  FCompiler.Config.CompilerOptions := FCompiler.Config.CompilerOptions +
+    [coExplicitUnitUses];
+  try
+    prog := FCompiler.Compile('var f := Func1;');
 
-      CheckEquals('Syntax Error: Unknown name "Func1" [line: 1, column: 10]'#13#10, prog.Msgs.AsInfo, 'Compile no uses');
+    CheckEquals
+      ('Syntax Error: Unknown name "Func1" [line: 1, column: 10]'#13#10,
+      prog.Msgs.AsInfo, 'Compile no uses');
 
-      prog:=FCompiler.Compile( 'uses Test;'#13#10
-                              +'var f := Func1;'#13#10
-                              +'PrintLn(f);');
+    prog := FCompiler.Compile('uses Test;'#13#10 + 'var f := Func1;'#13#10 +
+      'PrintLn(f);');
 
-      CheckEquals('', prog.Msgs.AsInfo, 'Compile no uses');
+    CheckEquals('', prog.Msgs.AsInfo, 'Compile no uses');
 
-      exec:=prog.Execute;
-      CheckEquals( '1'#13#10, exec.Result.ToString+exec.Msgs.AsInfo);
+    Exec := prog.execute;
+    CheckEquals('1'#13#10, Exec.Result.ToString + Exec.Msgs.AsInfo);
 
-   finally
-      FCompiler.Config.CompilerOptions:=FCompiler.Config.CompilerOptions-[coExplicitUnitUses];
-   end;
+  finally
+    FCompiler.Config.CompilerOptions := FCompiler.Config.CompilerOptions -
+      [coExplicitUnitUses];
+  end;
 end;
 
 // UnknownUnit
 //
 procedure TdwsUnitTests.UnknownUnit;
 var
-   un : TdwsUnit;
-   prog : IdwsProgram;
+  un: TdwsUnit;
+  prog: IdwsProgram;
 begin
-   un:=TdwsUnit.Create(nil);
-   try
-      un.UnitName:='TestBug';
-      un.Dependencies.Add('Bogus');
-      un.Script:=FCompiler;
+  un := TdwsUnit.Create(nil);
+  try
+    un.UnitName := 'TestBug';
+    un.Dependencies.Add('Bogus');
+    un.Script := FCompiler;
 
-      prog := FCompiler.Compile('');
-      CheckEquals('Syntax Error: Unit "Bogus" referenced in unit "TestBug" not found'#13#10, prog.Msgs.AsInfo);
-      prog := nil;
-   finally
-      un.Free;
-   end;
+    prog := FCompiler.Compile('');
+    CheckEquals
+      ('Syntax Error: Unit "Bogus" referenced in unit "TestBug" not found'#13#10,
+      prog.Msgs.AsInfo);
+    prog := nil;
+  finally
+    un.Free;
+  end;
 end;
 
 // CircularUnit
 //
 procedure TdwsUnitTests.CircularUnit;
 var
-   un : TdwsUnit;
-   prog : IdwsProgram;
+  un: TdwsUnit;
+  prog: IdwsProgram;
 begin
-   un:=TdwsUnit.Create(nil);
-   try
-      un.UnitName:='TestBug';
-      un.Dependencies.Add('TestBug');
-      un.Script:=FCompiler;
+  un := TdwsUnit.Create(nil);
+  try
+    un.UnitName := 'TestBug';
+    un.Dependencies.Add('TestBug');
+    un.Script := FCompiler;
 
-      prog := FCompiler.Compile('');
-      CheckEquals('Syntax Error: Circular referencing units detected'#13#10, prog.Msgs.AsInfo);
-      prog := nil;
-   finally
-      un.Free;
-   end;
+    prog := FCompiler.Compile('');
+    CheckEquals('Syntax Error: Circular referencing units detected'#13#10,
+      prog.Msgs.AsInfo);
+    prog := nil;
+  finally
+    un.Free;
+  end;
 end;
 
 // DuplicateUnit
 //
 procedure TdwsUnitTests.DuplicateUnit;
 var
-   un : TdwsUnit;
-   prog : IdwsProgram;
+  un: TdwsUnit;
+  prog: IdwsProgram;
 begin
-   un:=TdwsUnit.Create(nil);
-   try
-      un.UnitName:='Test';
-      un.Script:=FCompiler;
+  un := TdwsUnit.Create(nil);
+  try
+    un.UnitName := 'Test';
+    un.Script := FCompiler;
 
-      prog := FCompiler.Compile('');
-      CheckEquals('Syntax Error: Unit "Test" redeclared'#13#10, prog.Msgs.AsInfo);
-      prog := nil;
-   finally
-      un.Free;
-   end;
+    prog := FCompiler.Compile('');
+    CheckEquals('Syntax Error: Unit "Test" redeclared'#13#10, prog.Msgs.AsInfo);
+    prog := nil;
+  finally
+    un.Free;
+  end;
 end;
 
 // CallLevels
 //
 procedure TdwsUnitTests.CallLevels;
 var
-   un : TdwsUnit;
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  un: TdwsUnit;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   un:=TdwsUnit.Create(nil);
-   try
-      un.UnitName:='TestCallLevels';
-      un.Script:=FCompiler;
-      with un.Functions.Add do begin
-         Name:='UnitProc';
-         OnEval:=FContext.ProcCallLevelsEval;
-      end;
+  un := TdwsUnit.Create(nil);
+  try
+    un.UnitName := 'TestCallLevels';
+    un.Script := FCompiler;
+    with un.Functions.Add do
+    begin
+      Name := 'UnitProc';
+      OnEval := FContext.ProcCallLevelsEval;
+    end;
 
-      prog:=FCompiler.Compile(
-          'var v := "a";'#13#10
-         +'var i := Ord("b");'#13#10
-         +'procedure CallMe; begin v+=Chr(i); i+=1; end;'#13#10
-         +'procedure RunMe; begin CallMe; UnitProc; CallMe; end;');
-      CheckEquals('', prog.Msgs.AsInfo);
+    prog := FCompiler.Compile('var v := "a";'#13#10 + 'var i := Ord("b");'#13#10
+      + 'procedure CallMe; begin v+=Chr(i); i+=1; end;'#13#10 +
+      'procedure RunMe; begin CallMe; UnitProc; CallMe; end;');
+    CheckEquals('', prog.Msgs.AsInfo);
 
-      exec:=prog.BeginNewExecution;
-      try
-         exec.RunProgram(0);
-         CheckEquals('a', exec.Info.ValueAsString['v']);
-         exec.Info.Func['CallMe'].Call;
-         CheckEquals('ab', exec.Info.ValueAsString['v']);
-         exec.Info.Func['RunMe'].Call;
-         CheckEquals('abcde', exec.Info.ValueAsString['v']);
-         exec.Info.Func['CallMe'].Call;
-         CheckEquals('abcdef', exec.Info.ValueAsString['v']);
-      finally
-         exec.EndProgram;
-         exec:=nil;
-         prog:=nil;
-      end;
-   finally
-      un.Free;
-   end;
+    Exec := prog.BeginNewExecution;
+    try
+      Exec.RunProgram(0);
+      CheckEquals('a', Exec.Info.ValueAsString['v']);
+      Exec.Info.func['CallMe'].Call;
+      CheckEquals('ab', Exec.Info.ValueAsString['v']);
+      Exec.Info.func['RunMe'].Call;
+      CheckEquals('abcde', Exec.Info.ValueAsString['v']);
+      Exec.Info.func['CallMe'].Call;
+      CheckEquals('abcdef', Exec.Info.ValueAsString['v']);
+    finally
+      Exec.EndProgram;
+      Exec := nil;
+      prog := nil;
+    end;
+  finally
+    un.Free;
+  end;
 end;
 
 // InfoExceptions
 //
 procedure TdwsUnitTests.InfoExceptions;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   msg : String;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
+  msg: String;
 begin
-   prog := FCompiler.Compile('var v := 123;');
-   CheckEquals('', prog.Msgs.AsInfo);
+  prog := FCompiler.Compile('var v := 123;');
+  CheckEquals('', prog.Msgs.AsInfo);
 
-   exec := prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
-      try
-         exec.Info.ValueAsString['vvvv'];
-      except
-         on E : Exception do
-            msg := E.Message;
-      end;
-      CheckTrue(Pos('vvvv', msg) > 0, msg);
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.RunProgram(0);
+    try
+      Exec.Info.ValueAsString['vvvv'];
+    except
+      on E: Exception do
+        msg := E.Message;
+    end;
+    CheckTrue(Pos('vvvv', msg) > 0, msg);
 
-      exec.RunProgram(0);
-      try
-         exec.Info.Params[1234];
-      except
-         on E : Exception do
-            msg := E.Message;
-      end;
-      CheckTrue(Pos('1234', msg) > 0, msg);
+    Exec.RunProgram(0);
+    try
+      Exec.Info.Params[1234];
+    except
+      on E: Exception do
+        msg := E.Message;
+    end;
+    CheckTrue(Pos('1234', msg) > 0, msg);
 
-   finally
-      exec.EndProgram;
-      exec:=nil;
-      prog:=nil;
-   end;
+  finally
+    Exec.EndProgram;
+    Exec := nil;
+    prog := nil;
+  end;
 end;
 
 // InternalClassStatic
 //
 procedure TdwsUnitTests.InternalClassStatic;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   prog := FCompiler.Compile(
-       'type TFoo = class (TInternalClass);'#10
-      +'type TBar = TInternalClass;'#10
-      +'type TFooBar = class (TBar);'#10
-      +'var a := new TInternalClass;'#10
-      +'var b := new TBar;'#10
-      +'var c := TInternalClass.Create;'#10
-      +'var d := TBar.Create;'
-   );
-   CheckEquals(
-       'Syntax Error: Class "TInternalClass" is internal, inheriting is not allowed [line: 1, column: 20]'#13#10
-      +'Syntax Error: Class "TInternalClass" is internal, inheriting is not allowed [line: 3, column: 23]'#13#10
-      +'Syntax Error: Constructing internal class "TInternalClass" is not allowed [line: 4, column: 14]'#13#10
-      +'Syntax Error: Constructing internal class "TInternalClass" is not allowed [line: 5, column: 14]'#13#10
-      +'Syntax Error: Constructing internal class "TInternalClass" is not allowed [line: 6, column: 25]'#13#10
-      +'Syntax Error: Constructing internal class "TInternalClass" is not allowed [line: 7, column: 15]'#13#10,
-      prog.Msgs.AsInfo
-   );
+  prog := FCompiler.Compile('type TFoo = class (TInternalClass);'#10 +
+    'type TBar = TInternalClass;'#10 + 'type TFooBar = class (TBar);'#10 +
+    'var a := new TInternalClass;'#10 + 'var b := new TBar;'#10 +
+    'var c := TInternalClass.Create;'#10 + 'var d := TBar.Create;');
+  CheckEquals
+    ('Syntax Error: Class "TInternalClass" is internal, inheriting is not allowed [line: 1, column: 20]'#13#10
+    + 'Syntax Error: Class "TInternalClass" is internal, inheriting is not allowed [line: 3, column: 23]'#13#10
+    + 'Syntax Error: Constructing internal class "TInternalClass" is not allowed [line: 4, column: 14]'#13#10
+    + 'Syntax Error: Constructing internal class "TInternalClass" is not allowed [line: 5, column: 14]'#13#10
+    + 'Syntax Error: Constructing internal class "TInternalClass" is not allowed [line: 6, column: 25]'#13#10
+    + 'Syntax Error: Constructing internal class "TInternalClass" is not allowed [line: 7, column: 15]'#13#10,
+    prog.Msgs.AsInfo);
 end;
 
 // InternalClassDynamic
 //
 procedure TdwsUnitTests.InternalClassDynamic;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   prog := FCompiler.Compile(
-       'var a := FuncInternalClass;'#10
-      +'PrintLn(a is TInternalClass);'#10
-      +'PrintLn(a.ClassName);'#10
-      +'try var b = TClass(TInternalClass).Create; except on E: Exception do PrintLn(E.Message) end;'
-   );
-   CheckEquals(0, prog.Msgs.Count, prog.Msgs.AsInfo);
-   exec := prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
-      CheckEquals(
-          'True'#13#10
-         +'TInternalClass'#13#10
-         +'Constructing internal class "TInternalClass" is not allowed'#13#10, exec.Result.ToString);
-   finally
-      exec.EndProgram;
-      exec := nil;
-      prog := nil;
-   end;
+  prog := FCompiler.Compile('var a := FuncInternalClass;'#10 +
+    'PrintLn(a is TInternalClass);'#10 + 'PrintLn(a.ClassName);'#10 +
+    'try var b = TClass(TInternalClass).Create; except on E: Exception do PrintLn(E.Message) end;');
+  CheckEquals(0, prog.Msgs.Count, prog.Msgs.AsInfo);
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.RunProgram(0);
+    CheckEquals('True'#13#10 + 'TInternalClass'#13#10 +
+      'Constructing internal class "TInternalClass" is not allowed'#13#10,
+      Exec.Result.ToString);
+  finally
+    Exec.EndProgram;
+    Exec := nil;
+    prog := nil;
+  end;
 end;
 
 // InterfaceTest
 //
 procedure TdwsUnitTests.InterfaceTest;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  Exec: IdwsProgramExecution;
 begin
-   prog := FCompiler.Compile(
-       'type TTest = class(IHello)'#10
-         +'function GetHello : String; begin Result := "World"; end;'#10
-      +'end;'#10
-      +'var i : IHello := new TTest;'#10
-      +'PrintLn(i.Hello);'
-   );
-   CheckEquals(0, prog.Msgs.Count, prog.Msgs.AsInfo);
-   exec := prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
-      CheckEquals(
-          'World'#13#10
-          , exec.Result.ToString);
-   finally
-      exec.EndProgram;
-      exec := nil;
-      prog := nil;
-   end;
+  prog := FCompiler.Compile('type TTest = class(IHello)'#10 +
+    'function GetHello : String; begin Result := "World"; end;'#10 + 'end;'#10 +
+    'var i : IHello := new TTest;'#10 + 'PrintLn(i.Hello);');
+  CheckEquals(0, prog.Msgs.Count, prog.Msgs.AsInfo);
+  Exec := prog.BeginNewExecution;
+  try
+    Exec.RunProgram(0);
+    CheckEquals('World'#13#10, Exec.Result.ToString);
+  finally
+    Exec.EndProgram;
+    Exec := nil;
+    prog := nil;
+  end;
 end;
 
 // PropertyVisibilityPromotion
 //
 procedure TdwsUnitTests.PropertyVisibilityPromotion;
 var
-   prog : IdwsProgram;
+  prog: IdwsProgram;
 begin
-   var propUnit := TdwsUnit.Create(nil);
-   try
-      propUnit.UnitName := 'Promotion';
-      var cls1 := propUnit.Classes.Add;
-         cls1.Name := 'TParent';
-      var fld1 := cls1.Fields.Add;
-         fld1.Name := 'Field';
-         fld1.DataType := 'Integer';
-      var prop1 := cls1.Properties.Add;
-         prop1.Visibility := cvProtected;
-         prop1.Name := 'MyProp';
-         prop1.DataType := 'Integer';
-         prop1.WriteAccess := 'Field';
-      var cls2 := propUnit.Classes.Add;
-         cls2.Name := 'TSub';
-         cls2.Ancestor := 'TParent';
-      var prop2 := cls2.Properties.Add;
-         prop2.Name := 'MyProp';
-         prop2.Visibility := cvPublic;
+  var
+  propUnit := TdwsUnit.Create(nil);
+  try
+    propUnit.UnitName := 'Promotion';
+    var
+    cls1 := propUnit.Classes.Add;
+    cls1.Name := 'TParent';
+    var
+    fld1 := cls1.Fields.Add;
+    fld1.Name := 'Field';
+    fld1.DataType := 'Integer';
+    var
+    prop1 := cls1.Properties.Add;
+    prop1.Visibility := cvProtected;
+    prop1.Name := 'MyProp';
+    prop1.DataType := 'Integer';
+    prop1.WriteAccess := 'Field';
+    var
+    cls2 := propUnit.Classes.Add;
+    cls2.Name := 'TSub';
+    cls2.Ancestor := 'TParent';
+    var
+    prop2 := cls2.Properties.Add;
+    prop2.Name := 'MyProp';
+    prop2.Visibility := cvPublic;
 
-      propUnit.Script := FCompiler;
+    propUnit.Script := FCompiler;
 
-      try
-         prog := FCompiler.Compile('var c := new TParent; c.MyProp := 123;');
-         CheckEquals(
-            'Syntax Error: Member symbol "MyProp" is not visible from this scope [line: 1, column: 25]'#13#10,
-            prog.Msgs.AsInfo,
-            'TParent.MyProp write access'
-         );
+    try
+      prog := FCompiler.Compile('var c := new TParent; c.MyProp := 123;');
+      CheckEquals
+        ('Syntax Error: Member symbol "MyProp" is not visible from this scope [line: 1, column: 25]'#13#10,
+        prog.Msgs.AsInfo, 'TParent.MyProp write access');
 
-         prog := FCompiler.Compile('var c := new TSub; c.MyProp := 123;');
-         CheckEquals(
-            '',
-            prog.Msgs.AsInfo,
-            'TSub.MyProp write access'
-         );
-      finally
-         prog := nil;
-      end;
-   finally
-      propUnit.Free;
-   end;
+      prog := FCompiler.Compile('var c := new TSub; c.MyProp := 123;');
+      CheckEquals('', prog.Msgs.AsInfo, 'TSub.MyProp write access');
+    finally
+      prog := nil;
+    end;
+  finally
+    propUnit.Free;
+  end;
 end;
-
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 initialization
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
-   RegisterTest('dwsUnit', TdwsUnitTests);
+RegisterTest('dwsUnit', TdwsUnitTests);
 
 end.

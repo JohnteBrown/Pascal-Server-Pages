@@ -3,12 +3,9 @@ PrintLn('Bug 1');
 {$ELSE}
 PrintLn('Hello');
 {$ENDIF}
-
-{$Define test}
-
-{$ifdef TEST}
+{$DEFINE test}
+{$IFDEF TEST}
 PrintLn('World');
-{$else}
+{$ELSE}
 PrintLn('Bug 2');
-{$endif}
-
+{$ENDIF}

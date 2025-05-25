@@ -1,6 +1,6 @@
-function Test(s : String) : Boolean;
-begin 
-    Result := s in ['a'..'z', '0'..'9', '-']; 
+function Test(s: String): Boolean;
+begin
+  Result := s in ['a' .. 'z', '0' .. '9', '-'];
 end;
 
 PrintLn(Test(''));

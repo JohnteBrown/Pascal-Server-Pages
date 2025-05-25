@@ -1,5 +1,8 @@
-var a := 3;
-var b := 5;
+var
+a := 3;
+
+var
+b := 5;
 
 PrintLn(not a + b);
 PrintLn(not a * b);
@@ -12,5 +15,3 @@ PrintLn(2 + a shr b);
 
 PrintLn(a and b or 2);
 PrintLn(a or b and 2);
-
-

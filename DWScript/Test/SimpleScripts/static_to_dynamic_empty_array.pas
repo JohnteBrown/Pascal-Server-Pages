@@ -1,14 +1,14 @@
-procedure Test1(const AParams : Array Of Variant);
+procedure Test1(const AParams: Array Of Variant);
 begin
-   PrintLn(Length(AParams));
+  PrintLn(Length(AParams));
 end;
 
-test1([]); 
+Test1([]);
 
-procedure Test2(const AParams : Array Of Integer);
+procedure Test2(const AParams: Array Of Integer);
 begin
-   PrintLn(Low(AParams));
-   PrintLn(High(AParams));
+  PrintLn(Low(AParams));
+  PrintLn(High(AParams));
 end;
 
-test2([]); 
+Test2([]);

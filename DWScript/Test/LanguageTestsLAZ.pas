@@ -1,15 +1,15 @@
 program LanguageTestsLAZ;
 
 {$IFDEF FPC}
-  {$MODE Delphi}
+{$MODE Delphi}
 {$ENDIF}
 
 uses
   Classes,
   fpcunit,
-//  Forms,
-//  TestFrameWork,
-//  GUITestRunner,
+  // Forms,
+  // TestFrameWork,
+  // GUITestRunner,
   SysUtils,
   UScriptTests in 'UScriptTests.pas',
   UAlgorithmsTests in 'UAlgorithmsTests.pas',
@@ -18,7 +18,8 @@ uses
   UCornerCasesTests in 'UCornerCasesTests.pas',
   UdwsClassesTests in 'UdwsClassesTests.pas',
   dwsClasses in '..\Libraries\ClassesLib\dwsClasses.pas',
-  dwsClassesLibModule in '..\Libraries\ClassesLib\dwsClassesLibModule.pas' {dwsClassesLib: TDataModule},
+  dwsClassesLibModule
+    in '..\Libraries\ClassesLib\dwsClassesLibModule.pas' {dwsClassesLib: TDataModule} ,
   UdwsFunctionsTests in 'UdwsFunctionsTests.pas',
   UCOMConnectorTests in 'UCOMConnectorTests.pas',
   UTestDispatcher in 'UTestDispatcher.pas',
@@ -31,8 +32,9 @@ uses
   USourceUtilsTests in 'USourceUtilsTests.pas';
 
 begin
-   FormatSettings.DecimalSeparator:='.';
-   ReportMemoryLeaksOnShutdown:=True;
-   Application.Initialize;
-   GUITestRunner.RunRegisteredTests;
+  FormatSettings.DecimalSeparator := '.';
+  ReportMemoryLeaksOnShutdown := True;
+  Application.Initialize;
+  GUITestRunner.RunRegisteredTests;
+
 end.

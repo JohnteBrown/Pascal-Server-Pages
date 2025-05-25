@@ -3,28 +3,21 @@
 PrintLn('Bug 1');
 {$ENDIF}
 {$ENDIF}
-
-{$Define ABCD}
-
+{$DEFINE ABCD}
 {$IFDEF TEST}
 {$IFDEF ABCD}
 PrintLn('Bug 2');
 {$ENDIF}
 {$ENDIF}
-
-{$Define TEST}
-
+{$DEFINE TEST}
 {$IFDEF TEST}
 {$IFDEF ABCD}
 PrintLn('Hello world');
 {$ENDIF}
 {$ENDIF}
-
-{$Undef ABCD}
-
+{$UNDEF ABCD}
 {$IFDEF TEST}
 {$IFDEF ABCD}
 PrintLn('Bug 3');
 {$ENDIF}
 {$ENDIF}
-

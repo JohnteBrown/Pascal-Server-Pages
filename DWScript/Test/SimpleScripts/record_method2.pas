@@ -1,27 +1,31 @@
 Type
 
- TRec = Record
+  TRec = Record
 
-  Field : String;
- 
-  Function GetName : String;
-  Begin
-     Result:='Hello '+Field;
+    Field: String;
+
+    Function GetName: String;
+
+    Begin
+      Result := 'Hello ' + Field;
+    End;
+
+    procedure SetExclamation;
+
+    begin
+      Field := Field + '!';
+    end;
+
   End;
-  
-  procedure SetExclamation;
-  begin
-     Field:=Field+'!';
-  end;
- 
- End;
- 
-Function GetRec : TRec;
+
+Function GetRec: TRec;
 Begin
-   Result.Field:='World';
+  Result.Field := 'World';
 End;
 
 PrintLn(GetRec.GetName);
-var r:=GetRec;
+
+var
+r := GetRec;
 r.SetExclamation;
 PrintLn(r.GetName);

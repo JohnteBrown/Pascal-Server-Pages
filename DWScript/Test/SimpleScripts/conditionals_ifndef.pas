@@ -1,14 +1,15 @@
-procedure Test({$ifdef TEST}{$endif}s : String);
+procedure Test({$IFDEF TEST}{$ENDIF}s: String);
 begin
-   PrintLn(s);
+  PrintLn(s);
 end;
 
 {$DEFINE TEST}
+
 type
-   TDummy = class
-  {$IFNDEF TEST}
-  bug here
-  {$ENDIF}
+  TDummy = class
+{$IFNDEF TEST}
+      bug here
+{$ENDIF}
   end;
-  
+
 Test(TDummy.ClassName);

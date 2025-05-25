@@ -3,99 +3,108 @@ unit UJSTestChromium;
 interface
 
 uses
-   Forms, Classes, SysUtils, TestFrameWork, Windows, Messages,
-   uCEFChromium, uCEFChromiumWindow, uCEFInterfaces, uCEFTypes, uCEFApplication,
-   uCEFSentinel, uCEFConstants;
+  Forms, Classes, SysUtils, TestFrameWork, Windows, Messages,
+  uCEFChromium, uCEFChromiumWindow, uCEFInterfaces, uCEFTypes, uCEFApplication,
+  uCEFSentinel, uCEFConstants;
 
 type
-   ITestChromium = interface
-      function Initialized : Boolean;
+  ITestChromium = interface
+    function Initialized: Boolean;
 
-      procedure LoadURL(const url : String);
-      procedure StopLoad;
+    procedure LoadURL(const url: String);
+    procedure StopLoad;
 
-      procedure ExecuteJavaScript(const js, url : String);
+    procedure ExecuteJavaScript(const js, url: String);
 
-      procedure ExecuteAndWait(const js, url, doneConsoleMarker : String);
-      procedure LoadAndWait(const html, url, doneConsoleMarker : String);
+    procedure ExecuteAndWait(const js, url, doneConsoleMarker: String);
+    procedure LoadAndWait(const html, url, doneConsoleMarker: String);
 
-      procedure ClearLastResult;
-      function LastResult : String;
-   end;
+    procedure ClearLastResult;
+    function LastResult: String;
+  end;
 
-function CreateTestChromium : ITestChromium;
+function CreateTestChromium: ITestChromium;
 
 implementation
 
 uses dwsUtils, dwsJSON;
 
-const cNoResult = '*no result*';
+const
+  cNoResult = '*no result*';
 
 type
-   TTestChromium = class;
+  TTestChromium = class;
 
-   TTestChromiumForm = class (TForm)
-      public
-         FConsole : String;
-         FChromium : TChromiumWindow;
-         FSentinel : TCEFSentinel;
-         FOwner : TTestChromium;
-         destructor Destroy; override;
-         procedure FormCloseQuery(Sender : TObject; var canClose : Boolean);
-         procedure SentinelClose(Sender: TObject);
-         procedure DoConsoleMessage(Sender: TObject; const browser: ICefBrowser;
-            level: TCefLogSeverity; const message, source: ustring; line: Integer; out Result: Boolean);
-   end;
+  TTestChromiumForm = class(TForm)
+  public
+    FConsole: String;
+    FChromium: TChromiumWindow;
+    FSentinel: TCEFSentinel;
+    FOwner: TTestChromium;
+    destructor Destroy; override;
+    procedure FormCloseQuery(Sender: TObject; var canClose: Boolean);
+    procedure SentinelClose(Sender: TObject);
+    procedure DoConsoleMessage(Sender: TObject; const browser: ICefBrowser;
+      level: TCefLogSeverity; const message, source: ustring; line: Integer;
+      out Result: Boolean);
+  end;
 
-   TTestChromium = class (TInterfacedObject, ITestChromium)
-      FForm : TTestChromiumForm;
-      constructor Create;
-      destructor Destroy; override;
-      function Initialized : Boolean;
-      procedure LoadURL(const url : String);
-      procedure StopLoad;
-      procedure ExecuteJavaScript(const js, url : String);
-      procedure ExecuteAndWait(const js, url, doneConsoleMarker : String);
-      procedure LoadAndWait(const html, url, doneConsoleMarker : String);
-      procedure ClearLastResult;
-      function LastResult : String;
-   end;
+  TTestChromium = class(TInterfacedObject, ITestChromium)
+    FForm: TTestChromiumForm;
+    constructor Create;
+    destructor Destroy; override;
+    function Initialized: Boolean;
+    procedure LoadURL(const url: String);
+    procedure StopLoad;
+    procedure ExecuteJavaScript(const js, url: String);
+    procedure ExecuteAndWait(const js, url, doneConsoleMarker: String);
+    procedure LoadAndWait(const html, url, doneConsoleMarker: String);
+    procedure ClearLastResult;
+    function LastResult: String;
+  end;
 
-procedure TTestChromiumForm.DoConsoleMessage(Sender: TObject; const browser: ICefBrowser;
-            level: TCefLogSeverity; const message, source: ustring; line: Integer; out Result: Boolean);
+procedure TTestChromiumForm.DoConsoleMessage(Sender: TObject;
+  const browser: ICefBrowser; level: TCefLogSeverity;
+  const message, source: ustring; line: Integer; out Result: Boolean);
 begin
-   if FConsole = cNoResult then
-      FConsole := message
-   else FConsole := FConsole + message;
-   Result := True;
+  if FConsole = cNoResult then
+    FConsole := message
+  else
+    FConsole := FConsole + message;
+  Result := True;
 end;
 
-procedure TTestChromiumForm.FormCloseQuery(Sender : TObject; var canClose : Boolean);
+procedure TTestChromiumForm.FormCloseQuery(Sender: TObject;
+  var canClose: Boolean);
 begin
-   if FChromium <> nil then begin
-      canClose := False;
-      if FSentinel.Status = ssIdle then begin
-         FChromium.CloseBrowser(True);
-         FSentinel.Start;
-      end;
-   end else begin
-      canClose := True;
-      Release;
-   end;
+  if FChromium <> nil then
+  begin
+    canClose := False;
+    if FSentinel.Status = ssIdle then
+    begin
+      FChromium.CloseBrowser(True);
+      FSentinel.Start;
+    end;
+  end
+  else
+  begin
+    canClose := True;
+    Release;
+  end;
 end;
 
 procedure TTestChromiumForm.SentinelClose(Sender: TObject);
 begin
-   FreeAndNil(FChromium);
-   Release;
+  FreeAndNil(FChromium);
+  Release;
 end;
 
 // Destroy
 //
 destructor TTestChromiumForm.Destroy;
 begin
-   FOwner.FForm := nil;
-   inherited;
+  FOwner.FForm := nil;
+  inherited;
 end;
 
 // ------------------
@@ -106,138 +115,149 @@ end;
 //
 constructor TTestChromium.Create;
 begin
-   inherited;
-   Assert(GlobalCEFApp.GlobalContextInitialized);
+  inherited;
+  Assert(GlobalCEFApp.GlobalContextInitialized);
 
-   FForm := TTestChromiumForm.CreateNew(nil);
-   FForm.OnCloseQuery := FForm.FormCloseQuery;
+  FForm := TTestChromiumForm.CreateNew(nil);
+  FForm.OnCloseQuery := FForm.FormCloseQuery;
 
-   FForm.FSentinel := TCEFSentinel.Create(FForm);
-   FForm.FSentinel.OnClose := FForm.SentinelClose;
+  FForm.FSentinel := TCEFSentinel.Create(FForm);
+  FForm.FSentinel.OnClose := FForm.SentinelClose;
 
-   FForm.FChromium := TChromiumWindow.Create(FForm);
-   FForm.FOwner := Self;
-   FForm.FChromium.ChromiumBrowser.OnConsoleMessage := FForm.DoConsoleMessage;
-   FForm.FChromium.Parent := FForm;
-   FForm.FChromium.CreateBrowser;
-   FForm.FChromium.ChromiumBrowser.LoadURL('about:blank');
+  FForm.FChromium := TChromiumWindow.Create(FForm);
+  FForm.FOwner := Self;
+  FForm.FChromium.ChromiumBrowser.OnConsoleMessage := FForm.DoConsoleMessage;
+  FForm.FChromium.Parent := FForm;
+  FForm.FChromium.CreateBrowser;
+  FForm.FChromium.ChromiumBrowser.LoadURL('about:blank');
 end;
 
 // Destroy
 //
 destructor TTestChromium.Destroy;
 begin
-   inherited;
-   if FForm <> nil then begin
-      FForm.Close;
-      while FForm <> nil do begin
-         Sleep(20);
-         Application.ProcessMessages;
-      end;
-   end;
+  inherited;
+  if FForm <> nil then
+  begin
+    FForm.Close;
+    while FForm <> nil do
+    begin
+      Sleep(20);
+      Application.ProcessMessages;
+    end;
+  end;
 end;
 
 // Initialized
 //
-function TTestChromium.Initialized : Boolean;
+function TTestChromium.Initialized: Boolean;
 begin
-   Result := (FForm <> nil) and (FForm.FChromium <> nil) and FForm.FChromium.Initialized;
+  Result := (FForm <> nil) and (FForm.FChromium <> nil) and
+    FForm.FChromium.Initialized;
 end;
 
 // LoadURL
 //
-procedure TTestChromium.LoadURL(const url : String);
+procedure TTestChromium.LoadURL(const url: String);
 begin
-   FForm.FChromium.LoadURL(url);
+  FForm.FChromium.LoadURL(url);
 end;
 
 // StopLoad
 //
 procedure TTestChromium.StopLoad;
 begin
-   FForm.FChromium.ChromiumBrowser.StopLoad;
+  FForm.FChromium.ChromiumBrowser.StopLoad;
 end;
 
 // ExecuteJavaScript
 //
-procedure TTestChromium.ExecuteJavaScript(const js, url : String);
+procedure TTestChromium.ExecuteJavaScript(const js, url: String);
 begin
-   FForm.FChromium.ChromiumBrowser.ExecuteJavaScript(js, url);
+  FForm.FChromium.ChromiumBrowser.ExecuteJavaScript(js, url);
 end;
 
 // ExecuteAndWait
 //
-procedure TTestChromium.ExecuteAndWait(const js, url, doneConsoleMarker : String);
+procedure TTestChromium.ExecuteAndWait(const js, url, doneConsoleMarker
+  : String);
 var
-   prevResult : String;
-   k, retry : Integer;
+  prevResult: String;
+  k, retry: Integer;
 begin
-   prevResult := LastResult;
+  prevResult := LastResult;
 
-   retry := 0;
-   while retry < 2 do begin
-      ExecuteJavaScript(js, url );
-      for k := 1 to 300 do begin
-         if prevResult <> LastResult then begin
-            if (doneConsoleMarker = '') or (Pos(doneConsoleMarker, LastResult) > 0) then Exit;
-            prevResult := LastResult;
-         end;
-         Application.ProcessMessages;
-         GlobalCEFApp.RunMessageLoop;
-         case k of
-            0..99 : Sleep(0);
-            100..199 : Sleep(1);
-         else
-            Sleep(10);
-         end;
+  retry := 0;
+  while retry < 2 do
+  begin
+    ExecuteJavaScript(js, url);
+    for k := 1 to 300 do
+    begin
+      if prevResult <> LastResult then
+      begin
+        if (doneConsoleMarker = '') or (Pos(doneConsoleMarker, LastResult) > 0)
+        then
+          Exit;
+        prevResult := LastResult;
       end;
-      FForm.FChromium.ChromiumBrowser.StopLoad;
-      Inc(retry);
-   end;
-   if FForm.FConsole = cNoResult then
-      FForm.FConsole := '';
-   FForm.FConsole := FForm.FConsole + '**** Timeout after ' + IntToStr(retry);
+      Application.ProcessMessages;
+      GlobalCEFApp.RunMessageLoop;
+      case k of
+        0 .. 99:
+          Sleep(0);
+        100 .. 199:
+          Sleep(1);
+      else
+        Sleep(10);
+      end;
+    end;
+    FForm.FChromium.ChromiumBrowser.StopLoad;
+    Inc(retry);
+  end;
+  if FForm.FConsole = cNoResult then
+    FForm.FConsole := '';
+  FForm.FConsole := FForm.FConsole + '**** Timeout after ' + IntToStr(retry);
 end;
 
 // LoadAndWait
 //
-procedure TTestChromium.LoadAndWait(const html, url, doneConsoleMarker : String);
+procedure TTestChromium.LoadAndWait(const html, url, doneConsoleMarker: String);
 var
-   wobs : TWriteOnlyBlockStream;
+  wobs: TWriteOnlyBlockStream;
 begin
-   wobs := TWriteOnlyBlockStream.AllocFromPool;
-   try
-      wobs.WriteString('document.open();document.write(');
-      WriteJavaScriptString(wobs, html);
-      wobs.WriteString(');document.close();');
-      ExecuteAndWait(wobs.ToString, url, doneConsoleMarker);
-   finally
-      wobs.ReturnToPool;
-   end;
+  wobs := TWriteOnlyBlockStream.AllocFromPool;
+  try
+    wobs.WriteString('document.open();document.write(');
+    WriteJavaScriptString(wobs, html);
+    wobs.WriteString(');document.close();');
+    ExecuteAndWait(wobs.ToString, url, doneConsoleMarker);
+  finally
+    wobs.ReturnToPool;
+  end;
 end;
 
 // LastResult
 //
-function TTestChromium.LastResult : String;
+function TTestChromium.LastResult: String;
 begin
-   if FForm.FConsole <> cNoResult then
-      Result := FForm.FConsole
-   else Result := cNoResult;
+  if FForm.FConsole <> cNoResult then
+    Result := FForm.FConsole
+  else
+    Result := cNoResult;
 end;
 
 // ClearLastResult
 //
 procedure TTestChromium.ClearLastResult;
 begin
-   FForm.FConsole := cNoResult;
+  FForm.FConsole := cNoResult;
 end;
-
 
 // CreateTestChromium
 //
-function CreateTestChromium : ITestChromium;
+function CreateTestChromium: ITestChromium;
 begin
-   Result := TTestChromium.Create;
+  Result := TTestChromium.Create;
 end;
 
 end.

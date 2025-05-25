@@ -1,4 +1,5 @@
-var v : Variant;
+var
+  v: Variant;
 
 v := True;
 

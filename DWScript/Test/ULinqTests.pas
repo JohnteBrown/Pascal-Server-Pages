@@ -3,132 +3,141 @@ unit ULinqTests;
 interface
 
 uses
-   Classes,
-   dwsXPlatformTests, dwsComp, dwsLinq, dwsDataBaseLibModule, dwsErrors;
+  Classes,
+  dwsXPlatformTests, dwsComp, dwsLinq, dwsDataBaseLibModule, dwsErrors;
 
 type
-   TLinqTests = class(TTestCase)
-      private
-         FTests: TStringList;
-         FCompiler: TDelphiWebScript;
-         FLinq: TdwsLinqFactory;
-         FDataBaseLib : TdwsDatabaseLib;
-      public
-         procedure SetUp; override;
-         procedure TearDown; override;
+  TLinqTests = class(TTestCase)
+  private
+    FTests: TStringList;
+    FCompiler: TDelphiWebScript;
+    FLinq: TdwsLinqFactory;
+    FDataBaseLib: TdwsDatabaseLib;
+  public
+    procedure SetUp; override;
+    procedure TearDown; override;
 
-         procedure Execution;
-         procedure Compilation;
-      published
-         procedure Test;
-   end;
+    procedure Execution;
+    procedure Compilation;
+  published
+    procedure Test;
+  end;
 
 implementation
+
 uses
-   SysUtils,
-   dwsXPlatform, dwsExprs, dwsLinqSql;
+  SysUtils,
+  dwsXPlatform, dwsExprs, dwsLinqSql;
 
 { TLinqTests }
 
 procedure TLinqTests.Compilation;
 var
-   source : TStringList;
-   i : Integer;
-   prog : IdwsProgram;
+  source: TStringList;
+  i: Integer;
+  prog: IdwsProgram;
 begin
-   source:=TStringList.Create;
-   try
+  source := TStringList.Create;
+  try
 
-      for i:=0 to FTests.Count-1 do begin
+    for i := 0 to FTests.Count - 1 do
+    begin
 
-         source.LoadFromFile(FTests[i]);
+      source.LoadFromFile(FTests[i]);
 
-         prog:=FCompiler.Compile(source.Text);
-         CheckEquals('', prog.Msgs.AsInfo, FTests[i]);
+      prog := FCompiler.Compile(source.Text);
+      CheckEquals('', prog.Msgs.AsInfo, FTests[i]);
 
-      end;
+    end;
 
-   finally
-      source.Free;
-   end;
+  finally
+    source.Free;
+  end;
 end;
 
 procedure TLinqTests.Execution;
 var
-   source, expectedResult : TStringList;
-   i : Integer;
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   resultText, resultsFileName : String;
+  source, expectedResult: TStringList;
+  i: Integer;
+  prog: IdwsProgram;
+  exec: IdwsProgramExecution;
+  resultText, resultsFileName: String;
 begin
-   source:=TStringList.Create;
-   expectedResult:=TStringList.Create;
-   try
+  source := TStringList.Create;
+  expectedResult := TStringList.Create;
+  try
 
-      for i:=0 to FTests.Count-1 do begin
+    for i := 0 to FTests.Count - 1 do
+    begin
 
-         source.LoadFromFile(FTests[i]);
+      source.LoadFromFile(FTests[i]);
 
-         prog:=FCompiler.Compile(source.Text);
+      prog := FCompiler.Compile(source.Text);
 
-         CheckEquals('', prog.Msgs.AsInfo, FTests[i]);
-         exec:=prog.Execute;
+      CheckEquals('', prog.Msgs.AsInfo, FTests[i]);
+      exec := prog.Execute;
 
-         resultText:=exec.Result.ToString;
-         if exec.Msgs.Count>0 then
-            resultText:=resultText+#13#10'>>>> Error(s): '#13#10+exec.Msgs.AsInfo;
+      resultText := exec.Result.ToString;
+      if exec.Msgs.Count > 0 then
+        resultText := resultText + #13#10'>>>> Error(s): '#13#10 +
+          exec.Msgs.AsInfo;
 
-         resultsFileName:=ChangeFileExt(FTests[i], '.txt');
-         if FileExists(resultsFileName) then begin
-            expectedResult.LoadFromFile(resultsFileName);
-            CheckEquals(expectedResult.Text, resultText, FTests[i]);
-         end else CheckEquals('', resultText, FTests[i]);
-         CheckEquals('', exec.Msgs.AsInfo, FTests[i]);
+      resultsFileName := ChangeFileExt(FTests[i], '.txt');
+      if FileExists(resultsFileName) then
+      begin
+        expectedResult.LoadFromFile(resultsFileName);
+        CheckEquals(expectedResult.Text, resultText, FTests[i]);
+      end
+      else
+        CheckEquals('', resultText, FTests[i]);
+      CheckEquals('', exec.Msgs.AsInfo, FTests[i]);
 
-      end;
+    end;
 
-   finally
-      expectedResult.Free;
-      source.Free;
-   end;
+  finally
+    expectedResult.Free;
+    source.Free;
+  end;
 end;
 
 procedure TLinqTests.SetUp;
 begin
-   FTests:=TStringList.Create;
+  FTests := TStringList.Create;
 
-   CollectFiles(ExtractFilePath(ParamStr(0))+'Linq'+PathDelim, '*.pas', FTests);
+  CollectFiles(ExtractFilePath(ParamStr(0)) + 'Linq' + PathDelim,
+    '*.pas', FTests);
 
-   FCompiler:=TDelphiWebScript.Create(nil);
-   FLinq := TdwsLinqFactory.Create(FCompiler);
-   FLinq.Script := FCompiler;
-   FDataBaseLib:=TdwsDatabaseLib.Create(FCompiler);
-   FDataBaseLib.dwsDatabase.StaticSymbols := false;
-   FDataBaseLib.Script:=FCompiler;
-   dwsLinqSql.TLinqSqlExtension.Create(FCompiler).LinqFactory := FLinq;
+  FCompiler := TDelphiWebScript.Create(nil);
+  FLinq := TdwsLinqFactory.Create(FCompiler);
+  FLinq.Script := FCompiler;
+  FDataBaseLib := TdwsDatabaseLib.Create(FCompiler);
+  FDataBaseLib.dwsDatabase.StaticSymbols := false;
+  FDataBaseLib.Script := FCompiler;
+  dwsLinqSql.TLinqSqlExtension.Create(FCompiler).LinqFactory := FLinq;
 end;
 
 procedure TLinqTests.TearDown;
 begin
-   FCompiler.Free;
+  FCompiler.Free;
 
-   FTests.Free;
+  FTests.Free;
 end;
 
 procedure TLinqTests.Test;
 begin
-   Compilation;
-   Execution;
+  Compilation;
+  Execution;
 end;
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 initialization
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
-   RegisterTest('dwsLinqLibTests', TLinqTests);
+RegisterTest('dwsLinqLibTests', TLinqTests);
 
 end.

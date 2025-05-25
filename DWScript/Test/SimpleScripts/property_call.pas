@@ -1,42 +1,43 @@
-type TProc = procedure;
+type
+  TProc = procedure;
 
-type TMyFunc = function : String;
+type
+  TMyFunc = function: String;
 
-type TMyFuncOne = function (i : Integer) : String;
+type
+  TMyFuncOne = function(i: Integer): String;
 
-type 
-   TTest = class
-      FProc : TProc;
-      FMyFunc : TMyFunc;
-      FMyFuncOne : TMyFuncOne;
-      
-      property Proc : TProc read FProc;
-      property MyFunc : TMyFunc read FMyFunc;
-      property MyFuncOne : TMyFuncOne read FMyFuncOne;
-   end;
+type
+  TTest = class
+    FProc: TProc;
+    FMyFunc: TMyFunc;
+    FMyFuncOne: TMyFuncOne;
 
-var t := new TTest;
+    property Proc: TProc read FProc;
+    property MyFunc: TMyFunc read FMyFunc;
+    property MyFuncOne: TMyFuncOne read FMyFuncOne;
+  end;
+
+var
+t := new TTest;
 
 procedure Hello;
 begin
-   PrintLn('Hello');
+  PrintLn('Hello');
 end;
 
-function World : String;
+function World: String;
 begin
-   Result:='World';
+  Result := 'World';
 end;
 
-t.FProc:=Hello;
-t.FMyFunc:=World;
-t.FMyFuncOne:=IntToStr;
+t.FProc := Hello;
+t.FMyFunc := World;
+t.FMyFuncOne := IntToStr;
 
 t.Proc();
 PrintLn(t.MyFunc());
 
 t.Proc;
 PrintLn(t.MyFunc);
-PrintLn(t.MyFuncOne(1+1));
-
-
-
+PrintLn(t.MyFuncOne(1 + 1));

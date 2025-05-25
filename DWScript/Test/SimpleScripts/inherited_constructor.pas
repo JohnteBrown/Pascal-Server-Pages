@@ -1,50 +1,52 @@
-function CreateElement : TObject;
+function CreateElement: TObject;
 begin
-   Result:=new TObject;
+  Result := new TObject;
 end;
 
 Type
-TComponent = Class(TObject)
-Private
-  FObjRef:  TObject;
-Public
-  Property    Handle:TObject read FObjRef;
-  Constructor Create(AOwner:TComponent);virtual;
-End;
+  TComponent = Class(TObject)
+  Private
+    FObjRef: TObject;
+  Public
+    Property Handle: TObject read FObjRef;
+    Constructor Create(AOwner: TComponent); virtual;
+  End;
 
-Constructor TComponent.Create(AOwner:TComponent);
+Constructor TComponent.Create(AOwner: TComponent);
 Begin
-  FObjRef:=createElement;
+  FObjRef := CreateElement;
 end;
 
 Type
-TCustomControl = Class(TComponent)
-public
-  Constructor Create(AOwner:TComponent);override;
-End;
+  TCustomControl = Class(TComponent)
+  public
+    Constructor Create(AOwner: TComponent); override;
+  End;
 
-Constructor TCustomControl.Create(AOwner:TComponent);
+Constructor TCustomControl.Create(AOwner: TComponent);
 Begin
   if assigned(Handle) then
-  println('We have a handle') else
-  println('We dont have a handle');
+    println('We have a handle')
+  else
+    println('We dont have a handle');
 end;
 
 Type
-TCustomControl2 = Class(TComponent)
-public
-  Constructor Create(AOwner:TComponent);override;
-End;
+  TCustomControl2 = Class(TComponent)
+  public
+    Constructor Create(AOwner: TComponent); override;
+  End;
 
-Constructor TCustomControl2.Create(AOwner:TComponent);
+Constructor TCustomControl2.Create(AOwner: TComponent);
 Begin
   inherited Create(AOwner);
   if assigned(Handle) then
-  println('We have a handle') else
-  println('We dont have a handle');
+    println('We have a handle')
+  else
+    println('We dont have a handle');
 end;
 
-
-var mObj: TComponent;
-mObj:=TCustomControl.Create(NIL);
-mObj:=TCustomControl2.Create(NIL);
+var
+  mObj: TComponent;
+mObj := TCustomControl.Create(NIL);
+mObj := TCustomControl2.Create(NIL);

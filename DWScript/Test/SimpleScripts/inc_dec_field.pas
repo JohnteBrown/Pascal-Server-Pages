@@ -1,30 +1,31 @@
 type
-   TTest = class
-      Field : Integer;
-      procedure IncDec;
-      procedure IncDecN(n : Integer);
-   end;
-   
+  TTest = class
+    Field: Integer;
+    procedure IncDec;
+    procedure IncDecN(n: Integer);
+  end;
+
 procedure TTest.IncDec;
 begin
-   Inc(Field);
-   PrintLn(Field);
-   Dec(Field);
-   PrintLn(Field);
+  Inc(Field);
+  PrintLn(Field);
+  Dec(Field);
+  PrintLn(Field);
 end;
 
-procedure TTest.IncDecN(n : Integer);
+procedure TTest.IncDecN(n: Integer);
 begin
-   Inc(Field, n);
-   PrintLn(Field);
-   Dec(Field, n);
-   PrintLn(Field);
+  Inc(Field, n);
+  PrintLn(Field);
+  Dec(Field, n);
+  PrintLn(Field);
 end;
-   
+
 TTest.Create.IncDec;
 TTest.Create.IncDecN(2);
 
-var t := new TTest;
+var
+t := new TTest;
 
 Inc(t.Field);
 PrintLn(t.Field);

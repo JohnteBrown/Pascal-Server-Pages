@@ -1,7 +1,9 @@
-var e : Exception;
+var
+  e: Exception;
 
 try
-   raise e;
+  raise e;
 except
-   on Ex: Exception do PrintLn(Ex.Message);
+  on Ex: Exception do
+    PrintLn(Ex.Message);
 end;

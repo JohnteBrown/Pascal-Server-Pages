@@ -3,107 +3,110 @@ unit UdwsFunctionsTests;
 interface
 
 uses Classes, SysUtils, dwsXPlatformTests, dwsComp, dwsCompiler, dwsExprs,
-   dwsTokenizer, dwsSymbols, dwsXPlatform, dwsUtils, dwsErrors,
-   dwsMathFunctions, dwsTimeFunctions, dwsGlobalVarsFunctions, dwsVariantFunctions,
-   dwsMathComplexFunctions, dwsMath3DFunctions, dwsCompilerContext,
-   dwsByteBufferFunctions, dwsUnitSymbols, dwsJSONConnector;
+  dwsTokenizer, dwsSymbols, dwsXPlatform, dwsUtils, dwsErrors,
+  dwsMathFunctions, dwsTimeFunctions, dwsGlobalVarsFunctions,
+  dwsVariantFunctions,
+  dwsMathComplexFunctions, dwsMath3DFunctions, dwsCompilerContext,
+  dwsByteBufferFunctions, dwsUnitSymbols, dwsJSONConnector;
 
 type
 
-   TdwsFunctionsTestsBase = class (TTestCase)
-      private
-         FFolder, FFolderPath : String;
-         FTests : TStringList;
-         FCompiler : TDelphiWebScript;
-         FJSON : TdwsJSONLibModule;
+  TdwsFunctionsTestsBase = class(TTestCase)
+  private
+    FFolder, FFolderPath: String;
+    FTests: TStringList;
+    FCompiler: TDelphiWebScript;
+    FJSON: TdwsJSONLibModule;
 
-      public
-         procedure SetUp; override;
-         procedure TearDown; override;
+  public
+    procedure SetUp; override;
+    procedure TearDown; override;
 
-         function DoNeedUnit(const unitName : String; var unitSource : String) : IdwsUnit;
+    function DoNeedUnit(const unitName: String; var unitSource: String)
+      : IdwsUnit;
 
-         procedure Compilation;
-         procedure Execution;
+    procedure Compilation;
+    procedure Execution;
 
-      published
+  published
 
-         procedure CompilationNormal;
-         procedure CompilationWithMapAndSymbols;
-         procedure ExecutionNonOptimized;
-         procedure ExecutionOptimized;
-   end;
+    procedure CompilationNormal;
+    procedure CompilationWithMapAndSymbols;
+    procedure ExecutionNonOptimized;
+    procedure ExecutionOptimized;
+  end;
 
-   TdwsFuncFunctionsTestsMath = class (TdwsFunctionsTestsBase)
-      public
-         procedure SetUp; override;
-   end;
+  TdwsFuncFunctionsTestsMath = class(TdwsFunctionsTestsBase)
+  public
+    procedure SetUp; override;
+  end;
 
-   TdwsFuncFunctionsTestsMathComplex = class (TdwsFunctionsTestsBase)
-      public
-         procedure SetUp; override;
-   end;
+  TdwsFuncFunctionsTestsMathComplex = class(TdwsFunctionsTestsBase)
+  public
+    procedure SetUp; override;
+  end;
 
-   TdwsFuncFunctionsTestsMath3D = class (TdwsFunctionsTestsBase)
-      public
-         procedure SetUp; override;
-   end;
+  TdwsFuncFunctionsTestsMath3D = class(TdwsFunctionsTestsBase)
+  public
+    procedure SetUp; override;
+  end;
 
-   TdwsFuncFunctionsTestsTime = class (TdwsFunctionsTestsBase)
-      public
-         procedure SetUp; override;
-   end;
+  TdwsFuncFunctionsTestsTime = class(TdwsFunctionsTestsBase)
+  public
+    procedure SetUp; override;
+  end;
 
-   TdwsFuncFunctionsTestsString = class (TdwsFunctionsTestsBase)
-      private
-         FLocalizer : TdwsCustomLocalizer;
+  TdwsFuncFunctionsTestsString = class(TdwsFunctionsTestsBase)
+  private
+    FLocalizer: TdwsCustomLocalizer;
 
-      protected
-         procedure DoOnLocalize(Sender : TObject; const aString : String;
-                                var result : String);
+  protected
+    procedure DoOnLocalize(Sender: TObject; const aString: String;
+      var result: String);
 
-      public
-         procedure SetUp; override;
+  public
+    procedure SetUp; override;
 
-      published
-         procedure LocalizeTest;
+  published
+    procedure LocalizeTest;
 
-   end;
+  end;
 
-   TdwsFuncFunctionsTestsVariant = class (TdwsFunctionsTestsBase)
-      public
-         procedure SetUp; override;
-   end;
+  TdwsFuncFunctionsTestsVariant = class(TdwsFunctionsTestsBase)
+  public
+    procedure SetUp; override;
+  end;
 
-   TdwsFuncFunctionsTestsGlobalVars = class (TdwsFunctionsTestsBase)
-      public
-         procedure SetUp; override;
-   end;
+  TdwsFuncFunctionsTestsGlobalVars = class(TdwsFunctionsTestsBase)
+  public
+    procedure SetUp; override;
+  end;
 
-   TdwsFuncFunctionsTestsRTTI = class (TdwsFunctionsTestsBase)
-      public
-         procedure SetUp; override;
-   end;
+  TdwsFuncFunctionsTestsRTTI = class(TdwsFunctionsTestsBase)
+  public
+    procedure SetUp; override;
+  end;
 
-   TdwsFuncFunctionsTestsDebug = class (TdwsFunctionsTestsBase)
-      public
-         procedure SetUp; override;
-   end;
+  TdwsFuncFunctionsTestsDebug = class(TdwsFunctionsTestsBase)
+  public
+    procedure SetUp; override;
+  end;
 
-   TdwsFuncFunctionsTestsByteBuffer = class (TdwsFunctionsTestsBase)
-      public
-         procedure SetUp; override;
-   end;
+  TdwsFuncFunctionsTestsByteBuffer = class(TdwsFunctionsTestsBase)
+  public
+    procedure SetUp; override;
+  end;
 
-   TdwsFuncFunctionsTestsFile = class (TdwsFunctionsTestsBase)
-      public
-         procedure SetUp; override;
-   end;
+  TdwsFuncFunctionsTestsFile = class(TdwsFunctionsTestsBase)
+  public
+    procedure SetUp; override;
+  end;
 
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
 implementation
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
@@ -116,141 +119,151 @@ implementation
 //
 procedure TdwsFunctionsTestsBase.SetUp;
 begin
-   SetDecimalSeparator('.');
+  SetDecimalSeparator('.');
 
-   FCompiler:=TDelphiWebScript.Create(nil);
-   FCompiler.Config.OnNeedUnit := DoNeedUnit;
+  FCompiler := TDelphiWebScript.Create(nil);
+  FCompiler.Config.OnNeedUnit := DoNeedUnit;
 
-   FFolderPath := ExtractFilePath(ParamStr(0))+FFolder+PathDelim;
+  FFolderPath := ExtractFilePath(ParamStr(0)) + FFolder + PathDelim;
 
-   FTests:=TStringList.Create;
-   CollectFiles(FFolderPath, '*.pas', FTests);
+  FTests := TStringList.Create;
+  CollectFiles(FFolderPath, '*.pas', FTests);
 end;
 
 // TearDown
 //
 procedure TdwsFunctionsTestsBase.TearDown;
 begin
-   FTests.Free;
+  FTests.Free;
 
-   FreeAndNil(FJSON);
-   FCompiler.Free;
+  FreeAndNil(FJSON);
+  FCompiler.Free;
 end;
 
 // DoNeedUnit
 //
-function TdwsFunctionsTestsBase.DoNeedUnit(const unitName : String; var unitSource : String) : IdwsUnit;
+function TdwsFunctionsTestsBase.DoNeedUnit(const unitName: String;
+  var unitSource: String): IdwsUnit;
 var
-   tempPath : String;
+  tempPath: String;
 begin
-   if unitName = 'TestTempPath' then begin
-      tempPath := FFolderPath + 'Temp' + PathDelim;
-      FastStringReplace(tempPath, '"', '""');
-      unitSource := 'unit TestTempPath; const TempPath = "' + tempPath + '";';
-   end else unitSource := LoadTextFromFile(FFolderPath + unitName + '.pas');
+  if unitName = 'TestTempPath' then
+  begin
+    tempPath := FFolderPath + 'Temp' + PathDelim;
+    FastStringReplace(tempPath, '"', '""');
+    unitSource := 'unit TestTempPath; const TempPath = "' + tempPath + '";';
+  end
+  else
+    unitSource := LoadTextFromFile(FFolderPath + unitName + '.pas');
 end;
 
 // Compilation
 //
 procedure TdwsFunctionsTestsBase.Compilation;
 var
-   source : TStringList;
-   i : Integer;
-   prog : IdwsProgram;
+  source: TStringList;
+  i: Integer;
+  prog: IdwsProgram;
 begin
-   source:=TStringList.Create;
-   try
+  source := TStringList.Create;
+  try
 
-      for i:=0 to FTests.Count-1 do begin
+    for i := 0 to FTests.Count - 1 do
+    begin
 
-         source.LoadFromFile(FTests[i]);
+      source.LoadFromFile(FTests[i]);
 
-         prog:=FCompiler.Compile(source.Text);
-         CheckEquals(False, prog.Msgs.HasErrors, FTests[i]+#13#10+prog.Msgs.AsInfo);
+      prog := FCompiler.Compile(source.Text);
+      CheckEquals(False, prog.Msgs.HasErrors, FTests[i] + #13#10 +
+        prog.Msgs.AsInfo);
 
-      end;
+    end;
 
-   finally
-      source.Free;
-   end;
+  finally
+    source.Free;
+  end;
 end;
 
 // Execution
 //
 procedure TdwsFunctionsTestsBase.Execution;
 var
-   source, expectedResult : TStringList;
-   i : Integer;
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   resultsFileName, output : String;
+  source, expectedResult: TStringList;
+  i: Integer;
+  prog: IdwsProgram;
+  exec: IdwsProgramExecution;
+  resultsFileName, output: String;
 begin
-   source:=TStringList.Create;
-   expectedResult:=TStringList.Create;
-   try
+  source := TStringList.Create;
+  expectedResult := TStringList.Create;
+  try
 
-      for i:=0 to FTests.Count-1 do begin
+    for i := 0 to FTests.Count - 1 do
+    begin
 
-         source.LoadFromFile(FTests[i]);
+      source.LoadFromFile(FTests[i]);
 
-         prog:=FCompiler.Compile(source.Text);
-         CheckEquals(False, prog.Msgs.HasErrors, FTests[i]);
-         exec:=prog.Execute;
+      prog := FCompiler.Compile(source.Text);
+      CheckEquals(False, prog.Msgs.HasErrors, FTests[i]);
+      exec := prog.Execute;
 
-         if prog.Msgs.Count+exec.Msgs.Count=0 then
-            output:=exec.Result.ToString
-         else begin
-            output:= 'Errors >>>>'#13#10
-                    +prog.Msgs.AsInfo
-                    +exec.Msgs.AsInfo
-                    +'Result >>>>'#13#10
-                    +exec.Result.ToString;
-         end;
-
-         resultsFileName:=ChangeFileExt(FTests[i], '.txt');
-         if FileExists(resultsFileName) then begin
-            expectedResult.LoadFromFile(resultsFileName);
-            CheckEquals(expectedResult.Text, output, FTests[i]);
-         end else CheckEquals('', exec.Result.ToString, FTests[i]);
-
+      if prog.Msgs.Count + exec.Msgs.Count = 0 then
+        output := exec.result.ToString
+      else
+      begin
+        output := 'Errors >>>>'#13#10 + prog.Msgs.AsInfo + exec.Msgs.AsInfo +
+          'Result >>>>'#13#10 + exec.result.ToString;
       end;
 
-   finally
-      expectedResult.Free;
-      source.Free;
-   end;
+      resultsFileName := ChangeFileExt(FTests[i], '.txt');
+      if FileExists(resultsFileName) then
+      begin
+        expectedResult.LoadFromFile(resultsFileName);
+        CheckEquals(expectedResult.Text, output, FTests[i]);
+      end
+      else
+        CheckEquals('', exec.result.ToString, FTests[i]);
+
+    end;
+
+  finally
+    expectedResult.Free;
+    source.Free;
+  end;
 end;
 
 // CompilationNormal
 //
 procedure TdwsFunctionsTestsBase.CompilationNormal;
 begin
-   FCompiler.Config.CompilerOptions:=[coOptimize];
-   Compilation;
+  FCompiler.Config.CompilerOptions := [coOptimize];
+  Compilation;
 end;
 
 // CompilationWithMapAndSymbols
 //
 procedure TdwsFunctionsTestsBase.CompilationWithMapAndSymbols;
 begin
-   FCompiler.Config.CompilerOptions:=[coSymbolDictionary, coContextMap, coAssertions];
-   Compilation;
+  FCompiler.Config.CompilerOptions := [coSymbolDictionary, coContextMap,
+    coAssertions];
+  Compilation;
 end;
 
 // ExecutionNonOptimized
 //
 procedure TdwsFunctionsTestsBase.ExecutionNonOptimized;
 begin
-   FCompiler.Config.CompilerOptions:=[coSymbolDictionary, coContextMap, coAssertions];
-   Execution;
+  FCompiler.Config.CompilerOptions := [coSymbolDictionary, coContextMap,
+    coAssertions];
+  Execution;
 end;
 
 // ExecutionOptimized
 //
 procedure TdwsFunctionsTestsBase.ExecutionOptimized;
 begin
-   FCompiler.Config.CompilerOptions:=[coOptimize, coAssertions];
-   Execution;
+  FCompiler.Config.CompilerOptions := [coOptimize, coAssertions];
+  Execution;
 end;
 
 // ------------------
@@ -261,8 +274,8 @@ end;
 //
 procedure TdwsFuncFunctionsTestsMath.SetUp;
 begin
-   FFolder:='FunctionsMath';
-   inherited;
+  FFolder := 'FunctionsMath';
+  inherited;
 end;
 
 // ------------------
@@ -273,8 +286,8 @@ end;
 //
 procedure TdwsFuncFunctionsTestsMathComplex.SetUp;
 begin
-   FFolder:='FunctionsMathComplex';
-   inherited;
+  FFolder := 'FunctionsMathComplex';
+  inherited;
 end;
 
 // ------------------
@@ -285,8 +298,8 @@ end;
 //
 procedure TdwsFuncFunctionsTestsMath3D.SetUp;
 begin
-   FFolder:='FunctionsMath3D';
-   inherited;
+  FFolder := 'FunctionsMath3D';
+  inherited;
 end;
 
 // ------------------
@@ -297,8 +310,8 @@ end;
 //
 procedure TdwsFuncFunctionsTestsTime.SetUp;
 begin
-   FFolder:='FunctionsTime';
-   inherited;
+  FFolder := 'FunctionsTime';
+  inherited;
 end;
 
 // ------------------
@@ -309,33 +322,33 @@ end;
 //
 procedure TdwsFuncFunctionsTestsString.SetUp;
 begin
-   FFolder:='FunctionsString';
-   inherited;
+  FFolder := 'FunctionsString';
+  inherited;
 
-   FLocalizer:=TdwsCustomLocalizer.Create(FCompiler);
-   FCompiler.Config.Localizer:=FLocalizer;
-   FLocalizer.OnLocalizeString:=DoOnLocalize;
+  FLocalizer := TdwsCustomLocalizer.Create(FCompiler);
+  FCompiler.Config.Localizer := FLocalizer;
+  FLocalizer.OnLocalizeString := DoOnLocalize;
 end;
 
 // DoOnLocalize
 //
-procedure TdwsFuncFunctionsTestsString.DoOnLocalize(Sender : TObject; const aString : String;
-                                                    var result : String);
+procedure TdwsFuncFunctionsTestsString.DoOnLocalize(Sender: TObject;
+  const aString: String; var result: String);
 begin
-   Result:='['+aString+']';
+  result := '[' + aString + ']';
 end;
 
 // LocalizeTest
 //
 procedure TdwsFuncFunctionsTestsString.LocalizeTest;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
+  prog: IdwsProgram;
+  exec: IdwsProgramExecution;
 begin
-   prog:=FCompiler.Compile('Print(_("Test"));');
-   exec:=prog.CreateNewExecution;
-   exec.Execute;
-   CheckEquals('[Test]', exec.Result.ToString);
+  prog := FCompiler.Compile('Print(_("Test"));');
+  exec := prog.CreateNewExecution;
+  exec.Execute;
+  CheckEquals('[Test]', exec.result.ToString);
 end;
 
 // ------------------
@@ -346,10 +359,10 @@ end;
 //
 procedure TdwsFuncFunctionsTestsVariant.SetUp;
 begin
-   FFolder:='FunctionsVariant';
-   inherited;
-   FJSON := TdwsJSONLibModule.Create(nil);
-   FJSON.Script := FCompiler;
+  FFolder := 'FunctionsVariant';
+  inherited;
+  FJSON := TdwsJSONLibModule.Create(nil);
+  FJSON.Script := FCompiler;
 end;
 
 // ------------------
@@ -360,10 +373,10 @@ end;
 //
 procedure TdwsFuncFunctionsTestsGlobalVars.SetUp;
 begin
-   FFolder:='FunctionsGlobalVars';
-   inherited;
-   FJSON := TdwsJSONLibModule.Create(nil);
-   FJSON.Script := FCompiler;
+  FFolder := 'FunctionsGlobalVars';
+  inherited;
+  FJSON := TdwsJSONLibModule.Create(nil);
+  FJSON.Script := FCompiler;
 end;
 
 // ------------------
@@ -374,8 +387,8 @@ end;
 //
 procedure TdwsFuncFunctionsTestsRTTI.SetUp;
 begin
-   FFolder:='FunctionsRTTI';
-   inherited;
+  FFolder := 'FunctionsRTTI';
+  inherited;
 end;
 
 // ------------------
@@ -386,8 +399,8 @@ end;
 //
 procedure TdwsFuncFunctionsTestsDebug.SetUp;
 begin
-   FFolder:='FunctionsDebug';
-   inherited;
+  FFolder := 'FunctionsDebug';
+  inherited;
 end;
 
 // ------------------
@@ -398,8 +411,8 @@ end;
 //
 procedure TdwsFuncFunctionsTestsByteBuffer.SetUp;
 begin
-   FFolder:='FunctionsByteBuffer';
-   inherited;
+  FFolder := 'FunctionsByteBuffer';
+  inherited;
 end;
 
 // ------------------
@@ -410,28 +423,29 @@ end;
 //
 procedure TdwsFuncFunctionsTestsFile.SetUp;
 begin
-   FFolder:='FunctionsFile';
-   inherited;
+  FFolder := 'FunctionsFile';
+  inherited;
 end;
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 initialization
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
-   RegisterTest('Functions', TdwsFuncFunctionsTestsMath);
-   RegisterTest('Functions', TdwsFuncFunctionsTestsMathComplex);
-   RegisterTest('Functions', TdwsFuncFunctionsTestsMath3D);
-   RegisterTest('Functions', TdwsFuncFunctionsTestsTime);
-   RegisterTest('Functions', TdwsFuncFunctionsTestsString);
-   RegisterTest('Functions', TdwsFuncFunctionsTestsVariant);
-   RegisterTest('Functions', TdwsFuncFunctionsTestsGlobalVars);
-   RegisterTest('Functions', TdwsFuncFunctionsTestsRTTI);
-   RegisterTest('Functions', TdwsFuncFunctionsTestsDebug);
-   RegisterTest('Functions', TdwsFuncFunctionsTestsByteBuffer);
-   RegisterTest('Functions', TdwsFuncFunctionsTestsFile);
+RegisterTest('Functions', TdwsFuncFunctionsTestsMath);
+RegisterTest('Functions', TdwsFuncFunctionsTestsMathComplex);
+RegisterTest('Functions', TdwsFuncFunctionsTestsMath3D);
+RegisterTest('Functions', TdwsFuncFunctionsTestsTime);
+RegisterTest('Functions', TdwsFuncFunctionsTestsString);
+RegisterTest('Functions', TdwsFuncFunctionsTestsVariant);
+RegisterTest('Functions', TdwsFuncFunctionsTestsGlobalVars);
+RegisterTest('Functions', TdwsFuncFunctionsTestsRTTI);
+RegisterTest('Functions', TdwsFuncFunctionsTestsDebug);
+RegisterTest('Functions', TdwsFuncFunctionsTestsByteBuffer);
+RegisterTest('Functions', TdwsFuncFunctionsTestsFile);
 
 end.

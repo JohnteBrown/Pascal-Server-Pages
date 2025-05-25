@@ -1,5 +1,5 @@
 {
-Demo: Object Orientated Programming (OOP)
+  Demo: Object Orientated Programming (OOP)
 
 }
 type
@@ -32,36 +32,42 @@ begin
   Result := 'CClass.Q: Static method';
 end;
 
-var objA, objB : AClass;
+var
+  objA, objB: AClass;
 
 objA := AClass.Create;
 objB := BClass.Create;
 
-if objA is AClass then PrintLn('objA is AClass');
-if objA is BClass then PrintLn('objA is BClass');
-if objA is CClass then PrintLn('objA is CClass');
+if objA is AClass then
+  PrintLn('objA is AClass');
+if objA is BClass then
+  PrintLn('objA is BClass');
+if objA is CClass then
+  PrintLn('objA is CClass');
 
-if objB is AClass then PrintLn('objB is AClass');
-if objB is BClass then PrintLn('objB is BClass');
-if objB is CClass then PrintLn('objB is CClass');
+if objB is AClass then
+  PrintLn('objB is AClass');
+if objB is BClass then
+  PrintLn('objB is BClass');
+if objB is CClass then
+  PrintLn('objB is CClass');
 
 PrintLn((objA as AClass).Q);
 try
-   PrintLn((objA as BClass).Q);
+  PrintLn((objA as BClass).Q);
 except
-   PrintLn('objA isn''t BClass');
+  PrintLn('objA isn''t BClass');
 end;
 try
-   PrintLn((objA as CClass).Q);
+  PrintLn((objA as CClass).Q);
 except
-   PrintLn('objA isn''t CClass');
+  PrintLn('objA isn''t CClass');
 end;
 
 PrintLn((objB as AClass).Q);
 PrintLn((objB as BClass).Q);
 try
-   PrintLn((objB as CClass).Q);
+  PrintLn((objB as CClass).Q);
 except
-   PrintLn('objB isn''t CClass');
+  PrintLn('objB isn''t CClass');
 end;
-

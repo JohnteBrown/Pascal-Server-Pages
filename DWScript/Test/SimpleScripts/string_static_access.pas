@@ -1,5 +1,8 @@
-var s := 'hello';
-var i := 2;
+var
+s := 'hello';
+
+var
+i := 2;
 
 PrintLn(s[1]);
 PrintLn(s[i]);

@@ -1,10 +1,11 @@
-var v : Variant;
+var
+  v: Variant;
 
 try
-   Assert(v, 'empty');
+  Assert(v, 'empty');
 except
-   on E: EAssertionFailed do
-      PrintLn(E.Message);
+  on E: EAssertionFailed do
+    PrintLn(E.Message);
 end;
 
 v := True;
@@ -17,8 +18,8 @@ Assert(v, 'bug 1');
 
 v := 0;
 try
-   Assert(v, 'ok');
+  Assert(v, 'ok');
 except
-   on E: EAssertionFailed do
-      PrintLn(E.Message);
+  on E: EAssertionFailed do
+    PrintLn(E.Message);
 end;

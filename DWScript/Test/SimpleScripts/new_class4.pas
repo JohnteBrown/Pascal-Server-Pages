@@ -1,18 +1,19 @@
 type
-   TMyClass = class
-   end;
+  TMyClass = class
+  end;
 
-var c : TClass;
+var
+  c: TClass;
 
 try
-   new c;
+  new c;
 except
-   on E: Exception do
-      PrintLn(E.Message);
+  on E: Exception do
+    PrintLn(E.Message);
 end;
 
-c:=TObject;
+c := TObject;
 PrintLn(new c.ClassName);
 
-c:=TMyClass;
+c := TMyClass;
 PrintLn(new c.ClassName);

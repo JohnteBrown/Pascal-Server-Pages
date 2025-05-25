@@ -1,8 +1,8 @@
 {
-Demo: Object Orientated Programming (OOP)
+  Demo: Object Orientated Programming (OOP)
 
 }
-type 
+type
   AClass = class
     s, t: string;
     procedure P(param: string); virtual;
@@ -38,7 +38,8 @@ begin
   inherited P('inh');
 end;
 
-var o: AClass;
+var
+  o: AClass;
 
 o := BClass.Create;
 
@@ -51,4 +52,3 @@ PrintLn('');
 PrintLn('--- Static methods');
 PrintLn(o.Q);
 PrintLn(BClass(o).Q);
-

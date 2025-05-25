@@ -1,28 +1,34 @@
 type
-   TBase = class
-      F := 123;
-      A := [1, 2, 3];
-      procedure P; virtual;
-      begin
-         PrintLn(F);
-         Print(A.Length);
-         Print(A[0]);
-         Print(A[1]);
-         PrintLn(A[2]);
-      end;
-   end;
+  TBase = class
+    F := 123;
+    A := [1, 2, 3];
+    procedure P; virtual;
+
+    begin
+      PrintLn(F);
+      Print(A.Length);
+      Print(A[0]);
+      Print(A[1]);
+      PrintLn(A[2]);
+    end;
+  end;
+
 type
-   TChild = class (TBase)
-      B = 4.5;
-      procedure P; override;
-      begin
-         inherited P;
-         PrintLn(B);
-      end;
-   end;
+  TChild = class(TBase)
+    B = 4.5;
+    procedure P; override;
 
-var b := TBase.Create;
-var c := TChild.Create;
+    begin
+      inherited P;
+      PrintLn(B);
+    end;
+  end;
 
-b.P;
+var
+B := TBase.Create;
+
+var
+c := TChild.Create;
+
+B.P;
 c.P;

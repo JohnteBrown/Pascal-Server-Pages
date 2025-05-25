@@ -1,14 +1,15 @@
 type
-   TRec = record
-      a : Integer;
-   end;
+  TRec = record
+    a: Integer;
+  end;
 
-procedure Test(var a : Integer);
+procedure Test(var a: Integer);
 begin
-   Inc(a);
+  Inc(a);
 end;
 
-var r : TRec;
+var
+  r: TRec;
 
 Test(r.a);
 PrintLn(r.a);

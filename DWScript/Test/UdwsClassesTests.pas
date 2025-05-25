@@ -3,41 +3,42 @@ unit UdwsClassesTests;
 interface
 
 uses Classes, SysUtils, dwsXPlatformTests, dwsComp, dwsCompiler, dwsExprs,
-   dwsXPlatform, dwsSymbols, dwsUtils, dwsInfo, dwsCompilerContext,
-   dwsClassesLibModule, dwsZipLibModule;
+  dwsXPlatform, dwsSymbols, dwsUtils, dwsInfo, dwsCompilerContext,
+  dwsClassesLibModule, dwsZipLibModule;
 
 type
 
-   TdwsClassesTests = class (TTestCase)
-      private
-         FTests : TStringList;
-         FCompiler : TDelphiWebScript;
-         FClassesLib : TdwsClassesLib;
-         FZipLib : TdwsZipLib;
+  TdwsClassesTests = class(TTestCase)
+  private
+    FTests: TStringList;
+    FCompiler: TDelphiWebScript;
+    FClassesLib: TdwsClassesLib;
+    FZipLib: TdwsZipLib;
 
-      public
-         procedure SetUp; override;
-         procedure TearDown; override;
+  public
+    procedure SetUp; override;
+    procedure TearDown; override;
 
-         procedure Execution;
-         procedure Compilation;
+    procedure Execution;
+    procedure Compilation;
 
-      published
+  published
 
-         procedure CompilationNormal;
-         procedure CompilationWithMapAndSymbols;
-         procedure ExecutionNonOptimized;
-         procedure ExecutionOptimized;
+    procedure CompilationNormal;
+    procedure CompilationWithMapAndSymbols;
+    procedure ExecutionNonOptimized;
+    procedure ExecutionOptimized;
 
-         procedure SymbolDescriptions;
+    procedure SymbolDescriptions;
 
-         procedure CallAfterExec;
-   end;
+    procedure CallAfterExec;
+  end;
 
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
 implementation
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
@@ -50,179 +51,185 @@ implementation
 //
 procedure TdwsClassesTests.SetUp;
 begin
-   FTests:=TStringList.Create;
+  FTests := TStringList.Create;
 
-   CollectFiles(ExtractFilePath(ParamStr(0))+'ClassesLib'+PathDelim, '*.pas', FTests);
+  CollectFiles(ExtractFilePath(ParamStr(0)) + 'ClassesLib' + PathDelim,
+    '*.pas', FTests);
 
-   FCompiler:=TDelphiWebScript.Create(nil);
+  FCompiler := TDelphiWebScript.Create(nil);
 
-   FClassesLib:=TdwsClassesLib.Create(nil);
-   FClassesLib.Script:=FCompiler;
+  FClassesLib := TdwsClassesLib.Create(nil);
+  FClassesLib.Script := FCompiler;
 
-   FZipLib := TdwsZipLib.Create(nil);
-   FZipLib.dwsZip.Script := FCompiler;
+  FZipLib := TdwsZipLib.Create(nil);
+  FZipLib.dwsZip.Script := FCompiler;
 end;
 
 // TearDown
 //
 procedure TdwsClassesTests.TearDown;
 begin
-   FClassesLib.Free;
-   FZipLib.Free;
+  FClassesLib.Free;
+  FZipLib.Free;
 
-   FCompiler.Free;
+  FCompiler.Free;
 
-   FTests.Free;
+  FTests.Free;
 end;
 
 // Compilation
 //
 procedure TdwsClassesTests.Compilation;
 var
-   source : TStringList;
-   i : Integer;
-   prog : IdwsProgram;
+  source: TStringList;
+  i: Integer;
+  prog: IdwsProgram;
 begin
-   source:=TStringList.Create;
-   try
+  source := TStringList.Create;
+  try
 
-      for i:=0 to FTests.Count-1 do begin
+    for i := 0 to FTests.Count - 1 do
+    begin
 
-         source.LoadFromFile(FTests[i]);
+      source.LoadFromFile(FTests[i]);
 
-         prog:=FCompiler.Compile(source.Text);
-         CheckEquals('', prog.Msgs.AsInfo, FTests[i]);
+      prog := FCompiler.Compile(source.Text);
+      CheckEquals('', prog.Msgs.AsInfo, FTests[i]);
 
-      end;
+    end;
 
-   finally
-      source.Free;
-   end;
+  finally
+    source.Free;
+  end;
 end;
 
 // CompilationNormal
 //
 procedure TdwsClassesTests.CompilationNormal;
 begin
-   FCompiler.Config.CompilerOptions:=[coOptimize];
-   Compilation;
+  FCompiler.Config.CompilerOptions := [coOptimize];
+  Compilation;
 end;
 
 // CompilationWithMapAndSymbols
 //
 procedure TdwsClassesTests.CompilationWithMapAndSymbols;
 begin
-   FCompiler.Config.CompilerOptions:=[coSymbolDictionary, coContextMap, coAssertions];
-   Compilation;
+  FCompiler.Config.CompilerOptions := [coSymbolDictionary, coContextMap,
+    coAssertions];
+  Compilation;
 end;
 
 // ExecutionNonOptimized
 //
 procedure TdwsClassesTests.ExecutionNonOptimized;
 begin
-   FCompiler.Config.CompilerOptions:=[coAssertions];
-   Execution;
+  FCompiler.Config.CompilerOptions := [coAssertions];
+  Execution;
 end;
 
 // ExecutionOptimized
 //
 procedure TdwsClassesTests.ExecutionOptimized;
 begin
-   FCompiler.Config.CompilerOptions:=[coOptimize, coAssertions];
-   Execution;
+  FCompiler.Config.CompilerOptions := [coOptimize, coAssertions];
+  Execution;
 end;
 
 // SymbolDescriptions
 //
 procedure TdwsClassesTests.SymbolDescriptions;
 var
-   prog : IdwsProgram;
-   stringsSymbol : TClassSymbol;
+  prog: IdwsProgram;
+  stringsSymbol: TClassSymbol;
 begin
-   prog:=FCompiler.Compile('');
-   stringsSymbol:=prog.Table.FindSymbol('TStrings', cvMagic) as TClassSymbol;
-   CheckEquals('property Strings[x: Integer]: String read GetStrings write SetStrings; default;',
-               stringsSymbol.Members.FindSymbol('Strings', cvPublic).Description, 'Strings Description');
+  prog := FCompiler.Compile('');
+  stringsSymbol := prog.Table.FindSymbol('TStrings', cvMagic) as TClassSymbol;
+  CheckEquals
+    ('property Strings[x: Integer]: String read GetStrings write SetStrings; default;',
+    stringsSymbol.Members.FindSymbol('Strings', cvPublic).Description,
+    'Strings Description');
 end;
 
 // Execution
 //
 procedure TdwsClassesTests.Execution;
 var
-   source, expectedResult : TStringList;
-   i : Integer;
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   resultsFileName : String;
+  source, expectedResult: TStringList;
+  i: Integer;
+  prog: IdwsProgram;
+  exec: IdwsProgramExecution;
+  resultsFileName: String;
 begin
-   source:=TStringList.Create;
-   expectedResult:=TStringList.Create;
-   try
+  source := TStringList.Create;
+  expectedResult := TStringList.Create;
+  try
 
-      for i:=0 to FTests.Count-1 do begin
+    for i := 0 to FTests.Count - 1 do
+    begin
 
-         source.LoadFromFile(FTests[i]);
+      source.LoadFromFile(FTests[i]);
 
-         prog:=FCompiler.Compile(source.Text);
+      prog := FCompiler.Compile(source.Text);
 
-         CheckEquals('', prog.Msgs.AsInfo, FTests[i]);
-         exec:=prog.Execute;
-         resultsFileName:=ChangeFileExt(FTests[i], '.txt');
-         if FileExists(resultsFileName) then begin
-            expectedResult.LoadFromFile(resultsFileName);
-            CheckEquals(expectedResult.Text, exec.Result.ToString, FTests[i]);
-         end else CheckEquals('', exec.Result.ToString, FTests[i]);
-         CheckEquals('', exec.Msgs.AsInfo, FTests[i]);
+      CheckEquals('', prog.Msgs.AsInfo, FTests[i]);
+      exec := prog.Execute;
+      resultsFileName := ChangeFileExt(FTests[i], '.txt');
+      if FileExists(resultsFileName) then
+      begin
+        expectedResult.LoadFromFile(resultsFileName);
+        CheckEquals(expectedResult.Text, exec.Result.ToString, FTests[i]);
+      end
+      else
+        CheckEquals('', exec.Result.ToString, FTests[i]);
+      CheckEquals('', exec.Msgs.AsInfo, FTests[i]);
 
-      end;
+    end;
 
-   finally
-      expectedResult.Free;
-      source.Free;
-   end;
+  finally
+    expectedResult.Free;
+    source.Free;
+  end;
 end;
 
 // CallAfterExec
 //
 procedure TdwsClassesTests.CallAfterExec;
 var
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   func : IInfo;
+  prog: IdwsProgram;
+  exec: IdwsProgramExecution;
+  func: IInfo;
 begin
-   prog:=FCompiler.Compile( 'var s = TStrings.Create;'#13#10
-                           +'s.Add("Line 1");'#13#10
-                           +'s.Add("Line 2");'#13#10
-                           +'procedure MyProc;'#13#10
-                           +'begin'#13#10
-                           +'  Print(s.Count)'#13#10
-                           +'end;'#13#10
-                           +'Print(s.Text)');
-   CheckEquals('', prog.Msgs.AsInfo);
+  prog := FCompiler.Compile('var s = TStrings.Create;'#13#10 +
+    's.Add("Line 1");'#13#10 + 's.Add("Line 2");'#13#10 +
+    'procedure MyProc;'#13#10 + 'begin'#13#10 + '  Print(s.Count)'#13#10 +
+    'end;'#13#10 + 'Print(s.Text)');
+  CheckEquals('', prog.Msgs.AsInfo);
 
-   exec:=prog.BeginNewExecution;
-   try
-      exec.RunProgram(0);
+  exec := prog.BeginNewExecution;
+  try
+    exec.RunProgram(0);
 
-      CheckEquals('Line 1'#13#10'Line 2'#13#10, exec.Result.ToString);
+    CheckEquals('Line 1'#13#10'Line 2'#13#10, exec.Result.ToString);
 
-      func:=exec.Info.Func['MyProc'];
-      func.Call([]);
+    func := exec.Info.func['MyProc'];
+    func.Call([]);
 
-      CheckEquals('Line 1'#13#10'Line 2'#13#10'2', exec.Result.ToString);
-   finally
-      exec.EndProgram;
-   end;
+    CheckEquals('Line 1'#13#10'Line 2'#13#10'2', exec.Result.ToString);
+  finally
+    exec.EndProgram;
+  end;
 end;
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 initialization
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
-   RegisterTest('LibModules', TdwsClassesTests);
+RegisterTest('LibModules', TdwsClassesTests);
 
 end.

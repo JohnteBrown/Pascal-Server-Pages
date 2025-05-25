@@ -3,52 +3,55 @@ unit UBuildTests;
 interface
 
 uses
-   Classes, SysUtils,
-   dwsXPlatformTests, dwsComp, dwsCompiler, dwsExprs, dwsUtils, dwsErrors,
-   dwsXPlatform, dwsSymbols, dwsFunctions, dwsJSON, dwsCompilerContext,
-   dwsUnitSymbols;
+  Classes, SysUtils,
+  dwsXPlatformTests, dwsComp, dwsCompiler, dwsExprs, dwsUtils, dwsErrors,
+  dwsXPlatform, dwsSymbols, dwsFunctions, dwsJSON, dwsCompilerContext,
+  dwsUnitSymbols;
 
 type
 
-   TBuildTests = class (TTestCase)
-      private
-         FTests : TStringList;
-         FCompiler : TDelphiWebScript;
+  TBuildTests = class(TTestCase)
+  private
+    FTests: TStringList;
+    FCompiler: TDelphiWebScript;
 
-      public
-         procedure SetUp; override;
-         procedure TearDown; override;
+  public
+    procedure SetUp; override;
+    procedure TearDown; override;
 
-         procedure DoInclude(const scriptName : String; var scriptSource : String);
-         function DoNeedUnit(const unitName : String; var unitSource : String) : IdwsUnit;
+    procedure DoInclude(const scriptName: String; var scriptSource: String);
+    function DoNeedUnit(const unitName: String; var unitSource: String)
+      : IdwsUnit;
 
-         procedure Compilation;
-         procedure Execution;
+    procedure Compilation;
+    procedure Execution;
 
-      published
+  published
 
-         procedure CompilationNormal;
-         procedure CompilationWithMapAndSymbols;
-         procedure ExecutionNonOptimized;
-         procedure ExecutionOptimized;
-   end;
+    procedure CompilationNormal;
+    procedure CompilationWithMapAndSymbols;
+    procedure ExecutionNonOptimized;
+    procedure ExecutionOptimized;
+  end;
 
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
 implementation
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
 type
-   TEnumeratorEmptyCallBack = class
-      procedure EmptyCallBack(parent, expr : TExprBase; var abort : Boolean);
-   end;
+  TEnumeratorEmptyCallBack = class
+    procedure EmptyCallBack(parent, expr: TExprBase; var abort: Boolean);
+  end;
 
-procedure TEnumeratorEmptyCallBack.EmptyCallBack(parent, expr : TExprBase; var abort : Boolean);
+procedure TEnumeratorEmptyCallBack.EmptyCallBack(parent, expr: TExprBase;
+  var abort: Boolean);
 begin
-   // just used for detecting crashes in subexpr tree navigation
+  // just used for detecting crashes in subexpr tree navigation
 end;
 
 // ------------------
@@ -59,194 +62,218 @@ end;
 //
 procedure TBuildTests.SetUp;
 begin
-   SetDecimalSeparator('.');
+  SetDecimalSeparator('.');
 
-   FTests:=TStringList.Create;
+  FTests := TStringList.Create;
 
-   CollectFiles(ExtractFilePath(ParamStr(0))+'BuildScripts'+PathDelim, '*.dws', FTests);
+  CollectFiles(ExtractFilePath(ParamStr(0)) + 'BuildScripts' + PathDelim,
+    '*.dws', FTests);
 
-   FCompiler:=TDelphiWebScript.Create(nil);
-   FCompiler.OnInclude:=DoInclude;
-   FCompiler.OnNeedUnit:=DoNeedUnit;
-   FCompiler.Config.Conditionals.Add('CONDITION');
+  FCompiler := TDelphiWebScript.Create(nil);
+  FCompiler.OnInclude := DoInclude;
+  FCompiler.OnNeedUnit := DoNeedUnit;
+  FCompiler.Config.Conditionals.Add('CONDITION');
 end;
 
 // TearDown
 //
 procedure TBuildTests.TearDown;
 begin
-   FCompiler.Free;
+  FCompiler.Free;
 
-   FTests.Free;
+  FTests.Free;
 end;
 
 // DoInclude
 //
-procedure TBuildTests.DoInclude(const scriptName: String; var scriptSource: String);
+procedure TBuildTests.DoInclude(const scriptName: String;
+  var scriptSource: String);
 var
-   fileName : String;
+  fileName: String;
 begin
-   fileName:='BuildScripts\'+scriptName;
-   if FileExists(fileName) then
-      scriptSource:=LoadTextFromFile(fileName)
-   else scriptSource:='';
+  fileName := 'BuildScripts\' + scriptName;
+  if FileExists(fileName) then
+    scriptSource := LoadTextFromFile(fileName)
+  else
+    scriptSource := '';
 end;
 
 // DoNeedUnit
 //
-function TBuildTests.DoNeedUnit(const unitName : String; var unitSource : String) : IdwsUnit;
+function TBuildTests.DoNeedUnit(const unitName: String; var unitSource: String)
+  : IdwsUnit;
 begin
-   Result:=nil;
-   DoInclude(unitName+'.pas', unitSource);
+  Result := nil;
+  DoInclude(unitName + '.pas', unitSource);
 end;
 
 // Compilation
 //
 procedure TBuildTests.Compilation;
 var
-   source, expectedResult : TStringList;
-   i : Integer;
-   prog : IdwsProgram;
-   output, resultsFileName, contextMapFileName : String;
-   json : TdwsJSONBeautifiedWriter;
+  source, expectedResult: TStringList;
+  i: Integer;
+  prog: IdwsProgram;
+  output, resultsFileName, contextMapFileName: String;
+  json: TdwsJSONBeautifiedWriter;
 begin
-   source:=TStringList.Create;
-   expectedResult:=TStringList.Create;
-   try
+  source := TStringList.Create;
+  expectedResult := TStringList.Create;
+  try
 
-      for i:=0 to FTests.Count-1 do begin
+    for i := 0 to FTests.Count - 1 do
+    begin
 
-         source.LoadFromFile(FTests[i]);
+      source.LoadFromFile(FTests[i]);
 
-         prog:=FCompiler.Compile(source.Text, 'Test\'+ExtractFileName(FTests[i]));
+      prog := FCompiler.Compile(source.Text,
+        'Test\' + ExtractFileName(FTests[i]));
 
-         if prog.Msgs.HasErrors then begin
+      if prog.Msgs.HasErrors then
+      begin
 
-            output:= 'Errors >>>>'#13#10
-                    +prog.Msgs.AsInfo;
+        output := 'Errors >>>>'#13#10 + prog.Msgs.AsInfo;
 
-            resultsFileName:=ChangeFileExt(FTests[i], '.txt');
-            if FileExists(resultsFileName) then begin
-               expectedResult.LoadFromFile(resultsFileName);
-               CheckEquals(expectedResult.Text, output, FTests[i]);
-            end else CheckEquals('', output, FTests[i]);
+        resultsFileName := ChangeFileExt(FTests[i], '.txt');
+        if FileExists(resultsFileName) then
+        begin
+          expectedResult.LoadFromFile(resultsFileName);
+          CheckEquals(expectedResult.Text, output, FTests[i]);
+        end
+        else
+          CheckEquals('', output, FTests[i]);
 
-            if coContextMap in FCompiler.Config.CompilerOptions then begin
-               json:=TdwsJSONBeautifiedWriter.Create(nil, 0, 1);
-               try
-                  prog.SourceContextMap.WriteToJSON(json);
-                  contextMapFileName:=ChangeFileExt(FTests[i], '.cmap');
-                  if FileExists(contextMapFileName) then begin
-                     expectedResult.LoadFromFile(contextMapFileName);
-                     CheckEquals(Trim(expectedResult.Text), json.Stream.ToString, FTests[i]);
-                  end else CheckEquals('', json.Stream.ToString, FTests[i]);
+        if coContextMap in FCompiler.Config.CompilerOptions then
+        begin
+          json := TdwsJSONBeautifiedWriter.Create(nil, 0, 1);
+          try
+            prog.SourceContextMap.WriteToJSON(json);
+            contextMapFileName := ChangeFileExt(FTests[i], '.cmap');
+            if FileExists(contextMapFileName) then
+            begin
+              expectedResult.LoadFromFile(contextMapFileName);
+              CheckEquals(Trim(expectedResult.Text), json.Stream.ToString,
+                FTests[i]);
+            end
+            else
+              CheckEquals('', json.Stream.ToString, FTests[i]);
 
-               finally
-                  json.Free;
-               end;
-            end;
+          finally
+            json.Free;
+          end;
+        end;
 
-         end else begin
+      end
+      else
+      begin
 
-            CheckEquals(False, prog.Msgs.HasErrors, FTests[i]+#13#10+prog.Msgs.AsInfo);
+        CheckEquals(False, prog.Msgs.HasErrors, FTests[i] + #13#10 +
+          prog.Msgs.AsInfo);
 
-            (prog.GetSelf as TdwsProgram).InitExpr.RecursiveEnumerateSubExprs(TEnumeratorEmptyCallBack(nil).EmptyCallBack);
-            (prog.GetSelf as TdwsProgram).Expr.RecursiveEnumerateSubExprs(TEnumeratorEmptyCallBack(nil).EmptyCallBack);
-
-         end;
-
-         prog:=nil;
+        (prog.GetSelf as TdwsProgram).InitExpr.RecursiveEnumerateSubExprs
+          (TEnumeratorEmptyCallBack(nil).EmptyCallBack);
+        (prog.GetSelf as TdwsProgram).expr.RecursiveEnumerateSubExprs
+          (TEnumeratorEmptyCallBack(nil).EmptyCallBack);
 
       end;
 
-   finally
-      expectedResult.Free;
-      source.Free;
-   end;
+      prog := nil;
+
+    end;
+
+  finally
+    expectedResult.Free;
+    source.Free;
+  end;
 end;
 
 // Execution
 //
 procedure TBuildTests.Execution;
 var
-   i : Integer;
-   prog : IdwsProgram;
-   resultsFileName : String;
-   output : String;
-   exec : IdwsProgramExecution;
+  i: Integer;
+  prog: IdwsProgram;
+  resultsFileName: String;
+  output: String;
+  exec: IdwsProgramExecution;
 begin
-   for i:=0 to FTests.Count-1 do begin
+  for i := 0 to FTests.Count - 1 do
+  begin
 
-      prog:=FCompiler.Compile(LoadTextFromFile(FTests[i]), 'Test\'+ExtractFileName(FTests[i]));
+    prog := FCompiler.Compile(LoadTextFromFile(FTests[i]),
+      'Test\' + ExtractFileName(FTests[i]));
 
-      if not prog.Msgs.HasErrors then begin
-         try
-            exec:=prog.Execute;
-         except
-            on E: Exception do begin
-               CheckEquals('', E.Message, FTests[i]);
-            end;
-         end;
-         if prog.Msgs.Count+exec.Msgs.Count=0 then
-            output:=exec.Result.ToString
-         else begin
-            output:= 'Errors >>>>'#13#10
-                    +prog.Msgs.AsInfo
-                    +exec.Msgs.AsInfo
-                    +'Result >>>>'#13#10
-                    +exec.Result.ToString;
-         end;
-      end else begin
-         output:= 'Errors >>>>'#13#10
-                 +prog.Msgs.AsInfo
+    if not prog.Msgs.HasErrors then
+    begin
+      try
+        exec := prog.Execute;
+      except
+        on E: Exception do
+        begin
+          CheckEquals('', E.Message, FTests[i]);
+        end;
       end;
+      if prog.Msgs.Count + exec.Msgs.Count = 0 then
+        output := exec.Result.ToString
+      else
+      begin
+        output := 'Errors >>>>'#13#10 + prog.Msgs.AsInfo + exec.Msgs.AsInfo +
+          'Result >>>>'#13#10 + exec.Result.ToString;
+      end;
+    end
+    else
+    begin
+      output := 'Errors >>>>'#13#10 + prog.Msgs.AsInfo
+    end;
 
-      resultsFileName:=ChangeFileExt(FTests[i], '.txt');
-      CheckEquals(LoadTextFromFile(resultsFileName), output, FTests[i]);
+    resultsFileName := ChangeFileExt(FTests[i], '.txt');
+    CheckEquals(LoadTextFromFile(resultsFileName), output, FTests[i]);
 
-   end;
+  end;
 end;
 
 // CompilationNormal
 //
 procedure TBuildTests.CompilationNormal;
 begin
-   FCompiler.Config.CompilerOptions:=[coOptimize];
-   Compilation;
+  FCompiler.Config.CompilerOptions := [coOptimize];
+  Compilation;
 end;
 
 // CompilationWithMapAndSymbols
 //
 procedure TBuildTests.CompilationWithMapAndSymbols;
 begin
-   FCompiler.Config.CompilerOptions:=cDefaultCompilerOptions+[coSymbolDictionary, coContextMap];
-   Compilation;
+  FCompiler.Config.CompilerOptions := cDefaultCompilerOptions +
+    [coSymbolDictionary, coContextMap];
+  Compilation;
 end;
 
 // ExecutionNonOptimized
 //
 procedure TBuildTests.ExecutionNonOptimized;
 begin
-   FCompiler.Config.CompilerOptions:=cDefaultCompilerOptions-[coOptimize];
-   Execution;
+  FCompiler.Config.CompilerOptions := cDefaultCompilerOptions - [coOptimize];
+  Execution;
 end;
 
 // ExecutionOptimized
 //
 procedure TBuildTests.ExecutionOptimized;
 begin
-   FCompiler.Config.CompilerOptions:=cDefaultCompilerOptions+[coOptimize];
-   Execution;
+  FCompiler.Config.CompilerOptions := cDefaultCompilerOptions + [coOptimize];
+  Execution;
 end;
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 initialization
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
-   RegisterTest('BuildTests', TBuildTests);
+RegisterTest('BuildTests', TBuildTests);
 
 end.

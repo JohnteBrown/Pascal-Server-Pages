@@ -1,22 +1,24 @@
 type
-	TSub = record
-		D : String;
-	end;
-	
+  TSub = record
+    D: String;
+  end;
+
 type
-	TParent = record
-		A : String;
-		Sub : record
-			C : TSub;
-		end;
-	end;
+  TParent = record
+    A: String;
 
-var r1, r2 : TParent;
+    Sub: record
+      C: TSub;
+    end;
+  end;
 
-r1.A:='hello';
-r1.Sub.C.D:='world';
+var
+  r1, r2: TParent;
 
-r2:=r1;
+r1.A := 'hello';
+r1.Sub.C.D := 'world';
+
+r2 := r1;
 
 PrintLn(r2.A);
 PrintLn(r2.Sub.C.D);

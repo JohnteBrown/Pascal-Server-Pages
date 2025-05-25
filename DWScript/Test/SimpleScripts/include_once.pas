@@ -1,7 +1,7 @@
 PrintLn('before');
-{$include_once 'include.inc'}
-{$include_once 'include.inc'}
+{$INCLUDE_ONCE 'include.inc'}
+{$INCLUDE_ONCE 'include.inc'}
 PrintLn('after');
-{$include 'include.inc'}
-{$include_once 'include.inc'}
+{$INCLUDE 'include.inc'}
+{$INCLUDE_ONCE 'include.inc'}
 PrintLn('done');

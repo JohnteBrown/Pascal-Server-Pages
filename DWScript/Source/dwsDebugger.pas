@@ -1,22 +1,22 @@
-{**********************************************************************}
-{                                                                      }
-{    "The contents of this file are subject to the Mozilla Public      }
-{    License Version 1.1 (the "License"); you may not use this         }
-{    file except in compliance with the License. You may obtain        }
-{    a copy of the License at http://www.mozilla.org/MPL/              }
-{                                                                      }
-{    Software distributed under the License is distributed on an       }
-{    "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express       }
-{    or implied. See the License for the specific language             }
-{    governing rights and limitations under the License.               }
-{                                                                      }
-{    The Initial Developer of the Original Code is Matthias            }
-{    Ackermann. For other initial contributors, see contributors.txt   }
-{    Subsequent portions Copyright Creative IT.                        }
-{                                                                      }
-{    Current maintainer: Eric Grange                                   }
-{                                                                      }
-{**********************************************************************}
+{ ********************************************************************** }
+{ }
+{ "The contents of this file are subject to the Mozilla Public }
+{ License Version 1.1 (the "License"); you may not use this }
+{ file except in compliance with the License. You may obtain }
+{ a copy of the License at http://www.mozilla.org/MPL/ }
+{ }
+{ Software distributed under the License is distributed on an }
+{ "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express }
+{ or implied. See the License for the specific language }
+{ governing rights and limitations under the License. }
+{ }
+{ The Initial Developer of the Original Code is Matthias }
+{ Ackermann. For other initial contributors, see contributors.txt }
+{ Subsequent portions Copyright Creative IT. }
+{ }
+{ Current maintainer: Eric Grange }
+{ }
+{ ********************************************************************** }
 unit dwsDebugger;
 
 {$I dws.inc}
@@ -24,420 +24,441 @@ unit dwsDebugger;
 interface
 
 uses
-   System.Classes, System.SysUtils,
-   dwsSymbols, dwsXPlatform, dwsCompiler, dwsDataContext, dwsExprs,
-   dwsInfo, dwsEvaluate, dwsScriptSource, dwsUtils, dwsUnitSymbols;
+  System.Classes, System.SysUtils,
+  dwsSymbols, dwsXPlatform, dwsCompiler, dwsDataContext, dwsExprs,
+  dwsInfo, dwsEvaluate, dwsScriptSource, dwsUtils, dwsUnitSymbols;
 
 type
-   TdwsDebugger = class;
-
-   TOnDebugStartStopEvent = procedure(exec: TdwsExecution) of object;
-   TOnDebugEvent = procedure(exec: TdwsExecution; expr: TExprBase) of object;
-   TOnDebugMessageEvent = procedure(const msg : String) of object;
-   TOnNotifyExceptionEvent = procedure (const exceptObj : IInfo) of object;
-
-   // TdwsSimpleDebugger
-   //
-   TdwsSimpleDebugger = class (TComponent, IDebugger)
-      private
-
-      protected
-         FDebugger : IDebugger;
-         FOnDebug : TOnDebugEvent;
-         FOnStartDebug : TOnDebugStartStopEvent;
-         FOnStopDebug : TOnDebugStartStopEvent;
-         FOnEnterFunc : TOnDebugEvent;
-         FOnLeaveFunc : TOnDebugEvent;
-         FOnDebugMessage : TOnDebugMessageEvent;
-         FOnNotifyException : TOnNotifyExceptionEvent;
-
-         procedure StartDebug(exec : TdwsExecution); virtual;
-         procedure DoDebug(exec : TdwsExecution; expr : TExprBase); virtual;
-         procedure StopDebug(exec : TdwsExecution); virtual;
-         procedure EnterFunc(exec : TdwsExecution; funcExpr : TExprBase); virtual;
-         procedure LeaveFunc(exec : TdwsExecution; funcExpr : TExprBase); virtual;
-         function  LastDebugStepExpr : TExprBase; virtual;
-         procedure DebugMessage(const msg : String); virtual;
-         procedure NotifyException(exec : TdwsExecution; const exceptObj : IScriptObj); virtual;
-
-      public
-         property Debugger : IDebugger read FDebugger write FDebugger;
-
-      published
-         property OnDebug : TOnDebugEvent read FOnDebug write FOnDebug;
-         property OnDebugStart : TOnDebugStartStopEvent read FOnStartDebug write FOnStartDebug;
-         property OnDebugStop : TOnDebugStartStopEvent read FOnStopDebug write FOnStopDebug;
-         property OnEnterFunc : TOnDebugEvent read FOnEnterFunc write FOnEnterFunc;
-         property OnLeaveFunc : TOnDebugEvent read FOnLeaveFunc write FOnLeaveFunc;
-         property OnDebugMessage : TOnDebugMessageEvent read FOnDebugMessage write FOnDebugMessage;
-         property OnNotifyException : TOnNotifyExceptionEvent read FOnNotifyException write FOnNotifyException;
-   end;
-
-   TdwsDebuggerState = (dsIdle, dsDebugRun,
-                        dsDebugSuspending, dsDebugSuspended, dsDebugResuming,
-                        dsDebugDone);
-
-   TdwsDebuggerAction = (daCanBeginDebug, daCanSuspend, daCanStep, daCanResume,
-                         daCanEndDebug, daCanEvaluate, daCanStepOut);
-   TdwsDebuggerActions = set of TdwsDebuggerAction;
-
-   TdwsDebuggerMode = (dmMainThread,
-                       dmThreadedSynchronize, // not supported (yet)
-                       dmThreaded);           // not supported (yet)
-
-   TdwsDebugBeginOption = (dboBeginSuspendedInMainModule,
-                           dboBeginSuspendedAnywhere);
-   TdwsDebugBeginOptions = set of TdwsDebugBeginOption;
-
-   // TdwsDebuggerBreakpoint
-   //
-   TdwsDebuggerBreakpoint = class (TRefCountedObject)
-      private
-         FEnabled : Boolean;
-         FLine : Integer;
-         FSourceName : String;
-
-      public
-         constructor Create;
-
-         function ConditionPassed(const debugger : TdwsDebugger) : Boolean; virtual;
-         procedure ClearEvaluators; virtual;
-
-         property Enabled : Boolean read FEnabled write FEnabled;
-         property Line : Integer read FLine write FLine;
-         property SourceName : String read FSourceName write FSourceName;
-   end;
-
-   // TdwsDebuggerBreakpointConditional
-   //
-   TdwsDebuggerBreakpointConditional = class (TdwsDebuggerBreakpoint)
-      private
-         FCondition : String;
-         FEvaluator : IdwsEvaluateExpr;
-
-      protected
-         procedure SetCondition(const val : String);
-         procedure InitializeEvaluator(const debugger : TdwsDebugger);
-
-      public
-         function ConditionPassed(const debugger : TdwsDebugger) : Boolean; override;
-         procedure ClearEvaluators; override;
-
-         property Condition : String read FCondition write SetCondition;
-   end;
-
-
-   // TdwsDebuggerBreakpoints
-   //
-   TdwsDebuggerBreakpoints = class (TSortedList<TdwsDebuggerBreakpoint>)
-      private
-         FDebugger : TdwsDebugger;
-         FLookupVar : TdwsDebuggerBreakpoint;
-
-      protected
-         function Compare(const item1, item2 : TdwsDebuggerBreakpoint) : Integer; override;
-
-      public
-         constructor Create(aDebugger : TdwsDebugger);
-         destructor Destroy; override;
-
-         function Add(aLine : Integer; const aSourceName : String) : TdwsDebuggerBreakpoint;
-         function AddConditional(aLine : Integer; const aSourceName, aCondition : String) : TdwsDebuggerBreakpointConditional;
-
-         procedure Clear; inline;
-
-         function BreakpointAt(const scriptPos : TScriptPos) : TdwsDebuggerBreakpoint; overload;
-         function BreakpointAt(const sourceName : String; sourceLine : Integer) : TdwsDebuggerBreakpoint; overload;
-
-         procedure BreakPointsChanged;
-
-         procedure ClearEvaluators;
-
-         property Debugger : TdwsDebugger read FDebugger;
-   end;
-
-   // TdwsDebuggerTempValueSymbol
-   //
-   TdwsDebuggerTempValueSymbol = class(TDataSymbol)
-      private
-         FData : TData;
-      public
-         constructor Create(const name : String; typ : TTypeSymbol);
-         property Data : TData read FData;
-   end;
-
-   TdwsDebuggerWatchEvaluationError = (dweeNone, dweeCompile, dweeEvaluation);
-
-   // TdwsDebuggerWatch
-   //
-   TdwsDebuggerWatch = class (TRefCountedObject)
-      private
-         FExpressionText : String;
-         FEvaluator : IdwsEvaluateExpr;
-         FValueData : TdwsDebuggerTempValueSymbol;
-         FValueInfo : IInfo;
-         FEvaluationError : TdwsDebuggerWatchEvaluationError;
-
-      protected
-         procedure SetExpressionText(const val : String);
-
-      public
-         destructor Destroy; override;
-
-         procedure Update(debugger : TdwsDebugger);
-         procedure ClearEvaluator;
-
-         property ExpressionText : String read FExpressionText write SetExpressionText;
-         property Evaluator : IdwsEvaluateExpr read FEvaluator write FEvaluator;
-         property ValueData : TdwsDebuggerTempValueSymbol read FValueData;
-         property ValueInfo : IInfo read FValueInfo;
-         property EvaluationError : TdwsDebuggerWatchEvaluationError read FEvaluationError;
-   end;
-
-   // TdwsDebuggerWatches
-   //
-   TdwsDebuggerWatches = class(TSortedList<TdwsDebuggerWatch>)
-      private
-         FDebugger : TdwsDebugger;
-
-      protected
-         function Compare(const item1, item2 : TdwsDebuggerWatch) : Integer; override;
-
-      public
-         constructor Create(aDebugger : TdwsDebugger);
-         destructor Destroy; override;
-
-         function Add(const exprText : String) : TdwsDebuggerWatch;
-
-         procedure Update;
-         procedure ClearEvaluators;
-         procedure Clear;
-
-         property Debugger : TdwsDebugger read FDebugger;
-   end;
-
-   // TdwsDebuggerSuspendCondition
-   //
-   TdwsDebuggerSuspendCondition = class
-      private
-         FDebugger : TdwsDebugger;
-
-      protected
-         FParentCondition : TdwsDebuggerSuspendCondition;
-
-      public
-         constructor Create(aDebugger : TdwsDebugger);
-         destructor Destroy; override;
-
-         function SuspendExecution : Boolean; virtual;
-
-         property Debugger : TdwsDebugger read FDebugger;
-         property ParentCondition : TdwsDebuggerSuspendCondition read FParentCondition write FParentCondition;
-   end;
-
-   // TdwsDSCBreakpoints
-   //
-   TdwsDSCBreakpoints = class (TdwsDebuggerSuspendCondition)
-      private
-         FBitmap : TBits;
-         FBreakpoints : TdwsDebuggerBreakpoints;
-
-      public
-         constructor Create(aDebugger : TdwsDebugger; breakpointsList : TdwsDebuggerBreakpoints);
-         destructor Destroy; override;
-
-         procedure BreakpointsChanged;
-
-         function SuspendExecution : Boolean; override;
-   end;
-
-   // TdwsDSCStep
-   //
-   {: Self-release is automatic on execution suspension }
-   TdwsDSCStep = class (TdwsDebuggerSuspendCondition)
-      public
-         constructor Create(aDebugger : TdwsDebugger);
-         destructor Destroy; override;
-   end;
-
-   // TdwsDSCStepDetail
-   //
-   TdwsDSCStepDetail = class (TdwsDSCStep)
-      private
-         FSourceFileName : String;
-
-      public
-         function SuspendExecution : Boolean; override;
-
-         property SourceFileName : String read FSourceFileName write FSourceFileName;
-   end;
-
-   // TdwsDSCStepOver
-   //
-   TdwsDSCStepOver = class (TdwsDSCStepDetail)
-      private
-         FCallStackDepth : Integer;
-
-      public
-         function SuspendExecution : Boolean; override;
-
-         property CallStackDepth : Integer read FCallStackDepth write FCallStackDepth;
-   end;
-
-   // TdwsDSCStepOut
-   //
-   TdwsDSCStepOut = class (TdwsDSCStepDetail)
-      private
-         FCallStackDepth : Integer;
-
-      public
-         function SuspendExecution : Boolean; override;
-
-         property CallStackDepth : Integer read FCallStackDepth write FCallStackDepth;
-   end;
-
-   // TdwsDSCStepToLine
-   //
-   TdwsDSCStepToLine = class (TdwsDSCStepDetail)
-      private
-         FLine : Integer;
-
-      public
-         function SuspendExecution : Boolean; override;
-
-         property Line : Integer read FLine write FLine;
-   end;
-
-   // TdwsDebugger
-   //
-   TdwsDebugger = class (TdwsSimpleDebugger)
-      private
-         FExecution : IdwsProgramExecution;
-         FOnStateChanged : TNotifyEvent;
-         FMode : TdwsDebuggerMode;
-         FState : TdwsDebuggerState;
-         FCurrentExpression : TExprBase;
-         FSuspendCondition : TdwsDebuggerSuspendCondition;
-         FStepCondition : TdwsDebuggerSuspendCondition;
-         FBreakpoints : TdwsDebuggerBreakpoints;
-         FBreakpointsCondition : TdwsDSCBreakpoints;
-         FWatches : TdwsDebuggerWatches;
-         FLastAutoProcessMessages : Int64;
-         FSuspendOnException : Boolean;
-         FOnDebugSuspended : TNotifyEvent;
-
-         FParams : TVariantDynArray;
-         FBeginOptions : TdwsDebugBeginOptions;
-
-         FExecuteDebugThread : TThread;
-
-      protected
-         procedure DoDebug(exec : TdwsExecution; expr : TExprBase); override;
-         procedure DoDebugSuspended; virtual;
-         function  LastDebugStepExpr : TExprBase; override;
-         procedure NotifyException(exec : TdwsExecution; const exceptObj : IScriptObj); override;
-
-         procedure StateChanged;
-         procedure BreakpointsChanged;
-
-         procedure ExecuteDebug(const notifyStageChanged : TThreadMethod);
-
-         function GetCurrentScriptPos : TScriptPos; inline;
-
-      public
-         constructor Create(AOwner: TComponent); override;
-         destructor Destroy; override;
-
-         procedure BeginDebug(const exec : IdwsProgramExecution);
-         procedure EndDebug;
-
-         procedure AttachDebug(const exec : IdwsProgramExecution);
-         procedure DetachDebug;
-
-         procedure Suspend;
-         procedure Resume;
-
-         procedure StepDetailed;
-         procedure StepDetailedInSource(const sourceFileName : String);
-         procedure StepOver;
-         procedure StepOverInSource(const sourceFileName : String);
-         procedure StepOut;
-         procedure StepOutInSource(const sourceFileName : String);
-         procedure StepToLine(line : Integer; const sourceFileName : String);
-
-         procedure ClearSuspendConditions;
-
-         function Evaluate(const expression : String; scriptPos : PScriptPos = nil) : IdwsEvaluateExpr;
-         function EvaluateAsString(const expression : String; scriptPos : PScriptPos = nil) : String;
-         function EvaluateAsBoolean(const expression : String; scriptPos : PScriptPos = nil) : Boolean;
-
-         function AllowedActions : TdwsDebuggerActions;
-
-         property Execution : IdwsProgramExecution read FExecution;
-         property Watches : TdwsDebuggerWatches read FWatches;
-         property Breakpoints : TdwsDebuggerBreakpoints read FBreakpoints;
-         property Params : TVariantDynArray read FParams write FParams;
-         property BeginOptions : TdwsDebugBeginOptions read FBeginOptions write FBeginOptions;
-         property State : TdwsDebuggerState read FState;
-         property SuspendOnException : Boolean read FSuspendOnException write FSuspendOnException;
-
-         property CurrentExpression : TExprBase read FCurrentExpression;
-         property CurrentScriptPos : TScriptPos read GetCurrentScriptPos;
-
-      published
-         property Mode : TdwsDebuggerMode read FMode write FMode default dmMainThread;
-
-         property OnStateChanged : TNotifyEvent read FOnStateChanged write FOnStateChanged;
-         property OnDebugSuspended : TNotifyEvent read FOnDebugSuspended write FOnDebugSuspended;
-   end;
-
-   TBreakpointBits = class(TBits)
-      private
-         FSourceName : String;
-      public
-         property SourceName : String read FSourceName write FSourceName;
-   end;
-
-   TNamesBitsHash = TSimpleNameObjectHash<TBreakpointBits>;
-
-   TdwsBreakpointableLines = class
-      private
-         FSources : TNamesBitsHash;
-
-         // Valid only during construction
-         FProcessedProgs : TObjectsLookup;
-         FLastSourceFile : TSourceFile;
-         FLastBreakpointLines : TBreakpointBits;
-
-      protected
-         function GetSourceLines(const sourceName : String) : TBits; inline;
-
-         procedure EnumeratorCallback(parent, expr : TExprBase; var abort : Boolean);
-         procedure SteppableCallback(expr : TExprBase);
-         procedure RegisterScriptPos(const scriptPos : TScriptPos);
-
-         procedure ProcessProg(const prog : TdwsProgram);
-         procedure ProcessFuncSymbol(const funcSymbol : TFuncSymbol);
-         procedure ProcessUnitSymbol(const unitSymbol : TUnitMainSymbol);
-         procedure ProcessSymbolTable(table : TSymbolTable);
-         procedure ProcessSymbol(sym : TSymbol);
-
-      public
-         constructor Create(const prog : IdwsProgram);
-         destructor Destroy; override;
-
-         property SourceLines[const sourceName : String] : TBits read GetSourceLines;
-         function Count : Integer; inline;
-
-         function IsExecutable(const sourceName : String; line : Integer) : Boolean;
-
-         procedure Enumerate(destinationList : TStrings);
-   end;
-
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
+  TdwsDebugger = class;
+
+  TOnDebugStartStopEvent = procedure(exec: TdwsExecution) of object;
+  TOnDebugEvent = procedure(exec: TdwsExecution; expr: TExprBase) of object;
+  TOnDebugMessageEvent = procedure(const msg: String) of object;
+  TOnNotifyExceptionEvent = procedure(const exceptObj: IInfo) of object;
+
+  // TdwsSimpleDebugger
+  //
+  TdwsSimpleDebugger = class(TComponent, IDebugger)
+  private
+
+  protected
+    FDebugger: IDebugger;
+    FOnDebug: TOnDebugEvent;
+    FOnStartDebug: TOnDebugStartStopEvent;
+    FOnStopDebug: TOnDebugStartStopEvent;
+    FOnEnterFunc: TOnDebugEvent;
+    FOnLeaveFunc: TOnDebugEvent;
+    FOnDebugMessage: TOnDebugMessageEvent;
+    FOnNotifyException: TOnNotifyExceptionEvent;
+
+    procedure StartDebug(exec: TdwsExecution); virtual;
+    procedure DoDebug(exec: TdwsExecution; expr: TExprBase); virtual;
+    procedure StopDebug(exec: TdwsExecution); virtual;
+    procedure EnterFunc(exec: TdwsExecution; funcExpr: TExprBase); virtual;
+    procedure LeaveFunc(exec: TdwsExecution; funcExpr: TExprBase); virtual;
+    function LastDebugStepExpr: TExprBase; virtual;
+    procedure DebugMessage(const msg: String); virtual;
+    procedure NotifyException(exec: TdwsExecution;
+      const exceptObj: IScriptObj); virtual;
+
+  public
+    property Debugger: IDebugger read FDebugger write FDebugger;
+
+  published
+    property OnDebug: TOnDebugEvent read FOnDebug write FOnDebug;
+    property OnDebugStart: TOnDebugStartStopEvent read FOnStartDebug
+      write FOnStartDebug;
+    property OnDebugStop: TOnDebugStartStopEvent read FOnStopDebug
+      write FOnStopDebug;
+    property OnEnterFunc: TOnDebugEvent read FOnEnterFunc write FOnEnterFunc;
+    property OnLeaveFunc: TOnDebugEvent read FOnLeaveFunc write FOnLeaveFunc;
+    property OnDebugMessage: TOnDebugMessageEvent read FOnDebugMessage
+      write FOnDebugMessage;
+    property OnNotifyException: TOnNotifyExceptionEvent read FOnNotifyException
+      write FOnNotifyException;
+  end;
+
+  TdwsDebuggerState = (dsIdle, dsDebugRun, dsDebugSuspending, dsDebugSuspended,
+    dsDebugResuming, dsDebugDone);
+
+  TdwsDebuggerAction = (daCanBeginDebug, daCanSuspend, daCanStep, daCanResume,
+    daCanEndDebug, daCanEvaluate, daCanStepOut);
+  TdwsDebuggerActions = set of TdwsDebuggerAction;
+
+  TdwsDebuggerMode = (dmMainThread, dmThreadedSynchronize,
+    // not supported (yet)
+    dmThreaded); // not supported (yet)
+
+  TdwsDebugBeginOption = (dboBeginSuspendedInMainModule,
+    dboBeginSuspendedAnywhere);
+  TdwsDebugBeginOptions = set of TdwsDebugBeginOption;
+
+  // TdwsDebuggerBreakpoint
+  //
+  TdwsDebuggerBreakpoint = class(TRefCountedObject)
+  private
+    FEnabled: Boolean;
+    FLine: Integer;
+    FSourceName: String;
+
+  public
+    constructor Create;
+
+    function ConditionPassed(const Debugger: TdwsDebugger): Boolean; virtual;
+    procedure ClearEvaluators; virtual;
+
+    property Enabled: Boolean read FEnabled write FEnabled;
+    property Line: Integer read FLine write FLine;
+    property SourceName: String read FSourceName write FSourceName;
+  end;
+
+  // TdwsDebuggerBreakpointConditional
+  //
+  TdwsDebuggerBreakpointConditional = class(TdwsDebuggerBreakpoint)
+  private
+    FCondition: String;
+    FEvaluator: IdwsEvaluateExpr;
+
+  protected
+    procedure SetCondition(const val: String);
+    procedure InitializeEvaluator(const Debugger: TdwsDebugger);
+
+  public
+    function ConditionPassed(const Debugger: TdwsDebugger): Boolean; override;
+    procedure ClearEvaluators; override;
+
+    property Condition: String read FCondition write SetCondition;
+  end;
+
+  // TdwsDebuggerBreakpoints
+  //
+  TdwsDebuggerBreakpoints = class(TSortedList<TdwsDebuggerBreakpoint>)
+  private
+    FDebugger: TdwsDebugger;
+    FLookupVar: TdwsDebuggerBreakpoint;
+
+  protected
+    function Compare(const item1, item2: TdwsDebuggerBreakpoint)
+      : Integer; override;
+
+  public
+    constructor Create(aDebugger: TdwsDebugger);
+    destructor Destroy; override;
+
+    function Add(aLine: Integer; const aSourceName: String)
+      : TdwsDebuggerBreakpoint;
+    function AddConditional(aLine: Integer;
+      const aSourceName, aCondition: String): TdwsDebuggerBreakpointConditional;
+
+    procedure Clear; inline;
+
+    function BreakpointAt(const scriptPos: TScriptPos)
+      : TdwsDebuggerBreakpoint; overload;
+    function BreakpointAt(const SourceName: String; sourceLine: Integer)
+      : TdwsDebuggerBreakpoint; overload;
+
+    procedure BreakPointsChanged;
+
+    procedure ClearEvaluators;
+
+    property Debugger: TdwsDebugger read FDebugger;
+  end;
+
+  // TdwsDebuggerTempValueSymbol
+  //
+  TdwsDebuggerTempValueSymbol = class(TDataSymbol)
+  private
+    FData: TData;
+  public
+    constructor Create(const name: String; typ: TTypeSymbol);
+    property Data: TData read FData;
+  end;
+
+  TdwsDebuggerWatchEvaluationError = (dweeNone, dweeCompile, dweeEvaluation);
+
+  // TdwsDebuggerWatch
+  //
+  TdwsDebuggerWatch = class(TRefCountedObject)
+  private
+    FExpressionText: String;
+    FEvaluator: IdwsEvaluateExpr;
+    FValueData: TdwsDebuggerTempValueSymbol;
+    FValueInfo: IInfo;
+    FEvaluationError: TdwsDebuggerWatchEvaluationError;
+
+  protected
+    procedure SetExpressionText(const val: String);
+
+  public
+    destructor Destroy; override;
+
+    procedure Update(Debugger: TdwsDebugger);
+    procedure ClearEvaluator;
+
+    property ExpressionText: String read FExpressionText
+      write SetExpressionText;
+    property Evaluator: IdwsEvaluateExpr read FEvaluator write FEvaluator;
+    property ValueData: TdwsDebuggerTempValueSymbol read FValueData;
+    property ValueInfo: IInfo read FValueInfo;
+    property EvaluationError: TdwsDebuggerWatchEvaluationError
+      read FEvaluationError;
+  end;
+
+  // TdwsDebuggerWatches
+  //
+  TdwsDebuggerWatches = class(TSortedList<TdwsDebuggerWatch>)
+  private
+    FDebugger: TdwsDebugger;
+
+  protected
+    function Compare(const item1, item2: TdwsDebuggerWatch): Integer; override;
+
+  public
+    constructor Create(aDebugger: TdwsDebugger);
+    destructor Destroy; override;
+
+    function Add(const exprText: String): TdwsDebuggerWatch;
+
+    procedure Update;
+    procedure ClearEvaluators;
+    procedure Clear;
+
+    property Debugger: TdwsDebugger read FDebugger;
+  end;
+
+  // TdwsDebuggerSuspendCondition
+  //
+  TdwsDebuggerSuspendCondition = class
+  private
+    FDebugger: TdwsDebugger;
+
+  protected
+    FParentCondition: TdwsDebuggerSuspendCondition;
+
+  public
+    constructor Create(aDebugger: TdwsDebugger);
+    destructor Destroy; override;
+
+    function SuspendExecution: Boolean; virtual;
+
+    property Debugger: TdwsDebugger read FDebugger;
+    property ParentCondition: TdwsDebuggerSuspendCondition read FParentCondition
+      write FParentCondition;
+  end;
+
+  // TdwsDSCBreakpoints
+  //
+  TdwsDSCBreakpoints = class(TdwsDebuggerSuspendCondition)
+  private
+    FBitmap: TBits;
+    FBreakpoints: TdwsDebuggerBreakpoints;
+
+  public
+    constructor Create(aDebugger: TdwsDebugger;
+      breakpointsList: TdwsDebuggerBreakpoints);
+    destructor Destroy; override;
+
+    procedure BreakPointsChanged;
+
+    function SuspendExecution: Boolean; override;
+  end;
+
+  // TdwsDSCStep
+  //
+  { : Self-release is automatic on execution suspension }
+  TdwsDSCStep = class(TdwsDebuggerSuspendCondition)
+  public
+    constructor Create(aDebugger: TdwsDebugger);
+    destructor Destroy; override;
+  end;
+
+  // TdwsDSCStepDetail
+  //
+  TdwsDSCStepDetail = class(TdwsDSCStep)
+  private
+    FSourceFileName: String;
+
+  public
+    function SuspendExecution: Boolean; override;
+
+    property SourceFileName: String read FSourceFileName write FSourceFileName;
+  end;
+
+  // TdwsDSCStepOver
+  //
+  TdwsDSCStepOver = class(TdwsDSCStepDetail)
+  private
+    FCallStackDepth: Integer;
+
+  public
+    function SuspendExecution: Boolean; override;
+
+    property CallStackDepth: Integer read FCallStackDepth write FCallStackDepth;
+  end;
+
+  // TdwsDSCStepOut
+  //
+  TdwsDSCStepOut = class(TdwsDSCStepDetail)
+  private
+    FCallStackDepth: Integer;
+
+  public
+    function SuspendExecution: Boolean; override;
+
+    property CallStackDepth: Integer read FCallStackDepth write FCallStackDepth;
+  end;
+
+  // TdwsDSCStepToLine
+  //
+  TdwsDSCStepToLine = class(TdwsDSCStepDetail)
+  private
+    FLine: Integer;
+
+  public
+    function SuspendExecution: Boolean; override;
+
+    property Line: Integer read FLine write FLine;
+  end;
+
+  // TdwsDebugger
+  //
+  TdwsDebugger = class(TdwsSimpleDebugger)
+  private
+    FExecution: IdwsProgramExecution;
+    FOnStateChanged: TNotifyEvent;
+    FMode: TdwsDebuggerMode;
+    FState: TdwsDebuggerState;
+    FCurrentExpression: TExprBase;
+    FSuspendCondition: TdwsDebuggerSuspendCondition;
+    FStepCondition: TdwsDebuggerSuspendCondition;
+    FBreakpoints: TdwsDebuggerBreakpoints;
+    FBreakpointsCondition: TdwsDSCBreakpoints;
+    FWatches: TdwsDebuggerWatches;
+    FLastAutoProcessMessages: Int64;
+    FSuspendOnException: Boolean;
+    FOnDebugSuspended: TNotifyEvent;
+
+    FParams: TVariantDynArray;
+    FBeginOptions: TdwsDebugBeginOptions;
+
+    FExecuteDebugThread: TThread;
+
+  protected
+    procedure DoDebug(exec: TdwsExecution; expr: TExprBase); override;
+    procedure DoDebugSuspended; virtual;
+    function LastDebugStepExpr: TExprBase; override;
+    procedure NotifyException(exec: TdwsExecution;
+      const exceptObj: IScriptObj); override;
+
+    procedure StateChanged;
+    procedure BreakPointsChanged;
+
+    procedure ExecuteDebug(const notifyStageChanged: TThreadMethod);
+
+    function GetCurrentScriptPos: TScriptPos; inline;
+
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+
+    procedure BeginDebug(const exec: IdwsProgramExecution);
+    procedure EndDebug;
+
+    procedure AttachDebug(const exec: IdwsProgramExecution);
+    procedure DetachDebug;
+
+    procedure Suspend;
+    procedure Resume;
+
+    procedure StepDetailed;
+    procedure StepDetailedInSource(const SourceFileName: String);
+    procedure StepOver;
+    procedure StepOverInSource(const SourceFileName: String);
+    procedure StepOut;
+    procedure StepOutInSource(const SourceFileName: String);
+    procedure StepToLine(Line: Integer; const SourceFileName: String);
+
+    procedure ClearSuspendConditions;
+
+    function Evaluate(const expression: String; scriptPos: PScriptPos = nil)
+      : IdwsEvaluateExpr;
+    function EvaluateAsString(const expression: String;
+      scriptPos: PScriptPos = nil): String;
+    function EvaluateAsBoolean(const expression: String;
+      scriptPos: PScriptPos = nil): Boolean;
+
+    function AllowedActions: TdwsDebuggerActions;
+
+    property Execution: IdwsProgramExecution read FExecution;
+    property Watches: TdwsDebuggerWatches read FWatches;
+    property Breakpoints: TdwsDebuggerBreakpoints read FBreakpoints;
+    property Params: TVariantDynArray read FParams write FParams;
+    property BeginOptions: TdwsDebugBeginOptions read FBeginOptions
+      write FBeginOptions;
+    property State: TdwsDebuggerState read FState;
+    property SuspendOnException: Boolean read FSuspendOnException
+      write FSuspendOnException;
+
+    property CurrentExpression: TExprBase read FCurrentExpression;
+    property CurrentScriptPos: TScriptPos read GetCurrentScriptPos;
+
+  published
+    property Mode: TdwsDebuggerMode read FMode write FMode default dmMainThread;
+
+    property OnStateChanged: TNotifyEvent read FOnStateChanged
+      write FOnStateChanged;
+    property OnDebugSuspended: TNotifyEvent read FOnDebugSuspended
+      write FOnDebugSuspended;
+  end;
+
+  TBreakpointBits = class(TBits)
+  private
+    FSourceName: String;
+  public
+    property SourceName: String read FSourceName write FSourceName;
+  end;
+
+  TNamesBitsHash = TSimpleNameObjectHash<TBreakpointBits>;
+
+  TdwsBreakpointableLines = class
+  private
+    FSources: TNamesBitsHash;
+
+    // Valid only during construction
+    FProcessedProgs: TObjectsLookup;
+    FLastSourceFile: TSourceFile;
+    FLastBreakpointLines: TBreakpointBits;
+
+  protected
+    function GetSourceLines(const SourceName: String): TBits; inline;
+
+    procedure EnumeratorCallback(parent, expr: TExprBase; var abort: Boolean);
+    procedure SteppableCallback(expr: TExprBase);
+    procedure RegisterScriptPos(const scriptPos: TScriptPos);
+
+    procedure ProcessProg(const prog: TdwsProgram);
+    procedure ProcessFuncSymbol(const funcSymbol: TFuncSymbol);
+    procedure ProcessUnitSymbol(const unitSymbol: TUnitMainSymbol);
+    procedure ProcessSymbolTable(table: TSymbolTable);
+    procedure ProcessSymbol(sym: TSymbol);
+
+  public
+    constructor Create(const prog: IdwsProgram);
+    destructor Destroy; override;
+
+    property SourceLines[const SourceName: String]: TBits read GetSourceLines;
+    function Count: Integer; inline;
+
+    function IsExecutable(const SourceName: String; Line: Integer): Boolean;
+
+    procedure Enumerate(destinationList: TStrings);
+  end;
+
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
 implementation
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
@@ -445,154 +466,194 @@ implementation
 uses dwsCoreExprs, dwsStack, dwsInfoClasses, dwsStrings, dwsXPlatformUI;
 
 type
-   TThreadedDebugger = class (TdwsThread)
-      FMain : TdwsDebugger;
-      FExec : IdwsProgramExecution;
-      constructor Create(exec : IdwsProgramExecution; main : TdwsDebugger);
-      destructor Destroy; override;
-      procedure Execute; override;
-   end;
-   {$ifndef FPC}
-   TSynchronizedThreadedDebugger = class (TThreadedDebugger, IDebugger)
-      function QueryInterface({$ifdef FPC}constref{$else}const{$endif} IID: TGUID; out Obj): HResult; stdcall;
-      function _AddRef: Integer; stdcall;
-      function _Release: Integer; stdcall;
-      procedure StateChanged;
-      procedure StartDebug(exec : TdwsExecution);
-      procedure DoDebug(exec : TdwsExecution; expr : TExprBase);
-      procedure StopDebug(exec : TdwsExecution);
-      procedure EnterFunc(exec : TdwsExecution; funcExpr : TExprBase);
-      procedure LeaveFunc(exec : TdwsExecution; funcExpr : TExprBase);
-      function  LastDebugStepExpr : TExprBase;
-      procedure DebugMessage(const msg : String);
-      procedure NotifyException(exec : TdwsExecution; const exceptObj : IScriptObj);
-   end;
-   {$endif}
+  TThreadedDebugger = class(TdwsThread)
+    FMain: TdwsDebugger;
+    FExec: IdwsProgramExecution;
+    constructor Create(exec: IdwsProgramExecution; main: TdwsDebugger);
+    destructor Destroy; override;
+    procedure Execute; override;
+  end;
+{$IFNDEF FPC}
 
-// ------------------
-// ------------------ TThreadedDebugger ------------------
-// ------------------
+  TSynchronizedThreadedDebugger = class(TThreadedDebugger, IDebugger)
+    function QueryInterface({$IFDEF FPC}constref{$ELSE}const
+      {$ENDIF} IID: TGUID; out Obj): HResult; stdcall;
+    function _AddRef: Integer; stdcall;
+    function _Release: Integer; stdcall;
+    procedure StateChanged;
+    procedure StartDebug(exec: TdwsExecution);
+    procedure DoDebug(exec: TdwsExecution; expr: TExprBase);
+    procedure StopDebug(exec: TdwsExecution);
+    procedure EnterFunc(exec: TdwsExecution; funcExpr: TExprBase);
+    procedure LeaveFunc(exec: TdwsExecution; funcExpr: TExprBase);
+    function LastDebugStepExpr: TExprBase;
+    procedure DebugMessage(const msg: String);
+    procedure NotifyException(exec: TdwsExecution; const exceptObj: IScriptObj);
+  end;
+{$ENDIF}
+  // ------------------
+  // ------------------ TThreadedDebugger ------------------
+  // ------------------
 
-// Create
-//
-constructor TThreadedDebugger.Create(exec : IdwsProgramExecution; main : TdwsDebugger);
+  // Create
+  //
+constructor TThreadedDebugger.Create(exec: IdwsProgramExecution;
+  main: TdwsDebugger);
 begin
-   inherited Create(False);
-   FExec:=exec;
-   FMain:=main;
-   FreeOnTerminate:=True;
+  inherited Create(False);
+  FExec := exec;
+  FMain := main;
+  FreeOnTerminate := True;
 end;
 
 // Destroy
 //
 destructor TThreadedDebugger.Destroy;
 begin
-   inherited;
-   FExec:=nil;
+  inherited;
+  FExec := nil;
 end;
 
 // Execute
 //
 procedure TThreadedDebugger.Execute;
 begin
-   FMain.ExecuteDebug(FMain.StateChanged);
+  FMain.ExecuteDebug(FMain.StateChanged);
 end;
 
 // ------------------
 // ------------------ TSynchronizedThreadedDebugger ------------------
 // ------------------
-{$ifndef FPC}
+{$IFNDEF FPC}
+
 // QueryInterface
 //
 function TSynchronizedThreadedDebugger.QueryInterface(
-            {$ifdef FPC}constref{$else}const{$endif} IID: TGUID; out Obj): HResult;
+{$IFDEF FPC}constref{$ELSE}const
+  {$ENDIF} IID: TGUID; out Obj): HResult;
 begin
-   if GetInterface(IID, Obj) then
-      Result:=S_OK
-   else Result:=E_NOINTERFACE
+  if GetInterface(IID, Obj) then
+    Result := S_OK
+  else
+    Result := E_NOINTERFACE
 end;
 
 // _AddRef
 //
 function TSynchronizedThreadedDebugger._AddRef: Integer;
 begin
-   Result:=-1;   // -1 indicates no reference counting is taking place
+  Result := -1; // -1 indicates no reference counting is taking place
 end;
 
 // _Release
 //
 function TSynchronizedThreadedDebugger._Release: Integer;
 begin
-   Result:=-1;   // -1 indicates no reference counting is taking place
+  Result := -1; // -1 indicates no reference counting is taking place
 end;
 
 // StateChanged
 //
 procedure TSynchronizedThreadedDebugger.StateChanged;
 begin
-   Synchronize(FMain.StateChanged);
+  Synchronize(FMain.StateChanged);
 end;
 
 // StartDebug
 //
-procedure TSynchronizedThreadedDebugger.StartDebug(exec : TdwsExecution);
+procedure TSynchronizedThreadedDebugger.StartDebug(exec: TdwsExecution);
 begin
-   Synchronize(procedure begin FMain.StartDebug(exec) end);
+  Synchronize(
+    procedure
+    begin
+      FMain.StartDebug(exec)
+    end);
 end;
 
 // DoDebug
 //
-procedure TSynchronizedThreadedDebugger.DoDebug(exec : TdwsExecution; expr : TExprBase);
+procedure TSynchronizedThreadedDebugger.DoDebug(exec: TdwsExecution;
+expr: TExprBase);
 begin
-   Synchronize(procedure begin FMain.DoDebug(exec, expr) end);
+  Synchronize(
+    procedure
+    begin
+      FMain.DoDebug(exec, expr)
+    end);
 end;
 
 // StopDebug
 //
-procedure TSynchronizedThreadedDebugger.StopDebug(exec : TdwsExecution);
+procedure TSynchronizedThreadedDebugger.StopDebug(exec: TdwsExecution);
 begin
-   Synchronize(procedure begin FMain.StopDebug(exec) end);
+  Synchronize(
+    procedure
+    begin
+      FMain.StopDebug(exec)
+    end);
 end;
 
 // EnterFunc
 //
-procedure TSynchronizedThreadedDebugger.EnterFunc(exec : TdwsExecution; funcExpr : TExprBase);
+procedure TSynchronizedThreadedDebugger.EnterFunc(exec: TdwsExecution;
+funcExpr: TExprBase);
 begin
-   Synchronize(procedure begin FMain.EnterFunc(exec, funcExpr) end);
+  Synchronize(
+    procedure
+    begin
+      FMain.EnterFunc(exec, funcExpr)
+    end);
 end;
 
 // LeaveFunc
 //
-procedure TSynchronizedThreadedDebugger.LeaveFunc(exec : TdwsExecution; funcExpr : TExprBase);
+procedure TSynchronizedThreadedDebugger.LeaveFunc(exec: TdwsExecution;
+funcExpr: TExprBase);
 begin
-   Synchronize(procedure begin FMain.LeaveFunc(exec, funcExpr) end);
+  Synchronize(
+    procedure
+    begin
+      FMain.LeaveFunc(exec, funcExpr)
+    end);
 end;
 
 // LastDebugStepExpr
 //
-function TSynchronizedThreadedDebugger.LastDebugStepExpr : TExprBase;
+function TSynchronizedThreadedDebugger.LastDebugStepExpr: TExprBase;
 var
-   expr : TExprBase;
+  expr: TExprBase;
 begin
-   Synchronize(procedure begin expr:=FMain.LastDebugStepExpr end);
-   Result:=expr;
+  Synchronize(
+    procedure
+    begin
+      expr := FMain.LastDebugStepExpr
+    end);
+  Result := expr;
 end;
 
 // DebugMessage
 //
-procedure TSynchronizedThreadedDebugger.DebugMessage(const msg : String);
+procedure TSynchronizedThreadedDebugger.DebugMessage(const msg: String);
 begin
-   Synchronize(procedure begin FMain.DebugMessage(msg) end);
+  Synchronize(
+    procedure
+    begin
+      FMain.DebugMessage(msg)
+    end);
 end;
 
 // NotifyException
 //
-procedure TSynchronizedThreadedDebugger.NotifyException(exec : TdwsExecution; const exceptObj : IScriptObj);
+procedure TSynchronizedThreadedDebugger.NotifyException(exec: TdwsExecution;
+const exceptObj: IScriptObj);
 begin
-   Synchronize(procedure begin FMain.NotifyException(exec, exceptObj) end);
+  Synchronize(
+    procedure
+    begin
+      FMain.NotifyException(exec, exceptObj)
+    end);
 end;
-{$endif}
-
+{$ENDIF}
 // ------------------
 // ------------------ TdwsSimpleDebugger ------------------
 // ------------------
@@ -601,99 +662,104 @@ end;
 //
 procedure TdwsSimpleDebugger.DoDebug(exec: TdwsExecution; expr: TExprBase);
 begin
-   if Assigned(FDebugger) then
-      FDebugger.DoDebug(exec, expr);
-   if Assigned(FOnDebug) then
-      FOnDebug(exec, expr);
+  if Assigned(FDebugger) then
+    FDebugger.DoDebug(exec, expr);
+  if Assigned(FOnDebug) then
+    FOnDebug(exec, expr);
 end;
 
 // EnterFunc
 //
-procedure TdwsSimpleDebugger.EnterFunc(exec: TdwsExecution; funcExpr: TExprBase);
+procedure TdwsSimpleDebugger.EnterFunc(exec: TdwsExecution;
+funcExpr: TExprBase);
 begin
-   if Assigned(FDebugger) then
-      FDebugger.EnterFunc(exec, funcExpr);
-   if Assigned(FOnEnterFunc) then
-      if funcExpr is TFuncExprBase then
-         FOnEnterFunc(exec, TFuncExprBase(funcExpr));
+  if Assigned(FDebugger) then
+    FDebugger.EnterFunc(exec, funcExpr);
+  if Assigned(FOnEnterFunc) then
+    if funcExpr is TFuncExprBase then
+      FOnEnterFunc(exec, TFuncExprBase(funcExpr));
 end;
 
 // LeaveFunc
 //
-procedure TdwsSimpleDebugger.LeaveFunc(exec: TdwsExecution; funcExpr: TExprBase);
+procedure TdwsSimpleDebugger.LeaveFunc(exec: TdwsExecution;
+funcExpr: TExprBase);
 begin
-   if Assigned(FDebugger) then
-      FDebugger.LeaveFunc(exec, funcExpr);
-   if Assigned(FOnLeaveFunc) then
-      if funcExpr is TFuncExprBase then
-         FOnLeaveFunc(exec, TFuncExprBase(funcExpr));
+  if Assigned(FDebugger) then
+    FDebugger.LeaveFunc(exec, funcExpr);
+  if Assigned(FOnLeaveFunc) then
+    if funcExpr is TFuncExprBase then
+      FOnLeaveFunc(exec, TFuncExprBase(funcExpr));
 end;
 
 // LastDebugStepExpr
 //
-function TdwsSimpleDebugger.LastDebugStepExpr : TExprBase;
+function TdwsSimpleDebugger.LastDebugStepExpr: TExprBase;
 begin
-   Result:=nil;
+  Result := nil;
 end;
 
 // DebugMessage
 //
-procedure TdwsSimpleDebugger.DebugMessage(const msg : String);
+procedure TdwsSimpleDebugger.DebugMessage(const msg: String);
 begin
-   if Assigned(FOnDebugMessage) then
-      FOnDebugMessage(msg);
+  if Assigned(FOnDebugMessage) then
+    FOnDebugMessage(msg);
 end;
 
 // NotifyException
 //
-procedure TdwsSimpleDebugger.NotifyException(exec : TdwsExecution; const exceptObj : IScriptObj);
+procedure TdwsSimpleDebugger.NotifyException(exec: TdwsExecution;
+const exceptObj: IScriptObj);
 
-   procedure DoNotify;
-   var
-      info : TProgramInfo;
-      progExec : TdwsProgramExecution;
-      exceptInfo : IInfo;
-      exceptClassSym : TClassSymbol;
-      dataContext : IDataContext;
-   begin
-      progExec := (exec as TdwsProgramExecution);
-      info := progExec.AcquireProgramInfo(nil);
-      try
-         exec.DataContext_CreateEmpty(1, dataContext);
-         dataContext.AsInterface[0] := exceptObj;
-         if exceptObj = nil then
-            exceptClassSym := (exec as TdwsProgramExecution).CompilerContext.TypException
-         else exceptClassSym := exceptObj.ClassSym;
-         exceptInfo := TInfoClassObj.Create(info, exceptClassSym, dataContext);
-         FOnNotifyException(exceptInfo);
-      finally
-         progExec.ReleaseProgramInfo(info);
-      end;
-   end;
+  procedure DoNotify;
+  var
+    info: TProgramInfo;
+    progExec: TdwsProgramExecution;
+    exceptInfo: IInfo;
+    exceptClassSym: TClassSymbol;
+    dataContext: IDataContext;
+  begin
+    progExec := (exec as TdwsProgramExecution);
+    info := progExec.AcquireProgramInfo(nil);
+    try
+      exec.DataContext_CreateEmpty(1, dataContext);
+      dataContext.AsInterface[0] := exceptObj;
+      if exceptObj = nil then
+        exceptClassSym := (exec as TdwsProgramExecution)
+          .CompilerContext.TypException
+      else
+        exceptClassSym := exceptObj.ClassSym;
+      exceptInfo := TInfoClassObj.Create(info, exceptClassSym, dataContext);
+      FOnNotifyException(exceptInfo);
+    finally
+      progExec.ReleaseProgramInfo(info);
+    end;
+  end;
 
 begin
-   if Assigned(FOnNotifyException) then
-      DoNotify;
+  if Assigned(FOnNotifyException) then
+    DoNotify;
 end;
 
 // StartDebug
 //
 procedure TdwsSimpleDebugger.StartDebug(exec: TdwsExecution);
 begin
-   if Assigned(FDebugger) then
-      FDebugger.StartDebug(exec);
-   if Assigned(FOnStartDebug) then
-      FOnStartDebug(exec);
+  if Assigned(FDebugger) then
+    FDebugger.StartDebug(exec);
+  if Assigned(FOnStartDebug) then
+    FOnStartDebug(exec);
 end;
 
 // StopDebug
 //
 procedure TdwsSimpleDebugger.StopDebug(exec: TdwsExecution);
 begin
-   if Assigned(FDebugger) then
-      FDebugger.StopDebug(exec);
-   if Assigned(FOnStopDebug) then
-      FOnStopDebug(exec);
+  if Assigned(FDebugger) then
+    FDebugger.StopDebug(exec);
+  if Assigned(FOnStopDebug) then
+    FOnStopDebug(exec);
 end;
 
 // ------------------
@@ -704,424 +770,450 @@ end;
 //
 constructor TdwsDebugger.Create(AOwner: TComponent);
 begin
-   inherited;
-   FMode:=dmMainThread;
-   FState:=dsIdle;
-   FBreakpoints:=TdwsDebuggerBreakpoints.Create(Self);
-   FWatches:=TdwsDebuggerWatches.Create(Self);
+  inherited;
+  FMode := dmMainThread;
+  FState := dsIdle;
+  FBreakpoints := TdwsDebuggerBreakpoints.Create(Self);
+  FWatches := TdwsDebuggerWatches.Create(Self);
 end;
 
 // Destroy
 //
 destructor TdwsDebugger.Destroy;
 begin
-   if daCanEndDebug in AllowedActions then
-      EndDebug;
-   ClearSuspendConditions;
-   FWatches.Free;
-   FBreakpoints.Free;
-   inherited;
+  if daCanEndDebug in AllowedActions then
+    EndDebug;
+  ClearSuspendConditions;
+  FWatches.Free;
+  FBreakpoints.Free;
+  inherited;
 end;
 
 // StateChanged
 //
 procedure TdwsDebugger.StateChanged;
 begin
-   if Assigned(FOnStateChanged) then
-      FOnStateChanged(Self);
+  if Assigned(FOnStateChanged) then
+    FOnStateChanged(Self);
 end;
 
 // BeginDebug
 //
-procedure TdwsDebugger.BeginDebug(const exec : IdwsProgramExecution);
+procedure TdwsDebugger.BeginDebug(const exec: IdwsProgramExecution);
 var
-   step : TdwsDSCStepDetail;
+  step: TdwsDSCStepDetail;
 begin
-   Assert(daCanBeginDebug in AllowedActions, 'BeginDebug not allowed');
-   Assert(exec<>nil, 'Execution is nil');
+  Assert(daCanBeginDebug in AllowedActions, 'BeginDebug not allowed');
+  Assert(exec <> nil, 'Execution is nil');
 
-   BreakpointsChanged;
-   if dboBeginSuspendedAnywhere in BeginOptions then begin
-      TdwsDSCStepDetail.Create(Self);
-   end else if dboBeginSuspendedInMainModule in BeginOptions then begin
-      step:=TdwsDSCStepDetail.Create(Self);
-      step.SourceFileName:=MSG_MainModule;
-   end;
+  BreakPointsChanged;
+  if dboBeginSuspendedAnywhere in BeginOptions then
+  begin
+    TdwsDSCStepDetail.Create(Self);
+  end
+  else if dboBeginSuspendedInMainModule in BeginOptions then
+  begin
+    step := TdwsDSCStepDetail.Create(Self);
+    step.SourceFileName := MSG_MainModule;
+  end;
 
-   FExecution:=exec;
-   case Mode of
-      dmMainThread :
-         ExecuteDebug(StateChanged);
-      dmThreadedSynchronize :
-         {$ifdef FPC}
-         Assert(False);
-         {$else}
-         TSynchronizedThreadedDebugger.Create(exec, Self);
-         {$endif}
-      dmThreaded :
-         TThreadedDebugger.Create(exec, Self);
-   else
+  FExecution := exec;
+  case Mode of
+    dmMainThread:
+      ExecuteDebug(StateChanged);
+    dmThreadedSynchronize:
+{$IFDEF FPC}
       Assert(False);
-   end;
+{$ELSE}
+      TSynchronizedThreadedDebugger.Create(exec, Self);
+{$ENDIF}
+    dmThreaded:
+      TThreadedDebugger.Create(exec, Self);
+  else
+    Assert(False);
+  end;
 end;
 
 // EndDebug
 //
 procedure TdwsDebugger.EndDebug;
 begin
-   Assert(daCanEndDebug in AllowedActions, 'EndDebug not allowed');
+  Assert(daCanEndDebug in AllowedActions, 'EndDebug not allowed');
 
-   ClearSuspendConditions;
-   if not (FState in [dsIdle, dsDebugDone]) then begin
-      FExecution.Stop;
-      if FState=dsDebugSuspended then
-         FState:=dsDebugRun;
-      Exit;
-   end;
+  ClearSuspendConditions;
+  if not(FState in [dsIdle, dsDebugDone]) then
+  begin
+    FExecution.Stop;
+    if FState = dsDebugSuspended then
+      FState := dsDebugRun;
+    Exit;
+  end;
 
-   while FState<>dsDebugDone do
-      ProcessApplicationMessages(25);
+  while FState <> dsDebugDone do
+    ProcessApplicationMessages(25);
 
-   FCurrentExpression:=nil;
-   FExecution:=nil;
-   FState:=dsIdle;
+  FCurrentExpression := nil;
+  FExecution := nil;
+  FState := dsIdle;
 
-   StateChanged;
+  StateChanged;
 end;
 
 // AttachDebug
 //
-procedure TdwsDebugger.AttachDebug(const exec : IdwsProgramExecution);
+procedure TdwsDebugger.AttachDebug(const exec: IdwsProgramExecution);
 begin
-   Assert(daCanBeginDebug in AllowedActions, 'AttachDebug not allowed');
-   Assert(FExecution=nil, 'Already debugging');
-   Assert(exec<>nil, 'Execution is nil');
+  Assert(daCanBeginDebug in AllowedActions, 'AttachDebug not allowed');
+  Assert(FExecution = nil, 'Already debugging');
+  Assert(exec <> nil, 'Execution is nil');
 
-   BreakpointsChanged;
+  BreakPointsChanged;
 
-   FExecution:=exec;
+  FExecution := exec;
 
-   FState:=dsDebugRun;
+  FState := dsDebugRun;
 
-   StateChanged;
+  StateChanged;
 end;
 
 // DetachDebug
 //
 procedure TdwsDebugger.DetachDebug;
 begin
-   Assert(daCanEndDebug in AllowedActions, 'EndDebug not allowed');
+  Assert(daCanEndDebug in AllowedActions, 'EndDebug not allowed');
 
-   ClearSuspendConditions;
+  ClearSuspendConditions;
 
-   FCurrentExpression:=nil;
-   FExecution:=nil;
-   FState:=dsIdle;
+  FCurrentExpression := nil;
+  FExecution := nil;
+  FState := dsIdle;
 
-   StateChanged;
+  StateChanged;
 end;
 
 // Suspend
 //
 procedure TdwsDebugger.Suspend;
 begin
-   Assert(daCanSuspend in AllowedActions, 'Suspend not allowed');
+  Assert(daCanSuspend in AllowedActions, 'Suspend not allowed');
 
-   TdwsDSCStepDetail.Create(Self);
+  TdwsDSCStepDetail.Create(Self);
 end;
 
 // Resume
 //
 procedure TdwsDebugger.Resume;
 begin
-   Assert(daCanResume in AllowedActions, 'Resume not allowed');
+  Assert(daCanResume in AllowedActions, 'Resume not allowed');
 
-   FState:=dsDebugResuming;
+  FState := dsDebugResuming;
 end;
 
 // StepDetailed
 //
 procedure TdwsDebugger.StepDetailed;
 begin
-   StepDetailedInSource('');
+  StepDetailedInSource('');
 end;
 
 // StepDetailedInSource
 //
-procedure TdwsDebugger.StepDetailedInSource(const sourceFileName : String);
+procedure TdwsDebugger.StepDetailedInSource(const SourceFileName: String);
 var
-   step : TdwsDSCStepDetail;
+  step: TdwsDSCStepDetail;
 begin
-   Assert(daCanStep in AllowedActions, 'Step not allowed');
+  Assert(daCanStep in AllowedActions, 'Step not allowed');
 
-   step:=TdwsDSCStepDetail.Create(Self);
-   step.SourceFileName:=sourceFileName;
-   FState:=dsDebugResuming;
+  step := TdwsDSCStepDetail.Create(Self);
+  step.SourceFileName := SourceFileName;
+  FState := dsDebugResuming;
 end;
 
 // StepOver
 //
 procedure TdwsDebugger.StepOver;
 begin
-   StepOverInSource('');
+  StepOverInSource('');
 end;
 
 // StepOverInSource
 //
-procedure TdwsDebugger.StepOverInSource(const sourceFileName : String);
+procedure TdwsDebugger.StepOverInSource(const SourceFileName: String);
 var
-   step : TdwsDSCStepOver;
+  step: TdwsDSCStepOver;
 begin
-   Assert(daCanStep in AllowedActions, 'Step not allowed');
+  Assert(daCanStep in AllowedActions, 'Step not allowed');
 
-   step:=TdwsDSCStepOver.Create(Self);
-   step.SourceFileName:=sourceFileName;
-   step.CallStackDepth:=Execution.ExecutionObject.CallStackDepth;
-   FState:=dsDebugResuming;
+  step := TdwsDSCStepOver.Create(Self);
+  step.SourceFileName := SourceFileName;
+  step.CallStackDepth := Execution.ExecutionObject.CallStackDepth;
+  FState := dsDebugResuming;
 end;
 
 // StepOut
 //
 procedure TdwsDebugger.StepOut;
 begin
-   StepOutInSource('');
+  StepOutInSource('');
 end;
 
 // StepOutInSource
 //
-procedure TdwsDebugger.StepOutInSource(const sourceFileName : String);
+procedure TdwsDebugger.StepOutInSource(const SourceFileName: String);
 var
-   step : TdwsDSCStepOut;
+  step: TdwsDSCStepOut;
 begin
-   Assert(daCanStepOut in AllowedActions, 'StepOut not allowed');
+  Assert(daCanStepOut in AllowedActions, 'StepOut not allowed');
 
-   step:=TdwsDSCStepOut.Create(Self);
-   step.SourceFileName:=sourceFileName;
-   step.CallStackDepth:=Execution.ExecutionObject.CallStackDepth;
-   FState:=dsDebugResuming;
+  step := TdwsDSCStepOut.Create(Self);
+  step.SourceFileName := SourceFileName;
+  step.CallStackDepth := Execution.ExecutionObject.CallStackDepth;
+  FState := dsDebugResuming;
 end;
 
 // StepToLine
 //
-procedure TdwsDebugger.StepToLine(line : Integer; const sourceFileName : String);
+procedure TdwsDebugger.StepToLine(Line: Integer; const SourceFileName: String);
 var
-   step : TdwsDSCStepToLine;
+  step: TdwsDSCStepToLine;
 begin
-   Assert(daCanStep in AllowedActions, 'Step not allowed');
+  Assert(daCanStep in AllowedActions, 'Step not allowed');
 
-   step:=TdwsDSCStepToLine.Create(Self);
-   step.Line:=line;
-   step.SourceFileName:=sourceFileName;
-   FState:=dsDebugResuming;
+  step := TdwsDSCStepToLine.Create(Self);
+  step.Line := Line;
+  step.SourceFileName := SourceFileName;
+  FState := dsDebugResuming;
 end;
 
 // ClearSuspendConditions
 //
 procedure TdwsDebugger.ClearSuspendConditions;
 begin
-   while FSuspendCondition<>nil do
-      FSuspendCondition.Free;
+  while FSuspendCondition <> nil do
+    FSuspendCondition.Free;
 end;
 
 // BreakpointsChanged
 //
-procedure TdwsDebugger.BreakpointsChanged;
+procedure TdwsDebugger.BreakPointsChanged;
 begin
-   if FBreakpointsCondition<>nil then
-      FBreakpointsCondition.BreakpointsChanged
-   else if FBreakpoints.Count>0 then
-      TdwsDSCBreakpoints.Create(Self, FBreakpoints);
+  if FBreakpointsCondition <> nil then
+    FBreakpointsCondition.BreakPointsChanged
+  else if FBreakpoints.Count > 0 then
+    TdwsDSCBreakpoints.Create(Self, FBreakpoints);
 end;
 
 // Evaluate
 //
-function TdwsDebugger.Evaluate(const expression : String; scriptPos : PScriptPos = nil) : IdwsEvaluateExpr;
+function TdwsDebugger.Evaluate(const expression: String;
+scriptPos: PScriptPos = nil): IdwsEvaluateExpr;
 begin
-   Assert(daCanEvaluate in AllowedActions, 'Evaluate not allowed');
+  Assert(daCanEvaluate in AllowedActions, 'Evaluate not allowed');
 
-   if FExecution <> nil then
-      Result := TdwsEvaluateExpr.Evaluate(FExecution, expression, [], scriptPos)
-   else Result := nil;
+  if FExecution <> nil then
+    Result := TdwsEvaluateExpr.Evaluate(FExecution, expression, [], scriptPos)
+  else
+    Result := nil;
 end;
 
 // EvaluateAsString
 //
-function TdwsDebugger.EvaluateAsString(const expression : String; scriptPos : PScriptPos = nil) : String;
+function TdwsDebugger.EvaluateAsString(const expression: String;
+scriptPos: PScriptPos = nil): String;
 var
-   expr : IdwsEvaluateExpr;
-   locScriptPos : TScriptPos;
+  expr: IdwsEvaluateExpr;
+  locScriptPos: TScriptPos;
 begin
-   if FExecution=nil then Exit(DBG_NotDebugging);
-   try
-      if scriptPos = nil then begin
-         locScriptPos := CurrentScriptPos;
-         scriptPos := @locScriptPos;
-      end;
-      expr := Evaluate(expression, scriptPos);
+  if FExecution = nil then
+    Exit(DBG_NotDebugging);
+  try
+    if scriptPos = nil then
+    begin
+      locScriptPos := CurrentScriptPos;
+      scriptPos := @locScriptPos;
+    end;
+    expr := Evaluate(expression, scriptPos);
+    try
+      Result := DBG_NoResult;
+      FExecution.SuspendDebug;
       try
-         Result := DBG_NoResult;
-         FExecution.SuspendDebug;
-         try
-            expr.Expression.EvalAsString(FExecution.ExecutionObject, Result);
-         finally
-            FExecution.ResumeDebug;
-         end;
+        expr.expression.EvalAsString(FExecution.ExecutionObject, Result);
       finally
-         expr := nil;
+        FExecution.ResumeDebug;
       end;
-   except
-      on E : Exception do
-         Result:=E.Message;
-   end;
+    finally
+      expr := nil;
+    end;
+  except
+    on E: Exception do
+      Result := E.Message;
+  end;
 end;
 
 // EvaluateAsBoolean
 //
-function TdwsDebugger.EvaluateAsBoolean(const expression : String; scriptPos : PScriptPos = nil) : Boolean;
+function TdwsDebugger.EvaluateAsBoolean(const expression: String;
+scriptPos: PScriptPos = nil): Boolean;
 var
-   expr : IdwsEvaluateExpr;
+  expr: IdwsEvaluateExpr;
 begin
-   if FExecution=nil then Exit(False);
-   try
-      expr := Evaluate(expression, scriptPos);
+  if FExecution = nil then
+    Exit(False);
+  try
+    expr := Evaluate(expression, scriptPos);
+    try
+      FExecution.SuspendDebug;
       try
-         FExecution.SuspendDebug;
-         try
-            Result := expr.Expression.EvalAsBoolean(FExecution.ExecutionObject);
-         finally
-            FExecution.ResumeDebug;
-         end;
+        Result := expr.expression.EvalAsBoolean(FExecution.ExecutionObject);
       finally
-         expr := nil;
+        FExecution.ResumeDebug;
       end;
-   except
-      Result := False;
-   end;
+    finally
+      expr := nil;
+    end;
+  except
+    Result := False;
+  end;
 end;
 
 // AllowedActions
 //
-function TdwsDebugger.AllowedActions : TdwsDebuggerActions;
+function TdwsDebugger.AllowedActions: TdwsDebuggerActions;
 begin
-   Result:=[];
-   if Assigned(FExecution) then begin
-      case FState of
-         dsDebugRun : begin
-            Result:=[daCanSuspend, daCanEndDebug];
-            if (Mode in [ dmMainThread ]) or (FExecuteDebugThread = TThread.Current) then
-               Include(Result, daCanEvaluate);
-         end;
-         dsDebugSuspended : begin
-            Result:=[daCanResume, daCanEndDebug, daCanStep, daCanEvaluate];
-            if Execution.ExecutionObject.CallStackDepth>0 then
-               Include(Result, daCanStepOut);
-         end;
-         dsDebugSuspending :
-            Result:=[];
-         dsDebugDone :
-            Result:=[daCanEvaluate, daCanEndDebug];
-         dsDebugResuming :
-            Result:=[];
-      else
-         Assert(False);
-      end;
-   end else begin
-      case FState of
-         dsIdle :
-            Result:=[daCanBeginDebug, daCanEvaluate];
-      end;
-   end;
+  Result := [];
+  if Assigned(FExecution) then
+  begin
+    case FState of
+      dsDebugRun:
+        begin
+          Result := [daCanSuspend, daCanEndDebug];
+          if (Mode in [dmMainThread]) or (FExecuteDebugThread = TThread.Current)
+          then
+            Include(Result, daCanEvaluate);
+        end;
+      dsDebugSuspended:
+        begin
+          Result := [daCanResume, daCanEndDebug, daCanStep, daCanEvaluate];
+          if Execution.ExecutionObject.CallStackDepth > 0 then
+            Include(Result, daCanStepOut);
+        end;
+      dsDebugSuspending:
+        Result := [];
+      dsDebugDone:
+        Result := [daCanEvaluate, daCanEndDebug];
+      dsDebugResuming:
+        Result := [];
+    else
+      Assert(False);
+    end;
+  end
+  else
+  begin
+    case FState of
+      dsIdle:
+        Result := [daCanBeginDebug, daCanEvaluate];
+    end;
+  end;
 end;
 
 // ExecuteDebug
 //
-procedure TdwsDebugger.ExecuteDebug(const notifyStageChanged : TThreadMethod);
+procedure TdwsDebugger.ExecuteDebug(const notifyStageChanged: TThreadMethod);
 begin
-   FExecuteDebugThread := TThread.Current;
-   FState:=dsDebugRun;
-   try
-      FExecution.Debugger:=Self;
-      try
-         notifyStageChanged();
-         if Length(FParams)>0 then
-            FExecution.ExecuteParam(FParams)
-         else FExecution.Execute;
-      finally
-         FExecution.Debugger:=nil;
-      end;
-   finally
-      FState:=dsDebugDone;
-      FExecuteDebugThread := nil;
-   end;
-   notifyStageChanged();
+  FExecuteDebugThread := TThread.Current;
+  FState := dsDebugRun;
+  try
+    FExecution.Debugger := Self;
+    try
+      notifyStageChanged();
+      if Length(FParams) > 0 then
+        FExecution.ExecuteParam(FParams)
+      else
+        FExecution.Execute;
+    finally
+      FExecution.Debugger := nil;
+    end;
+  finally
+    FState := dsDebugDone;
+    FExecuteDebugThread := nil;
+  end;
+  notifyStageChanged();
 end;
 
 // GetCurrentScriptPos
 //
-function TdwsDebugger.GetCurrentScriptPos : TScriptPos;
+function TdwsDebugger.GetCurrentScriptPos: TScriptPos;
 begin
-   if FCurrentExpression<>nil then
-      Result:=FCurrentExpression.ScriptPos
-   else Result:=cNullPos;
+  if FCurrentExpression <> nil then
+    Result := FCurrentExpression.scriptPos
+  else
+    Result := cNullPos;
 end;
 
 // DoDebug
 //
-procedure TdwsDebugger.DoDebug(exec : TdwsExecution; expr : TExprBase);
+procedure TdwsDebugger.DoDebug(exec: TdwsExecution; expr: TExprBase);
 var
-   ticks : Int64;
+  ticks: Int64;
 begin
-   if expr.Taxonomy = ebtBlockExprBase then begin
-      if (expr.ClassType<>TBlockInitExpr) or (expr.SubExprCount=0) then Exit;
-   end;
-   FCurrentExpression:=expr;
-   inherited;
-   if    (expr.ClassType=TDebugBreakExpr)
-      or (    (FSuspendCondition<>nil)
-          and (FSuspendCondition.SuspendExecution)) then begin
-      FState:=dsDebugSuspended;
-      StateChanged;
-      while FState=dsDebugSuspended do
-         DoDebugSuspended;
-      if FState=dsDebugResuming then
-         FState:=dsDebugRun;
-      StateChanged;
-   end;
-   if Mode=dmMainThread then begin
-      ticks:=GetSystemMilliseconds;
-      if Cardinal(ticks-FLastAutoProcessMessages)>50 then begin
-         FLastAutoProcessMessages:=ticks;
-         ProcessApplicationMessages(0);
-      end;
-   end;
+  if expr.Taxonomy = ebtBlockExprBase then
+  begin
+    if (expr.ClassType <> TBlockInitExpr) or (expr.SubExprCount = 0) then
+      Exit;
+  end;
+  FCurrentExpression := expr;
+  inherited;
+  if (expr.ClassType = TDebugBreakExpr) or
+    ((FSuspendCondition <> nil) and (FSuspendCondition.SuspendExecution)) then
+  begin
+    FState := dsDebugSuspended;
+    StateChanged;
+    while FState = dsDebugSuspended do
+      DoDebugSuspended;
+    if FState = dsDebugResuming then
+      FState := dsDebugRun;
+    StateChanged;
+  end;
+  if Mode = dmMainThread then
+  begin
+    ticks := GetSystemMilliseconds;
+    if Cardinal(ticks - FLastAutoProcessMessages) > 50 then
+    begin
+      FLastAutoProcessMessages := ticks;
+      ProcessApplicationMessages(0);
+    end;
+  end;
 end;
 
 // DoDebugSuspended
 //
 procedure TdwsDebugger.DoDebugSuspended;
 begin
-   if Assigned(FOnDebugSuspended) then
-      FOnDebugSuspended(Self)
-   else ProcessApplicationMessages(10);
+  if Assigned(FOnDebugSuspended) then
+    FOnDebugSuspended(Self)
+  else
+    ProcessApplicationMessages(10);
 end;
 
 // LastDebugStepExpr
 //
-function TdwsDebugger.LastDebugStepExpr : TExprBase;
+function TdwsDebugger.LastDebugStepExpr: TExprBase;
 begin
-   Result:=FCurrentExpression;
+  Result := FCurrentExpression;
 end;
 
 // NotifyException
 //
-procedure TdwsDebugger.NotifyException(exec : TdwsExecution; const exceptObj : IScriptObj);
+procedure TdwsDebugger.NotifyException(exec: TdwsExecution;
+const exceptObj: IScriptObj);
 begin
-   if SuspendOnException then begin
-      if daCanSuspend in AllowedActions then
-         Suspend;
-   end;
+  if SuspendOnException then
+  begin
+    if daCanSuspend in AllowedActions then
+      Suspend;
+  end;
 
-   inherited;
+  inherited;
 end;
 
 // ------------------
@@ -1132,22 +1224,23 @@ end;
 //
 constructor TdwsDebuggerBreakpoint.Create;
 begin
-   inherited;
-   FEnabled:=True;
+  inherited;
+  FEnabled := True;
 end;
 
 // ConditionPassed
 //
-function TdwsDebuggerBreakpoint.ConditionPassed(const debugger : TdwsDebugger) : Boolean;
+function TdwsDebuggerBreakpoint.ConditionPassed(const Debugger
+  : TdwsDebugger): Boolean;
 begin
-   Result := True;
+  Result := True;
 end;
 
 // ClearEvaluators
 //
 procedure TdwsDebuggerBreakpoint.ClearEvaluators;
 begin
-   // nothing here
+  // nothing here
 end;
 
 // ------------------
@@ -1156,48 +1249,51 @@ end;
 
 // SetCondition
 //
-procedure TdwsDebuggerBreakpointConditional.SetCondition(const val : String);
+procedure TdwsDebuggerBreakpointConditional.SetCondition(const val: String);
 begin
-   FCondition := val;
-   FEvaluator := nil;
+  FCondition := val;
+  FEvaluator := nil;
 end;
 
 // InitializeEvaluator
 //
-procedure TdwsDebuggerBreakpointConditional.InitializeEvaluator(const debugger : TdwsDebugger);
+procedure TdwsDebuggerBreakpointConditional.InitializeEvaluator
+  (const Debugger: TdwsDebugger);
 var
-   scriptPos : TScriptPos;
+  scriptPos: TScriptPos;
 begin
-   scriptPos := debugger.CurrentScriptPos;
-   FEvaluator := debugger.Evaluate(Condition, @scriptPos);
+  scriptPos := Debugger.CurrentScriptPos;
+  FEvaluator := Debugger.Evaluate(Condition, @scriptPos);
 end;
 
 // ConditionPassed
 //
-function TdwsDebuggerBreakpointConditional.ConditionPassed(const debugger : TdwsDebugger) : Boolean;
+function TdwsDebuggerBreakpointConditional.ConditionPassed(const Debugger
+  : TdwsDebugger): Boolean;
 var
-   exec : IdwsProgramExecution;
+  exec: IdwsProgramExecution;
 begin
-   if FCondition = '' then Exit(True);
+  if FCondition = '' then
+    Exit(True);
 
-   if FEvaluator = nil then
-      InitializeEvaluator(debugger);
+  if FEvaluator = nil then
+    InitializeEvaluator(Debugger);
 
-   exec := debugger.Execution;
-   exec.SuspendDebug;
-   try
-      Result := FEvaluator.Expression.EvalAsBoolean(exec.ExecutionObject);
-   finally
-      exec.ResumeDebug;
-   end;
+  exec := Debugger.Execution;
+  exec.SuspendDebug;
+  try
+    Result := FEvaluator.expression.EvalAsBoolean(exec.ExecutionObject);
+  finally
+    exec.ResumeDebug;
+  end;
 end;
 
 // ClearEvaluators
 //
 procedure TdwsDebuggerBreakpointConditional.ClearEvaluators;
 begin
-   FEvaluator := nil;
-   inherited;
+  FEvaluator := nil;
+  inherited;
 end;
 
 // ------------------
@@ -1206,95 +1302,101 @@ end;
 
 // Create
 //
-constructor TdwsDebuggerBreakpoints.Create(aDebugger : TdwsDebugger);
+constructor TdwsDebuggerBreakpoints.Create(aDebugger: TdwsDebugger);
 begin
-   inherited Create;
-   FDebugger:=aDebugger;
-   FLookupVar:=TdwsDebuggerBreakpoint.Create;
+  inherited Create;
+  FDebugger := aDebugger;
+  FLookupVar := TdwsDebuggerBreakpoint.Create;
 end;
 
 // Destroy
 //
 destructor TdwsDebuggerBreakpoints.Destroy;
 begin
-   FDebugger.FBreakpoints:=nil;
-   FLookupVar.Free;
-   Clean;
-   inherited;
+  FDebugger.FBreakpoints := nil;
+  FLookupVar.Free;
+  Clean;
+  inherited;
 end;
 
 // Add
 //
-function TdwsDebuggerBreakpoints.Add(aLine : Integer; const aSourceName : String) : TdwsDebuggerBreakpoint;
+function TdwsDebuggerBreakpoints.Add(aLine: Integer; const aSourceName: String)
+  : TdwsDebuggerBreakpoint;
 begin
-   Result := TdwsDebuggerBreakpoint.Create;
-   Result.Line := aLine;
-   Result.SourceName := aSourceName;
-   inherited Add(Result);
+  Result := TdwsDebuggerBreakpoint.Create;
+  Result.Line := aLine;
+  Result.SourceName := aSourceName;
+  inherited Add(Result);
 end;
 
 // AddConditional
 //
-function TdwsDebuggerBreakpoints.AddConditional(aLine : Integer; const aSourceName, aCondition : String) : TdwsDebuggerBreakpointConditional;
+function TdwsDebuggerBreakpoints.AddConditional(aLine: Integer;
+const aSourceName, aCondition: String): TdwsDebuggerBreakpointConditional;
 begin
-   Result := TdwsDebuggerBreakpointConditional.Create;
-   Result.Line := aLine;
-   Result.SourceName := aSourceName;
-   Result.Condition := aCondition;
-   inherited Add(Result);
+  Result := TdwsDebuggerBreakpointConditional.Create;
+  Result.Line := aLine;
+  Result.SourceName := aSourceName;
+  Result.Condition := aCondition;
+  inherited Add(Result);
 end;
 
 // Clear
 //
 procedure TdwsDebuggerBreakpoints.Clear;
 begin
-   inherited Clean;
+  inherited Clean;
 end;
 
 // Compare
 //
-function TdwsDebuggerBreakpoints.Compare(const item1, item2 : TdwsDebuggerBreakpoint) : Integer;
+function TdwsDebuggerBreakpoints.Compare(const item1,
+  item2: TdwsDebuggerBreakpoint): Integer;
 begin
-   Result:=UnicodeCompareText(item1.SourceName, item2.SourceName);
-   if Result=0 then
-      Result:=item2.Line-item1.Line;
+  Result := UnicodeCompareText(item1.SourceName, item2.SourceName);
+  if Result = 0 then
+    Result := item2.Line - item1.Line;
 end;
 
 // BreakpointAt
 //
-function TdwsDebuggerBreakpoints.BreakpointAt(const scriptPos : TScriptPos) : TdwsDebuggerBreakpoint;
+function TdwsDebuggerBreakpoints.BreakpointAt(const scriptPos: TScriptPos)
+  : TdwsDebuggerBreakpoint;
 begin
-   Result := BreakpointAt(scriptPos.SourceFile.Name, scriptPos.Line);
+  Result := BreakpointAt(scriptPos.SourceFile.name, scriptPos.Line);
 end;
 
 // BreakpointAt
 //
-function TdwsDebuggerBreakpoints.BreakpointAt(const sourceName : String; sourceLine : Integer) : TdwsDebuggerBreakpoint;
+function TdwsDebuggerBreakpoints.BreakpointAt(const SourceName: String;
+sourceLine: Integer): TdwsDebuggerBreakpoint;
 var
-   i : Integer;
+  i: Integer;
 begin
-   FLookupVar.Line := sourceLine;
-   FLookupVar.SourceName := sourceName;
-   if Find(FLookupVar, i) then
-      Result := Items[i]
-   else Result := nil;
+  FLookupVar.Line := sourceLine;
+  FLookupVar.SourceName := SourceName;
+  if Find(FLookupVar, i) then
+    Result := Items[i]
+  else
+    Result := nil;
 end;
 
 // BreakPointsChanged
 //
 procedure TdwsDebuggerBreakpoints.BreakPointsChanged;
 begin
-   Debugger.BreakpointsChanged;
+  Debugger.BreakPointsChanged;
 end;
 
 // ClearEvaluators
 //
 procedure TdwsDebuggerBreakpoints.ClearEvaluators;
 var
-   i : Integer;
+  i: Integer;
 begin
-   for i := 0 to Count-1 do
-      Items[i].ClearEvaluators;
+  for i := 0 to Count - 1 do
+    Items[i].ClearEvaluators;
 end;
 
 // ------------------
@@ -1303,29 +1405,30 @@ end;
 
 // Create
 //
-constructor TdwsDebuggerSuspendCondition.Create(aDebugger : TdwsDebugger);
+constructor TdwsDebuggerSuspendCondition.Create(aDebugger: TdwsDebugger);
 begin
-   inherited Create;
-   FDebugger:=aDebugger;
-   FParentCondition:=aDebugger.FSuspendCondition;
-   aDebugger.FSuspendCondition:=Self;
+  inherited Create;
+  FDebugger := aDebugger;
+  FParentCondition := aDebugger.FSuspendCondition;
+  aDebugger.FSuspendCondition := Self;
 end;
 
 // Destroy
 //
 destructor TdwsDebuggerSuspendCondition.Destroy;
 begin
-   FDebugger.FSuspendCondition:=FParentCondition;
-   inherited;
+  FDebugger.FSuspendCondition := FParentCondition;
+  inherited;
 end;
 
 // SuspendExecution
 //
-function TdwsDebuggerSuspendCondition.SuspendExecution : Boolean;
+function TdwsDebuggerSuspendCondition.SuspendExecution: Boolean;
 begin
-   if Assigned(FParentCondition) then
-      Result:=FParentCondition.SuspendExecution
-   else Result:=False;
+  if Assigned(FParentCondition) then
+    Result := FParentCondition.SuspendExecution
+  else
+    Result := False;
 end;
 
 // ------------------
@@ -1334,54 +1437,58 @@ end;
 
 // Create
 //
-constructor TdwsDSCBreakpoints.Create(aDebugger : TdwsDebugger; breakpointsList : TdwsDebuggerBreakpoints);
+constructor TdwsDSCBreakpoints.Create(aDebugger: TdwsDebugger;
+breakpointsList: TdwsDebuggerBreakpoints);
 begin
-   inherited Create(aDebugger);
-   FBreakpoints:=breakpointsList;
-   FBitmap:=TBits.Create;
-   BreakpointsChanged;
+  inherited Create(aDebugger);
+  FBreakpoints := breakpointsList;
+  FBitmap := TBits.Create;
+  BreakPointsChanged;
 end;
 
 // Destroy
 //
 destructor TdwsDSCBreakpoints.Destroy;
 begin
-   Debugger.FBreakpointsCondition:=nil;
-   FBitmap.Free;
-   inherited;
+  Debugger.FBreakpointsCondition := nil;
+  FBitmap.Free;
+  inherited;
 end;
 
 // BreakpointsChanged
 //
-procedure TdwsDSCBreakpoints.BreakpointsChanged;
+procedure TdwsDSCBreakpoints.BreakPointsChanged;
 var
-   i : Integer;
-   bp : TdwsDebuggerBreakpoint;
+  i: Integer;
+  bp: TdwsDebuggerBreakpoint;
 begin
-   FBitmap.Size := 0;
-   for i := FBreakpoints.Count-1 downto 0 do begin
-      bp := FBreakpoints[i];
-      if FBitmap.Size <= bp.Line then
-         FBitmap.Size := bp.Line+1;
-      FBitmap.Bits[bp.Line] := True;
-   end;
+  FBitmap.Size := 0;
+  for i := FBreakpoints.Count - 1 downto 0 do
+  begin
+    bp := FBreakpoints[i];
+    if FBitmap.Size <= bp.Line then
+      FBitmap.Size := bp.Line + 1;
+    FBitmap.Bits[bp.Line] := True;
+  end;
 end;
 
 // SuspendExecution
 //
-function TdwsDSCBreakpoints.SuspendExecution : Boolean;
+function TdwsDSCBreakpoints.SuspendExecution: Boolean;
 var
-   scriptPos : TScriptPos;
-   breakpoint : TdwsDebuggerBreakpoint;
+  scriptPos: TScriptPos;
+  breakpoint: TdwsDebuggerBreakpoint;
 begin
-   scriptPos := Debugger.CurrentScriptPos;
-   if (scriptPos.Line < FBitmap.Size) and FBitmap.Bits[scriptPos.Line] then begin
-      breakpoint := FBreakpoints.BreakpointAt(scriptPos);
-      if (breakpoint <> nil) and breakpoint.Enabled and breakpoint.ConditionPassed(Debugger) then
-         Exit(True);
-   end;
+  scriptPos := Debugger.CurrentScriptPos;
+  if (scriptPos.Line < FBitmap.Size) and FBitmap.Bits[scriptPos.Line] then
+  begin
+    breakpoint := FBreakpoints.BreakpointAt(scriptPos);
+    if (breakpoint <> nil) and breakpoint.Enabled and
+      breakpoint.ConditionPassed(Debugger) then
+      Exit(True);
+  end;
 
-   Result:=inherited;
+  Result := inherited;
 end;
 
 // ------------------
@@ -1390,19 +1497,19 @@ end;
 
 // Create
 //
-constructor TdwsDSCStep.Create(aDebugger : TdwsDebugger);
+constructor TdwsDSCStep.Create(aDebugger: TdwsDebugger);
 begin
-   inherited;
-   aDebugger.FStepCondition.Free;
-   aDebugger.FStepCondition:=Self;
+  inherited;
+  aDebugger.FStepCondition.Free;
+  aDebugger.FStepCondition := Self;
 end;
 
 // Destroy
 //
 destructor TdwsDSCStep.Destroy;
 begin
-   Debugger.FStepCondition:=nil;
-   inherited;
+  Debugger.FStepCondition := nil;
+  inherited;
 end;
 
 // ------------------
@@ -1411,21 +1518,25 @@ end;
 
 // SuspendExecution
 //
-function TdwsDSCStepDetail.SuspendExecution : Boolean;
+function TdwsDSCStepDetail.SuspendExecution: Boolean;
 var
-   sourceFile : TSourceFile;
+  SourceFile: TSourceFile;
 begin
-   sourceFile := Debugger.CurrentExpression.ScriptPos.SourceFile;
-   if sourceFile.NotSteppable then Exit(False);
+  SourceFile := Debugger.CurrentExpression.scriptPos.SourceFile;
+  if SourceFile.NotSteppable then
+    Exit(False);
 
-   if SourceFileName = '' then begin
-      Result := True;
+  if SourceFileName = '' then
+  begin
+    Result := True;
+    Free;
+  end
+  else
+  begin
+    Result := UnicodeSameText(SourceFileName, SourceFile.name);
+    if Result then
       Free;
-   end else begin
-      Result := UnicodeSameText(SourceFileName, sourceFile.Name);
-      if Result then
-         Free;
-   end;
+  end;
 end;
 
 // ------------------
@@ -1434,13 +1545,13 @@ end;
 
 // SuspendExecution
 //
-function TdwsDSCStepOver.SuspendExecution : Boolean;
+function TdwsDSCStepOver.SuspendExecution: Boolean;
 begin
-   Result:=    (Debugger.Execution.ExecutionObject.CallStackDepth<=FCallStackDepth)
-           and (   (SourceFileName='')
-                or Debugger.CurrentExpression.ScriptPos.IsSourceFile(SourceFileName));
-   if Result then
-      Free;
+  Result := (Debugger.Execution.ExecutionObject.CallStackDepth <=
+    FCallStackDepth) and ((SourceFileName = '') or
+    Debugger.CurrentExpression.scriptPos.IsSourceFile(SourceFileName));
+  if Result then
+    Free;
 end;
 
 // ------------------
@@ -1449,13 +1560,13 @@ end;
 
 // SuspendExecution
 //
-function TdwsDSCStepOut.SuspendExecution : Boolean;
+function TdwsDSCStepOut.SuspendExecution: Boolean;
 begin
-   Result:=    (Debugger.Execution.ExecutionObject.CallStackDepth<FCallStackDepth)
-           and (   (SourceFileName='')
-                or Debugger.CurrentExpression.ScriptPos.IsSourceFile(SourceFileName));
-   if Result then
-      Free;
+  Result := (Debugger.Execution.ExecutionObject.CallStackDepth <
+    FCallStackDepth) and ((SourceFileName = '') or
+    Debugger.CurrentExpression.scriptPos.IsSourceFile(SourceFileName));
+  if Result then
+    Free;
 end;
 
 // ------------------
@@ -1464,15 +1575,14 @@ end;
 
 // SuspendExecution
 //
-function TdwsDSCStepToLine.SuspendExecution : Boolean;
+function TdwsDSCStepToLine.SuspendExecution: Boolean;
 var
-   scriptPos : TScriptPos;
+  scriptPos: TScriptPos;
 begin
-   scriptPos:=Debugger.CurrentExpression.ScriptPos;
-   Result:=    (scriptPos.Line=Line)
-           and scriptPos.IsSourceFile(SourceFileName);
-   if Result then
-      Free;
+  scriptPos := Debugger.CurrentExpression.scriptPos;
+  Result := (scriptPos.Line = Line) and scriptPos.IsSourceFile(SourceFileName);
+  if Result then
+    Free;
 end;
 
 // ------------------
@@ -1483,88 +1593,106 @@ end;
 //
 destructor TdwsDebuggerWatch.Destroy;
 begin
-   ClearEvaluator;
-   inherited;
+  ClearEvaluator;
+  inherited;
 end;
 
 // Update
 //
-procedure TdwsDebuggerWatch.Update(debugger : TdwsDebugger);
+procedure TdwsDebuggerWatch.Update(Debugger: TdwsDebugger);
 var
-   expr : TTypedExpr;
-   exec : TdwsExecution;
-   scriptPos : TScriptPos;
+  expr: TTypedExpr;
+  exec: TdwsExecution;
+  scriptPos: TScriptPos;
 begin
-   FEvaluationError:=dweeNone;
-   if debugger.State<>dsDebugSuspended then begin
-      FValueInfo:=nil;
-      FValueData.Free;
-      FValueData:=nil;
-      Exit;
-   end;
+  FEvaluationError := dweeNone;
+  if Debugger.State <> dsDebugSuspended then
+  begin
+    FValueInfo := nil;
+    FValueData.Free;
+    FValueData := nil;
+    Exit;
+  end;
 
-   if (Evaluator=nil) or (not Evaluator.ContextIsValid) then begin
-      scriptPos := debugger.GetCurrentScriptPos;
-      Evaluator := TdwsEvaluateExpr.Evaluate(debugger.Execution, ExpressionText, [], @scriptPos);
-   end;
+  if (Evaluator = nil) or (not Evaluator.ContextIsValid) then
+  begin
+    scriptPos := Debugger.GetCurrentScriptPos;
+    Evaluator := TdwsEvaluateExpr.Evaluate(Debugger.Execution, ExpressionText,
+      [], @scriptPos);
+  end;
 
-   expr:=Evaluator.Expression;
-   if expr.Typ=nil then begin
-      Evaluator:=TdwsEvaluateExpr.Evaluate(debugger.Execution, '''(not an expression)''');
-      expr:=Evaluator.Expression;
-      FEvaluationError:=dweeCompile;
-   end else if Evaluator.EvaluationError then
-      FEvaluationError:=dweeCompile;
+  expr := Evaluator.expression;
+  if expr.typ = nil then
+  begin
+    Evaluator := TdwsEvaluateExpr.Evaluate(Debugger.Execution,
+      '''(not an expression)''');
+    expr := Evaluator.expression;
+    FEvaluationError := dweeCompile;
+  end
+  else if Evaluator.EvaluationError then
+    FEvaluationError := dweeCompile;
 
-   FValueData:=TdwsDebuggerTempValueSymbol.Create(ExpressionText, expr.Typ);
-   exec:=debugger.Execution.ExecutionObject;
-   try
+  FValueData := TdwsDebuggerTempValueSymbol.Create(ExpressionText, expr.typ);
+  exec := Debugger.Execution.ExecutionObject;
+  try
+    if exec <> nil then
+      exec.SuspendDebug;
+    try
+      if (FValueData.typ <> nil) then
+      begin
+        if (FValueData.typ.Size > 1) and (expr is TDataExpr) then
+        begin
+          expr.EvalNoResult(exec);
+          TDataExpr(expr).DataPtr[exec].CopyData(FValueData.Data, 0,
+            FValueData.typ.Size);
+        end
+        else if FValueData.typ.Size = 1 then
+        begin
+          expr.EvalAsVariant(exec, FValueData.Data[0]);
+        end
+        else
+          expr.EvalNoResult(exec);
+      end
+      else
+        expr.EvalNoResult(exec);
+    finally
       if exec <> nil then
-         exec.SuspendDebug;
-      try
-         if (FValueData.Typ<>nil) then begin
-            if (FValueData.Typ.Size>1) and (expr is TDataExpr) then begin
-               expr.EvalNoResult(exec);
-               TDataExpr(expr).DataPtr[exec].CopyData(FValueData.Data, 0, FValueData.Typ.Size);
-            end else if FValueData.Typ.Size=1 then begin
-               expr.EvalAsVariant(exec, FValueData.Data[0]);
-            end else expr.EvalNoResult(exec);
-         end else expr.EvalNoResult(exec);
-      finally
-         if exec <> nil then
-            exec.ResumeDebug;
-      end;
-   except
-      on E: Exception do begin
-         FEvaluationError:=dweeEvaluation;
-         FValueData.Free;
-         FValueData:=TdwsDebuggerTempValueSymbol.Create(ExpressionText,
-                           debugger.Execution.Prog.ProgramObject.CompilerContext.TypString);
-         FValueData.Data[0]:=E.Message+' ('+E.ClassName+')';
-      end;
-   end;
-   CreateInfoOnSymbol(FValueInfo, debugger.Execution.Info, FValueData.Typ, FValueData.Data, 0);
+        exec.ResumeDebug;
+    end;
+  except
+    on E: Exception do
+    begin
+      FEvaluationError := dweeEvaluation;
+      FValueData.Free;
+      FValueData := TdwsDebuggerTempValueSymbol.Create(ExpressionText,
+        Debugger.Execution.prog.ProgramObject.CompilerContext.TypString);
+      FValueData.Data[0] := E.Message + ' (' + E.ClassName + ')';
+    end;
+  end;
+  CreateInfoOnSymbol(FValueInfo, Debugger.Execution.info, FValueData.typ,
+    FValueData.Data, 0);
 end;
 
 // ClearEvaluator
 //
 procedure TdwsDebuggerWatch.ClearEvaluator;
 begin
-   FEvaluationError:=dweeNone;
-   Evaluator:=nil;
-   FValueInfo:=nil;
-   FValueData.Free;
-   FValueData:=nil;
+  FEvaluationError := dweeNone;
+  Evaluator := nil;
+  FValueInfo := nil;
+  FValueData.Free;
+  FValueData := nil;
 end;
 
 // SetExpressionText
 //
-procedure TdwsDebuggerWatch.SetExpressionText(const val : String);
+procedure TdwsDebuggerWatch.SetExpressionText(const val: String);
 begin
-   if FExpressionText<>val then begin
-      FExpressionText:=val;
-      ClearEvaluator;
-   end;
+  if FExpressionText <> val then
+  begin
+    FExpressionText := val;
+    ClearEvaluator;
+  end;
 end;
 
 // ------------------
@@ -1573,66 +1701,68 @@ end;
 
 // Create
 //
-constructor TdwsDebuggerWatches.Create(aDebugger : TdwsDebugger);
+constructor TdwsDebuggerWatches.Create(aDebugger: TdwsDebugger);
 begin
-   inherited Create;
-   FDebugger:=aDebugger;
+  inherited Create;
+  FDebugger := aDebugger;
 end;
 
 // Destroy
 //
 destructor TdwsDebuggerWatches.Destroy;
 begin
-   Clean;
-   inherited;
+  Clean;
+  inherited;
 end;
 
 // Add
 //
-function TdwsDebuggerWatches.Add(const exprText : String) : TdwsDebuggerWatch;
+function TdwsDebuggerWatches.Add(const exprText: String): TdwsDebuggerWatch;
 begin
-   Result:=TdwsDebuggerWatch.Create;
-   Result.ExpressionText:=exprText;
-   inherited Add(Result);
+  Result := TdwsDebuggerWatch.Create;
+  Result.ExpressionText := exprText;
+  inherited Add(Result);
 end;
 
 // Compare
 //
-function TdwsDebuggerWatches.Compare(const item1, item2 : TdwsDebuggerWatch) : Integer;
+function TdwsDebuggerWatches.Compare(const item1,
+  item2: TdwsDebuggerWatch): Integer;
 begin
-   Result:=UnicodeCompareText(item1.ExpressionText, item2.ExpressionText);
+  Result := UnicodeCompareText(item1.ExpressionText, item2.ExpressionText);
 end;
 
 // Update
 //
 procedure TdwsDebuggerWatches.Update;
 var
-   i : Integer;
+  i: Integer;
 begin
-   if Debugger.Execution=nil then begin
-      ClearEvaluators;
-      Exit;
-   end;
+  if Debugger.Execution = nil then
+  begin
+    ClearEvaluators;
+    Exit;
+  end;
 
-   for i:=0 to Count-1 do
-      Items[i].Update(Debugger);
+  for i := 0 to Count - 1 do
+    Items[i].Update(Debugger);
 end;
 
 // ClearEvaluators
 //
 procedure TdwsDebuggerWatches.ClearEvaluators;
 var
-   i : Integer;
+  i: Integer;
 begin
-   for i:=0 to Count-1 do
-      Items[i].ClearEvaluator;
+  for i := 0 to Count - 1 do
+    Items[i].ClearEvaluator;
 end;
 
 // Clear
 //
 procedure TdwsDebuggerWatches.Clear;
 begin
-   Clean;
+  Clean;
 end;
 
 // ------------------
@@ -1641,10 +1771,11 @@ end;
 
 // Create
 //
-constructor TdwsDebuggerTempValueSymbol.Create(const name : String; typ : TTypeSymbol);
+constructor TdwsDebuggerTempValueSymbol.Create(const name: String;
+typ: TTypeSymbol);
 begin
-   inherited;
-   SetLength(FData, Size);
+  inherited;
+  SetLength(FData, Size);
 end;
 
 // ------------------
@@ -1653,204 +1784,223 @@ end;
 
 // Create
 //
-constructor TdwsBreakpointableLines.Create(const prog : IdwsProgram);
+constructor TdwsBreakpointableLines.Create(const prog: IdwsProgram);
 var
-   i : Integer;
-   p : TdwsMainProgram;
-   mp : TdwsMainProgram;
+  i: Integer;
+  p: TdwsMainProgram;
+  mp: TdwsMainProgram;
 begin
-   FSources:=TNamesBitsHash.Create;
+  FSources := TNamesBitsHash.Create;
 
-   FProcessedProgs:=TObjectsLookup.Create;
+  FProcessedProgs := TObjectsLookup.Create;
 
-   p:=prog.ProgramObject;
-   ProcessProg(p);
+  p := prog.ProgramObject;
+  ProcessProg(p);
 
-   if p is TdwsMainProgram then begin
-      mp:=TdwsMainProgram(p);
-      for i:=0 to mp.UnitMains.Count-1 do
-         ProcessUnitSymbol(mp.UnitMains[i]);
-   end;
+  if p is TdwsMainProgram then
+  begin
+    mp := TdwsMainProgram(p);
+    for i := 0 to mp.UnitMains.Count - 1 do
+      ProcessUnitSymbol(mp.UnitMains[i]);
+  end;
 end;
 
 // Destroy
 //
 destructor TdwsBreakpointableLines.Destroy;
 begin
-   FProcessedProgs.Free;
-   FSources.Clean;
-   FSources.Free;
+  FProcessedProgs.Free;
+  FSources.Clean;
+  FSources.Free;
 end;
 
 // SourceCount
 //
-function TdwsBreakpointableLines.Count : Integer;
+function TdwsBreakpointableLines.Count: Integer;
 begin
-   Result:=FSources.Count;
+  Result := FSources.Count;
 end;
 
 // IsExecutable
 //
-function TdwsBreakpointableLines.IsExecutable(const sourceName : String; line : Integer) : Boolean;
+function TdwsBreakpointableLines.IsExecutable(const SourceName: String;
+Line: Integer): Boolean;
 var
-   bits : TBits;
-   locationLC : String;
+  Bits: TBits;
+  locationLC: String;
 begin
-   UnicodeLowerCase(sourceName, locationLC);
-   bits := FSources.Objects[locationLC];
-   if bits<>nil then
-      Result:=(Cardinal(line)<Cardinal(bits.Size)) and bits[line]
-   else Result:=False;
+  UnicodeLowerCase(SourceName, locationLC);
+  Bits := FSources.Objects[locationLC];
+  if Bits <> nil then
+    Result := (Cardinal(Line) < Cardinal(Bits.Size)) and Bits[Line]
+  else
+    Result := False;
 end;
 
 // Enumerate
 //
-procedure TdwsBreakpointableLines.Enumerate(destinationList : TStrings);
+procedure TdwsBreakpointableLines.Enumerate(destinationList: TStrings);
 var
-   i : Integer;
-   bits : TBreakpointBits;
+  i: Integer;
+  Bits: TBreakpointBits;
 begin
-   for i:=0 to FSources.HighIndex do begin
-      if FSources.BucketObject[i]<>nil then begin
-         bits:=(FSources.BucketObject[i] as TBreakpointBits);
-         destinationList.AddObject(bits.SourceName, bits);
-      end;
-   end;
+  for i := 0 to FSources.HighIndex do
+  begin
+    if FSources.BucketObject[i] <> nil then
+    begin
+      Bits := (FSources.BucketObject[i] as TBreakpointBits);
+      destinationList.AddObject(Bits.SourceName, Bits);
+    end;
+  end;
 end;
 
 // GetSourceLines
 //
-function TdwsBreakpointableLines.GetSourceLines(const sourceName : String) : TBits;
+function TdwsBreakpointableLines.GetSourceLines(const SourceName
+  : String): TBits;
 var
-   lcName : String;
+  lcName: String;
 begin
-   UnicodeLowerCase(sourceName, lcName);
-   Result := FSources.Objects[lcName];
+  UnicodeLowerCase(SourceName, lcName);
+  Result := FSources.Objects[lcName];
 end;
 
 // EnumeratorCallback
 //
-procedure TdwsBreakpointableLines.EnumeratorCallback(parent, expr : TExprBase; var abort : Boolean);
+procedure TdwsBreakpointableLines.EnumeratorCallback(parent, expr: TExprBase;
+var abort: Boolean);
 begin
-   if expr is TProgramExpr then
-      TProgramExpr(expr).EnumerateSteppableExprs(SteppableCallback);
+  if expr is TProgramExpr then
+    TProgramExpr(expr).EnumerateSteppableExprs(SteppableCallback);
 end;
-                                                 //root block is not getting steppable callback called, must inject in ProcessProg
+
+// root block is not getting steppable callback called, must inject in ProcessProg
 // SteppableCallback
 //
-procedure TdwsBreakpointableLines.SteppableCallback(expr : TExprBase);
+procedure TdwsBreakpointableLines.SteppableCallback(expr: TExprBase);
 begin
-   if expr <> nil then
-      RegisterScriptPos(expr.ScriptPos);
+  if expr <> nil then
+    RegisterScriptPos(expr.scriptPos);
 end;
 
 // RegisterScriptPos
 //
-procedure TdwsBreakpointableLines.RegisterScriptPos(const scriptPos : TScriptPos);
+procedure TdwsBreakpointableLines.RegisterScriptPos(const scriptPos
+  : TScriptPos);
 
-   function CountLines(const src : String) : Integer;
-   var
-      i : Integer;
-      p : PWideChar;
-   begin
-      Result := 1;
-      p := PWideChar(src);
-      for i := 0 to Length(src)-1 do
-         if p[i] = #10 then
-            Inc(Result);
-   end;
+  function CountLines(const src: String): Integer;
+  var
+    i: Integer;
+    p: PWideChar;
+  begin
+    Result := 1;
+    p := PWideChar(src);
+    for i := 0 to Length(src) - 1 do
+      if p[i] = #10 then
+        Inc(Result);
+  end;
 
 var
-   i : Integer;
-   locationLC : String;
+  i: Integer;
+  locationLC: String;
 begin
-   if scriptPos.SourceFile = nil then Exit;
-   if scriptPos.SourceFile <> FLastSourceFile then begin
-      FLastSourceFile := scriptPos.SourceFile;
-      UnicodeLowerCase(FLastSourceFile.Name, locationLC);
-      FLastBreakpointLines := FSources.Objects[locationLC];
-      if FLastBreakpointLines = nil then begin
-         FLastBreakpointLines := TBreakpointBits.Create;
-         FLastBreakpointLines.SourceName := FLastSourceFile.Name;
-         FSources.AddObject(locationLC, FLastBreakpointLines);
-         FLastBreakpointLines.Size := CountLines(scriptPos.SourceFile.Code) + 1;
-      end;
-   end;
-   i := scriptPos.Line;
-   if i < FLastBreakpointLines.Size then
-      FLastBreakpointLines[i] := True;
+  if scriptPos.SourceFile = nil then
+    Exit;
+  if scriptPos.SourceFile <> FLastSourceFile then
+  begin
+    FLastSourceFile := scriptPos.SourceFile;
+    UnicodeLowerCase(FLastSourceFile.name, locationLC);
+    FLastBreakpointLines := FSources.Objects[locationLC];
+    if FLastBreakpointLines = nil then
+    begin
+      FLastBreakpointLines := TBreakpointBits.Create;
+      FLastBreakpointLines.SourceName := FLastSourceFile.name;
+      FSources.AddObject(locationLC, FLastBreakpointLines);
+      FLastBreakpointLines.Size := CountLines(scriptPos.SourceFile.Code) + 1;
+    end;
+  end;
+  i := scriptPos.Line;
+  if i < FLastBreakpointLines.Size then
+    FLastBreakpointLines[i] := True;
 end;
 
 // ProcessProg
 //
-procedure TdwsBreakpointableLines.ProcessProg(const prog : TdwsProgram);
+procedure TdwsBreakpointableLines.ProcessProg(const prog: TdwsProgram);
 begin
-   if FProcessedProgs.IndexOf(prog)>=0 then Exit;
-   FProcessedProgs.Add(prog);
+  if FProcessedProgs.IndexOf(prog) >= 0 then
+    Exit;
+  FProcessedProgs.Add(prog);
 
-   ProcessSymbolTable(prog.Table);
+  ProcessSymbolTable(prog.table);
 
-   if (prog.InitExpr.ScriptPos.SourceFile<>nil) and (prog.InitExpr.SubExprCount>0) then begin
-      prog.InitExpr.RecursiveEnumerateSubExprs(EnumeratorCallback);
-      prog.InitExpr.EnumerateSteppableExprs(SteppableCallback);
-   end;
+  if (prog.InitExpr.scriptPos.SourceFile <> nil) and
+    (prog.InitExpr.SubExprCount > 0) then
+  begin
+    prog.InitExpr.RecursiveEnumerateSubExprs(EnumeratorCallback);
+    prog.InitExpr.EnumerateSteppableExprs(SteppableCallback);
+  end;
 
-   if not (prog.Expr.Taxonomy = ebtBlockExprBase) then
-      RegisterScriptPos(prog.Expr.ScriptPos);
+  if not(prog.expr.Taxonomy = ebtBlockExprBase) then
+    RegisterScriptPos(prog.expr.scriptPos);
 
-   prog.Expr.EnumerateSteppableExprs(SteppableCallback);
-   prog.Expr.RecursiveEnumerateSubExprs(EnumeratorCallback);
+  prog.expr.EnumerateSteppableExprs(SteppableCallback);
+  prog.expr.RecursiveEnumerateSubExprs(EnumeratorCallback);
 
-   if (prog is TdwsMainProgram) and (TdwsMainProgram(prog).FinalExpr <> nil) then begin
-      TdwsMainProgram(prog).FinalExpr.RecursiveEnumerateSubExprs(EnumeratorCallback);
-      TdwsMainProgram(prog).FinalExpr.EnumerateSteppableExprs(SteppableCallback);
-   end;
+  if (prog is TdwsMainProgram) and (TdwsMainProgram(prog).FinalExpr <> nil) then
+  begin
+    TdwsMainProgram(prog).FinalExpr.RecursiveEnumerateSubExprs
+      (EnumeratorCallback);
+    TdwsMainProgram(prog).FinalExpr.EnumerateSteppableExprs(SteppableCallback);
+  end;
 end;
 
 // ProcessFuncSymbol
 //
-procedure TdwsBreakpointableLines.ProcessFuncSymbol(const funcSymbol : TFuncSymbol);
+procedure TdwsBreakpointableLines.ProcessFuncSymbol(const funcSymbol
+  : TFuncSymbol);
 var
-   execSelf : TObject;
+  execSelf: TObject;
 begin
-   if funcSymbol.Executable<>nil then begin
-      execSelf:=funcSymbol.Executable.GetSelf;
-      if execSelf is TdwsProcedure then
-         ProcessProg(TdwsProcedure(execSelf));
-   end;
+  if funcSymbol.Executable <> nil then
+  begin
+    execSelf := funcSymbol.Executable.GetSelf;
+    if execSelf is TdwsProcedure then
+      ProcessProg(TdwsProcedure(execSelf));
+  end;
 end;
 
 // ProcessUnitSymbol
 //
-procedure TdwsBreakpointableLines.ProcessUnitSymbol(const unitSymbol : TUnitMainSymbol);
+procedure TdwsBreakpointableLines.ProcessUnitSymbol(const unitSymbol
+  : TUnitMainSymbol);
 begin
-   ProcessSymbolTable(unitSymbol.InterfaceTable);
-   ProcessSymbolTable(unitSymbol.Table);
-   ProcessSymbolTable(unitSymbol.ImplementationTable);
+  ProcessSymbolTable(unitSymbol.InterfaceTable);
+  ProcessSymbolTable(unitSymbol.table);
+  ProcessSymbolTable(unitSymbol.ImplementationTable);
 end;
 
 // ProcessSymbolTable
 //
-procedure TdwsBreakpointableLines.ProcessSymbolTable(table : TSymbolTable);
+procedure TdwsBreakpointableLines.ProcessSymbolTable(table: TSymbolTable);
 var
-   sym : TSymbol;
+  sym: TSymbol;
 begin
-   for sym in table do
-      ProcessSymbol(sym);
+  for sym in table do
+    ProcessSymbol(sym);
 end;
 
 // ProcessSymbol
 //
-procedure TdwsBreakpointableLines.ProcessSymbol(sym : TSymbol);
+procedure TdwsBreakpointableLines.ProcessSymbol(sym: TSymbol);
 var
-   funcSym : TFuncSymbol;
+  funcSym: TFuncSymbol;
 begin
-   funcSym:=sym.AsFuncSymbol;
-   if funcSym<>nil then
-      ProcessFuncSymbol(funcSym)
-   else if sym is TStructuredTypeSymbol then
-      ProcessSymbolTable(TStructuredTypeSymbol(sym).Members);
+  funcSym := sym.AsFuncSymbol;
+  if funcSym <> nil then
+    ProcessFuncSymbol(funcSym)
+  else if sym is TStructuredTypeSymbol then
+    ProcessSymbolTable(TStructuredTypeSymbol(sym).Members);
 end;
 
 end.
-

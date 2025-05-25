@@ -1,15 +1,17 @@
-var c : TClass;
+var
+  c: TClass;
 
-if c=nil then 
-   PrintLn('nil default');
+if c = nil then
+  PrintLn('nil default');
 
 c := TObject.ClassType;
 
-if c<>nil then 
-   PrintLn(c.ClassName);
+if c <> nil then
+  PrintLn(c.ClassName);
 
-c:=nil;
+c := nil;
 
-if c<>nil then 
-   PrintLn('bug 3')
-else PrintLn('set nil');
+if c <> nil then
+  PrintLn('bug 3')
+else
+  PrintLn('set nil');

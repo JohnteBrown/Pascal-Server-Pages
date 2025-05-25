@@ -1,41 +1,45 @@
-function FuncInt(i : Integer) : Integer;
+function FuncInt(i: Integer): Integer;
 begin
-   Result:=i+1;
+  Result := i + 1;
 end;
 
-function FuncFloat(f : Float) : Float;
+function FuncFloat(f: Float): Float;
 begin
-   Result:=f+1.5;
+  Result := f + 1.5;
 end;
 
-function FuncString(s : String) : String;
+function FuncString(s: String): String;
 begin
-   Result:=s+s;
+  Result := s + s;
 end;
 
-function FuncBool(b : Boolean) : Boolean;
+function FuncBool(b: Boolean): Boolean;
 begin
-   Result:=not b;
+  Result := not b;
 end;
 
-function FuncObj(o : TObject) : TObject;
+function FuncObj(o: TObject): TObject;
 begin
-   Result:=if Assigned(o) then o else TObject.Create;
+  Result :=
+  if Assigned(o) then
+    o
+  else
+    TObject.Create;
 end;
 
 type
-   TRecord = record
-      x : Integer;
-   end;      
+  TRecord = record
+    x: Integer;
+  end;
 
-function FuncRec(i : Integer) : TRecord;
+function FuncRec(i: Integer): TRecord;
 begin
-   Result.x:=i;
+  Result.x := i;
 end;
 
-function FuncRec2 : TRecord;
+function FuncRec2: TRecord;
 begin
-   Result:=FuncRec(2);
+  Result := FuncRec(2);
 end;
 
 PrintLn(FuncInt(10));

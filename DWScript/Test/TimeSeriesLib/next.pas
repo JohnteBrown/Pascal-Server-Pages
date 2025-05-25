@@ -1,8 +1,10 @@
 uses System.Data.TimeSeries;
 
-var ts := TimeSeries.Create;
+var
+ts := TimeSeries.Create;
 
-var t := -1;
+var
+t := -1;
 
 PrintLn(ts.NextTimeStamp(t));
 PrintLn(t);
@@ -15,7 +17,7 @@ ts.StoreSample('test', 3, 13);
 
 PrintLn('Iterate');
 while ts.NextTimeStamp(t) do
-   PrintLn(t.ToString + ' = ' + ts.GetSample('test', t).ToString);
+  PrintLn(t.ToString + ' = ' + ts.GetSample('test', t).ToString);
 
 t := 2;
 PrintLn(ts.NextTimeStamp(t));

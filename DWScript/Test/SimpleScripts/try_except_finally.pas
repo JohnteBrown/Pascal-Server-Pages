@@ -1,29 +1,30 @@
 try
-   Print('Hello');
+  Print('Hello');
 except
-   Print('BUG');
+  Print('BUG');
 finally
-   PrintLn(' World');
+  PrintLn(' World');
 end;
 
 try
-   raise new Exception('DOH');
+  raise new Exception('DOH');
 except
-   Print('Exception ');
+  Print('Exception ');
 finally
-   PrintLn('World');
+  PrintLn('World');
 end;
 
-type EMyExcept = class(Exception) end;
+type
+  EMyExcept = class(Exception)
+  end;
 
 try
-   raise new EMyExcept('Bye');
+  raise new EMyExcept('Bye');
 except
-   on E : EMyExcept do
-      Print(E.Message)
-   else 
-      PrintLn('Bug');
+  on E: EMyExcept do
+    Print(E.Message)
+  else
+    PrintLn('Bug');
 finally
-   PrintLn(' World');
+  PrintLn(' World');
 end;
-   

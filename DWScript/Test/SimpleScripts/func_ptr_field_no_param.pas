@@ -1,45 +1,48 @@
 type
- TOnGetValue = function : string of object;
+  TOnGetValue = function: string of object;
 
 type
   TTestClass = class
-   private
+  private
     fOnGetValue: TOnGetValue;
-   public
-    function Get : string;
+  public
+    function Get: string;
     property OnGetValue: TOnGetValue read fOnGetValue write fOnGetValue;
   end;
 
 function TTestClass.Get: string;
 begin
- if Assigned(fOnGetValue) then
-  Result := fOnGetValue   //LINE WITH COMPILE ERROR!
- else
-  Result := 'event not assigned';
+  if Assigned(fOnGetValue) then
+    Result := fOnGetValue // LINE WITH COMPILE ERROR!
+  else
+    Result := 'event not assigned';
 end;
+
 type
-TMainClass = class
- function DoIt : string;
- function GetValue : string;
+  TMainClass = class
+    function DoIt: string;
+    function GetValue: string;
+  end;
+
+function TMainClass.GetValue: string;
+begin
+  Result := 'passed';
 end;
 
-function TMainClass.GetValue : string;
+function TMainClass.DoIt: string;
 begin
- result := 'passed';
-end;
-
-function TMainClass.DoIt : string;
-begin
- var Test : TTestClass = TTestClass.Create;
- try
- Test.OnGetValue := GetValue;
- result := Test.Get;
- finally
- Test.free
- end;
+  var
+    Test: TTestClass = TTestClass.Create;
+  try
+    Test.OnGetValue := GetValue;
+    Result := Test.Get;
+  finally
+    Test.free
+  end;
 end;
 
 begin
- var M : TMainClass = TMainClass.Create;
- PrintLn(M.DoIt);
+  var
+    M: TMainClass = TMainClass.Create;
+  PrintLn(M.DoIt);
 end;

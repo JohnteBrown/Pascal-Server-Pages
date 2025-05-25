@@ -1,6 +1,8 @@
-type MyEnum = enum (a, b, c = 255, d);
+type
+  MyEnum = enum(a, b, c = 255, d);
 
-type MyFlags = flags (a, b, c);
+type
+  MyFlags = flags(a, b, c);
 
 PrintLn(MyEnum.ByName(''));
 PrintLn(MyEnum.ByName('a'));

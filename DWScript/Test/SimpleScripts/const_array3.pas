@@ -1,13 +1,17 @@
-type TEnum = (en1, en2, en3);
+type
+  TEnum = (en1, en2, en3);
 
-const ac : array [TEnum] of String = ['one', 'two', 'three'];
+const
+  ac: array [TEnum] of String = ['one', 'two', 'three'];
 
-const ac2 = ac;
+const
+  ac2 = ac;
 
-var i : TEnum;
+var
+  i: TEnum;
 
 for i in TEnum do
-   PrintLn(ac[i]);
-   
+  PrintLn(ac[i]);
+
 for i in TEnum do
-   PrintLn(ac2[i]);
+  PrintLn(ac2[i]);

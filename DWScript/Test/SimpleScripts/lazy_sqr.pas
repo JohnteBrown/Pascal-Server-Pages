@@ -1,31 +1,34 @@
-var k : Integer = 1;
-var f : Float := 2;
+var
+  k: Integer = 1;
 
-function GlobInc : Integer;
+var
+  f: Float := 2;
+
+function GlobInc: Integer;
 begin
-   Result:=Inc(k, 1);
+  Result := Inc(k, 1);
 end;
 
-function GlobFloat : Float;
+function GlobFloat: Float;
 begin
-   Result:=f;
-	f+=2;
+  Result := f;
+  f + = 2;
 end;
 
-procedure TestInt(lazy i : Integer);
+procedure TestInt(lazy i: Integer);
 begin
-	PrintLn(Sqr(i));
-	PrintLn(Sqr(i));
-	PrintLn(i*i);
-	PrintLn(i*i);
+  PrintLn(Sqr(i));
+  PrintLn(Sqr(i));
+  PrintLn(i * i);
+  PrintLn(i * i);
 end;
 
-procedure TestFloat(lazy v : Float);
+procedure TestFloat(lazy v: Float);
 begin
-	PrintLn(Sqr(v));
-	PrintLn(Sqr(v));
-	PrintLn(v*v);
-	PrintLn(v*v);
+  PrintLn(Sqr(v));
+  PrintLn(Sqr(v));
+  PrintLn(v * v);
+  PrintLn(v * v);
 end;
 
 TestInt(GlobInc);

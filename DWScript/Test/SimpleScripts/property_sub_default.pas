@@ -1,20 +1,22 @@
 type
-   TSub = class
-      procedure setVal(aKey, aValue: String);
-      begin
-         PrintLn(aKey+','+aValue);
-      end;
+  TSub = class
+    procedure setVal(aKey, aValue: String);
 
-      property Values[aKey: String]: String write setVal; default;
-   end;
+    begin
+      PrintLn(aKey + ',' + aValue);
+    end;
 
-type
-   TTest = class
-     FSub : TSub;
-     property Sub : TSub read FSub;
+    property Values[aKey: String]: String write setVal; default;
   end;
 
-var data := new TTest;
+type
+  TTest = class
+    FSub: TSub;
+    property Sub: TSub read FSub;
+  end;
+
+var
+data := new TTest;
 
 data.Sub.Values['ABC'] := '123';
 data.Sub['DEF'] := '456';

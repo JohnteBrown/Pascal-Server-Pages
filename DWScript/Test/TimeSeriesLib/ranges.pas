@@ -1,49 +1,61 @@
 uses System.Data.TimeSeries;
 
-procedure TestRange(mini, maxi, decimals : Integer);
+procedure TestRange(mini, maxi, decimals: Integer);
 begin
-   PrintLn('Testing range ' + mini.ToString + ' to ' + maxi.ToString + ' with ' + decimals.ToString + ' decimals');
-   
-   var ts := TimeSeries.Create;
+  PrintLn('Testing range ' + mini.ToString + ' to ' + maxi.ToString + ' with ' +
+    decimals.ToString + ' decimals');
 
-   var scale := IntPower(10, decimals);
-   var ref : array of Float;
-   SetRandSeed(0);
-   for var i := 1 to 1000 do
-      ref.Add((mini+RandomInt(maxi-mini+1))/scale);
+  var
+  ts := TimeSeries.Create;
 
-   ts.AddSequence('test', decimals);
+  var
+  scale := IntPower(10, decimals);
+  var
+    ref: array of Float;
+  SetRandSeed(0);
+  for var i := 1 to 1000 do
+    ref.Add((mini + RandomInt(maxi - mini + 1)) / scale);
 
-   for var i := 0 to ref.High do
-      ts.StoreSample('test', i, ref[i]);
-   
-   var times : array of Integer;
-   var values : array of Float;
+  ts.AddSequence('test', decimals);
 
-   var nb := ts.ExtractSamples('test', 0, ref.High, times, values, [ tseoIgnoreNulls ]);
-   Assert(nb = ref.Length, 'before optimize');
+  for var i := 0 to ref.High do
+    ts.StoreSample('test', i, ref[i]);
 
-   for var i := 0 to ref.High do begin
-      if times[i] <> i then
-         PrintLn('Before, invalid time at ' + i.ToString);
-      if Round((values[i] - ref[i])*scale) <> 0 then
-         PrintLn('Before, invalid value at ' + i.ToString);
-   end;
+  var
+    times: array of Integer;
+  var
+    values: array of Float;
 
-   ts.Optimize;
+  var
+  nb := ts.ExtractSamples('test', 0, ref.High, times, values,
+    [tseoIgnoreNulls]);
+  Assert(nb = ref.Length, 'before optimize');
 
-   times.Clear;
-   values.Clear;
+  for var i := 0 to ref.High do
+  begin
+    if times[i] <> i then
+      PrintLn('Before, invalid time at ' + i.ToString);
+    if Round((values[i] - ref[i]) * scale) <> 0 then
+      PrintLn('Before, invalid value at ' + i.ToString);
+  end;
 
-   nb := ts.ExtractSamples('test', 0, ref.High, times, values, [ tseoIgnoreNulls ]);
-   Assert(nb = ref.Length, 'after optimize');
+  ts.Optimize;
 
-   for var i := 0 to ref.High do begin
-      if times[i] <> i then
-         PrintLn('After, invalid time at ' + i.ToString);
-      if Round((values[i] - ref[i])*scale) <> 0 then
-         PrintLn('After, invalid value at ' + i.ToString + ': ' + values[i].ToString + ' vs ' + ref[i].ToString);
-   end;
+  times.Clear;
+  values.Clear;
+
+  nb := ts.ExtractSamples('test', 0, ref.High, times, values,
+    [tseoIgnoreNulls]);
+  Assert(nb = ref.Length, 'after optimize');
+
+  for var i := 0 to ref.High do
+  begin
+    if times[i] <> i then
+      PrintLn('After, invalid time at ' + i.ToString);
+    if Round((values[i] - ref[i]) * scale) <> 0 then
+      PrintLn('After, invalid value at ' + i.ToString + ': ' +
+        values[i].ToString + ' vs ' + ref[i].ToString);
+  end;
 end;
 
 TestRange(0, 10, 0);

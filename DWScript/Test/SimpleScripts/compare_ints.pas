@@ -1,36 +1,40 @@
-procedure PrintOut(bool : Boolean);
+procedure PrintOut(bool: Boolean);
 begin
-   case bool of
-      False : PrintLn('False');
-      True : PrintLn('True');
-   end;
+  case bool of
+    False:
+      PrintLn('False');
+    True:
+      PrintLn('True');
+  end;
 end;
 
-var one : Integer = 1;
-var two : Integer = 2;
+var
+  one: Integer = 1;
 
-PrintOut(one<two);
-PrintOut(one<=two);
-PrintOut(one=two);
-PrintOut(one>=two);
-PrintOut(one>two);
-PrintOut(one<>two);
+var
+  two: Integer = 2;
 
-PrintLn('');
-
-PrintOut(one<one);
-PrintOut(one<=one);
-PrintOut(one=one);
-PrintOut(one>=one);
-PrintOut(one>one);
-PrintOut(one<>one);
+PrintOut(one < two);
+PrintOut(one <= two);
+PrintOut(one = two);
+PrintOut(one >= two);
+PrintOut(one > two);
+PrintOut(one <> two);
 
 PrintLn('');
 
-PrintOut(two<one);
-PrintOut(two<=one);
-PrintOut(two=one);
-PrintOut(two>=one);
-PrintOut(two>one);
-PrintOut(two<>one);
+PrintOut(one < one);
+PrintOut(one <= one);
+PrintOut(one = one);
+PrintOut(one >= one);
+PrintOut(one > one);
+PrintOut(one <> one);
 
+PrintLn('');
+
+PrintOut(two < one);
+PrintOut(two <= one);
+PrintOut(two = one);
+PrintOut(two >= one);
+PrintOut(two > one);
+PrintOut(two <> one);

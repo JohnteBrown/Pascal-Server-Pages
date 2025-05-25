@@ -1,14 +1,20 @@
-type TEnum = (en1, en2, en3);
-type TEnumArray = array [TEnum] of string;
+type
+  TEnum = (en1, en2, en3);
 
-const ac : TEnumArray = ('one', 'two', 'three');
+type
+  TEnumArray = array [TEnum] of string;
 
-const ac2 : TEnumArray = ac;
+const
+  ac: TEnumArray = ('one', 'two', 'three');
 
-var i : TEnum;
+const
+  ac2: TEnumArray = ac;
+
+var
+  i: TEnum;
 
 for i in TEnum do
-   PrintLn(ac[i]);
-   
+  PrintLn(ac[i]);
+
 for i in TEnum do
-   PrintLn(ac2[i]);
+  PrintLn(ac2[i]);

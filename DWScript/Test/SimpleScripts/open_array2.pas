@@ -1,6 +1,6 @@
-procedure PrintFormat(fmt : String; const args : array of const);
+procedure PrintFormat(fmt: String; const args: array of const);
 begin
-   PrintLn(Format(fmt, args));
+  PrintLn(Format(fmt, args));
 end;
 
 PrintFormat('hello %s', ['World']);

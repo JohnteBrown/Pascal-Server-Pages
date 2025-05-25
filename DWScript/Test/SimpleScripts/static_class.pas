@@ -1,31 +1,38 @@
 type
-   TStatic = class static
-      const MyConst = 'hello';
-      class procedure PrintMe; virtual;
-      begin
-         PrintLn('world');
-      end;
-   end;
+  TStatic = class
+    static
 
-type TStaticClass = class of TStatic;
+  const
+    MyConst = 'hello';
+    class procedure PrintMe; virtual;
+
+    begin
+      PrintLn('world');
+    end;
+  end;
 
 type
-   TSubStatic = class (TStatic)
-      class procedure PrintMe; override;
-      begin
-         Print(MyConst+' ');
-         inherited;
-      end;
-   end;
+  TStaticClass = class of TStatic;
 
-PrintLn('const = '+TStatic.MyConst);
+type
+  TSubStatic = class(TStatic)
+    class procedure PrintMe; override;
+
+    begin
+      Print(MyConst + ' ');
+      inherited;
+    end;
+  end;
+
+PrintLn('const = ' + TStatic.MyConst);
 TStatic.PrintMe;
 TSubStatic.PrintMe;
 
-var c : TStaticClass;
+var
+  c: TStaticClass;
 
-c:=TStatic;
+c := TStatic;
 c.PrintMe;
 
-c:=TSubStatic;
+c := TSubStatic;
 c.PrintMe;

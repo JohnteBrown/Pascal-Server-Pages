@@ -1,27 +1,28 @@
- type
+type
   TPersistent = class
-    fString:string;
-    function GetOwner:TPersistent;
+    fString: string;
+    function GetOwner: TPersistent;
     function GetNamePath: String;
   end;
 
-  function TPersistent.GetOwner: TPersistent;
-  begin
-    result:= nil;
-  end;
+function TPersistent.GetOwner: TPersistent;
+begin
+  result := nil;
+end;
 
-  function TPersistent.GetNamePath: string;
-  var
-    S:String;
+function TPersistent.GetNamePath: string;
+var
+  S: String;
+begin
+  result := ClassName;
+  if (GetOwner <> nil) then
   begin
-    Result:= ClassName;
-    if (GetOwner <> nil) then
-    begin
-      s:=GetOwner.GetNamePath;
-      if s <> '' then
-        Result:=S+'.'+Result;
-    end;
+    S := GetOwner.GetNamePath;
+    if S <> '' then
+      result := S + '.' + result;
   end;
-  
-var p := TPersistent.Create;
+end;
+
+var
+p := TPersistent.Create;
 PrintLn(p.GetNamePath);

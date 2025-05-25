@@ -1,30 +1,33 @@
 type
-	TBase = class
-       Field : Integer;
-	   procedure PrintBase;
-	end;
-	
+  TBase = class
+    Field: Integer;
+    procedure PrintBase;
+  end;
+
 type
-    TChild = class(TBase)
-	    Field : Integer;
-        procedure PrintChild;
-	end;
-	
+  TChild = class(TBase)
+    Field: Integer;
+    procedure PrintChild;
+  end;
+
 procedure TBase.PrintBase;
 begin
-   PrintLn(Field);
+  PrintLn(Field);
 end;
 
 procedure TChild.PrintChild;
 begin
-   PrintLn(Field);
+  PrintLn(Field);
 end;
 
-var c := TChild.Create;
-var b : TBase := c;
+var
+c := TChild.Create;
 
-b.Field:=1;
-c.Field:=2;
+var
+  b: TBase := c;
+
+b.Field := 1;
+c.Field := 2;
 
 b.PrintBase;
 c.PrintBase;

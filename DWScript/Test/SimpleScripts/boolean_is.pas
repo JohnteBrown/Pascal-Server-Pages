@@ -1,4 +1,5 @@
-var i := 0;
+var
+i := 0;
 
 PrintLn((i = 0) is True);
 PrintLn((i = 1) is False);

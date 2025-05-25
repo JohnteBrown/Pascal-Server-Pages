@@ -1,8 +1,5 @@
-var v := "hello
-heredoc";
+var
+v := " hello heredoc ";
 
 PrintLn(v);
-PrintLn("long
-multiline
-""strings""
-with quotes");
+PrintLn(" long multiline " " strings " "with quotes ");

@@ -1,17 +1,18 @@
-var i : Integer;
+var
+  i: Integer;
 
-PrintLn(0b0);
-PrintLn(0B1);
-PrintLn(0b10);
-PrintLn(0xa);
+PrintLn(0 b0);
+PrintLn(0 B1);
+PrintLn(0 b10);
+PrintLn(0 xa);
 
-i:=0b1110;
-PrintLn(i and 0b11);
-PrintLn(0b0111 and i);
-PrintLn(0b0111 and 0x4);
+i := 0 b1110;
+PrintLn(i and 0 b11);
+PrintLn(0 b0111 and i);
+PrintLn(0 b0111 and 0 x4);
 
-PrintLn(0b_101_111);
-PrintLn(0b101_101);
+PrintLn(0 b_101_111);
+PrintLn(0 b101_101);
 
 PrintLn(%110011);
 PrintLn(%110_011);

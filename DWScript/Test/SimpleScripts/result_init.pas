@@ -1,16 +1,16 @@
-function MyStr : String;
+function MyStr: String;
 begin
-   Result:=Result+Result;
+  Result := Result + Result;
 end;
 
-function MyInt : Integer;
+function MyInt: Integer;
 begin
-   Result:=Result-Result;
+  Result := Result - Result;
 end;
 
-function MyFloat : Float;
+function MyFloat: Float;
 begin
-   Result:=Sqr(Result);
+  Result := Sqr(Result);
 end;
 
 PrintLn(MyStr);

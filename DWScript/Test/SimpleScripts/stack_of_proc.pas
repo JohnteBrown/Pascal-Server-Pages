@@ -1,13 +1,14 @@
-var s : array of procedure;
+var
+  s: array of procedure;
 
 procedure Hello;
 begin
-   PrintLn('Hello');
+  PrintLn('Hello');
 end;
 
 procedure World;
 begin
-   PrintLn('World');
+  PrintLn('World');
 end;
 
 s.Push(World);
@@ -16,8 +17,8 @@ s.Push(Hello);
 s.Pop();
 s.Pop();
 try
-   s.Pop();
+  s.Pop();
 except
-   on e : Exception do
-      PrintLn(e.Message);
+  on e: Exception do
+    PrintLn(e.Message);
 end;

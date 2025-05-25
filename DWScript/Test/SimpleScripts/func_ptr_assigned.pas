@@ -1,38 +1,43 @@
 type
-   TMyFunc = function (i : Integer) : String;
+  TMyFunc = function(i: Integer): String;
 
 type
-   TMyClass = class
-      FEvent : TMyFunc;
-      function DoConv(i : Integer) : String;
-   end;
+  TMyClass = class
+    FEvent: TMyFunc;
+    function DoConv(i: Integer): String;
+  end;
 
-function TMyClass.DoConv(i : Integer) : String;
+function TMyClass.DoConv(i: Integer): String;
 begin
-   Result:='['+IntToStr(i)+']';
+  Result := '[' + IntToStr(i) + ']';
 end;
 
-var o := TMyClass.Create;
+var
+o := TMyClass.Create;
 
 if Assigned(o.FEvent) then
-   PrintLn(o.FEvent(1))
-else PrintLn('Unassigned');
-o.FEvent:=o.DoConv;
+  PrintLn(o.FEvent(1))
+else
+  PrintLn('Unassigned');
+o.FEvent := o.DoConv;
 if Assigned(o.FEvent) then
-   PrintLn(o.FEvent(2));
-   
-var e : TMyFunc;
+  PrintLn(o.FEvent(2));
+
+var
+  e: TMyFunc;
 
 if Assigned(e) then
-   PrintLn(e(3))
-else PrintLn('Unassigned');
-e:=o.DoConv;
+  PrintLn(e(3))
+else
+  PrintLn('Unassigned');
+e := o.DoConv;
 if Assigned(e) then
-   PrintLn(e(4));
-   
-e:=nil;
-o.FEvent:=e;
+  PrintLn(e(4));
+
+e := nil;
+o.FEvent := e;
 
 if Assigned(e) then
-   PrintLn(e(5))
-else PrintLn('Unassigned');
+  PrintLn(e(5))
+else
+  PrintLn('Unassigned');

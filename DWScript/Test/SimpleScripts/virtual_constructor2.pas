@@ -1,32 +1,33 @@
-type 
-   TClassA = class
-      Field : String;
-      constructor Create; virtual;
-   end;
+type
+  TClassA = class
+    Field: String;
+    constructor Create; virtual;
+  end;
 
 type
-   TClassB = class(TClassA)
-      constructor Create; override;
-   end;
+  TClassB = class(TClassA)
+    constructor Create; override;
+  end;
 
 constructor TClassA.Create;
 begin
-   Field := 'A';
+  Field := 'A';
 end;
 
 constructor TClassB.Create;
 begin
-   Field := 'B';
-end; 
+  Field := 'B';
+end;
 
-var o, o2 : TClassA;
+var
+  o, o2: TClassA;
 
-o:=TClassA.Create;
+o := TClassA.Create;
 PrintLn(o.Field);
-o2:=o.Create;
+o2 := o.Create;
 PrintLn(o2.Field);
 
-o:=TClassB.Create;
+o := TClassB.Create;
 PrintLn(o.Field);
-o2:=o.Create;
+o2 := o.Create;
 PrintLn(o2.Field);

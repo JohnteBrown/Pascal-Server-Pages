@@ -5,38 +5,39 @@ unit UBigIntegerTests;
 interface
 
 uses
-   Windows, Classes, SysUtils,
-   dwsXPlatformTests, dwsComp, dwsCompiler, dwsExprs, dwsErrors,
-   dwsBigIntegerFunctions.GMP, dwsXPlatform, dwsSymbols, dwsUtils,
-   dwsMPIR.Bundle, dwsCompilerContext;
+  Windows, Classes, SysUtils,
+  dwsXPlatformTests, dwsComp, dwsCompiler, dwsExprs, dwsErrors,
+  dwsBigIntegerFunctions.GMP, dwsXPlatform, dwsSymbols, dwsUtils,
+  dwsMPIR.Bundle, dwsCompilerContext;
 
 type
 
-   TBigIntegerTests = class (TTestCase)
-      private
-         FTests : TStringList;
-         FCompiler : TDelphiWebScript;
+  TBigIntegerTests = class(TTestCase)
+  private
+    FTests: TStringList;
+    FCompiler: TDelphiWebScript;
 
-      public
-         procedure SetUp; override;
-         procedure TearDown; override;
+  public
+    procedure SetUp; override;
+    procedure TearDown; override;
 
-         procedure Execution;
-         procedure Compilation;
+    procedure Execution;
+    procedure Compilation;
 
-      published
-         procedure CompilationNormal;
-         procedure CompilationWithMapAndSymbols;
-         procedure ExecutionNonOptimized;
-         procedure ExecutionOptimized;
+  published
+    procedure CompilationNormal;
+    procedure CompilationWithMapAndSymbols;
+    procedure ExecutionNonOptimized;
+    procedure ExecutionOptimized;
 
-         procedure MultiThreadedExecution;
-   end;
+    procedure MultiThreadedExecution;
+  end;
 
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
 implementation
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
@@ -49,189 +50,205 @@ implementation
 //
 procedure TBigIntegerTests.SetUp;
 begin
-   FTests:=TStringList.Create;
+  FTests := TStringList.Create;
 
-   CollectFiles(ExtractFilePath(ParamStr(0))+'BigInteger'+PathDelim, '*.pas', FTests);
+  CollectFiles(ExtractFilePath(ParamStr(0)) + 'BigInteger' + PathDelim,
+    '*.pas', FTests);
 
-   FCompiler:=TDelphiWebScript.Create(nil);
+  FCompiler := TDelphiWebScript.Create(nil);
 end;
 
 // TearDown
 //
 procedure TBigIntegerTests.TearDown;
 begin
-   FCompiler.Free;
+  FCompiler.Free;
 
-   FTests.Free;
+  FTests.Free;
 end;
 
 // Compilation
 //
 procedure TBigIntegerTests.Compilation;
 var
-   source : TStringList;
-   i : Integer;
-   prog : IdwsProgram;
+  source: TStringList;
+  i: Integer;
+  prog: IdwsProgram;
 begin
-   source:=TStringList.Create;
-   try
+  source := TStringList.Create;
+  try
 
-      for i:=0 to FTests.Count-1 do begin
+    for i := 0 to FTests.Count - 1 do
+    begin
 
-         source.LoadFromFile(FTests[i]);
+      source.LoadFromFile(FTests[i]);
 
-         prog:=FCompiler.Compile(source.Text);
-         CheckFalse(prog.Msgs.HasErrors, FTests[i]);
+      prog := FCompiler.Compile(source.Text);
+      CheckFalse(prog.Msgs.HasErrors, FTests[i]);
 
-      end;
+    end;
 
-   finally
-      source.Free;
-   end;
+  finally
+    source.Free;
+  end;
 end;
 
 // CompilationNormal
 //
 procedure TBigIntegerTests.CompilationNormal;
 begin
-   FCompiler.Config.CompilerOptions:=[coOptimize];
-   Compilation;
+  FCompiler.Config.CompilerOptions := [coOptimize];
+  Compilation;
 end;
 
 // CompilationWithMapAndSymbols
 //
 procedure TBigIntegerTests.CompilationWithMapAndSymbols;
 begin
-   FCompiler.Config.CompilerOptions:=[coSymbolDictionary, coContextMap, coAssertions];
-   Compilation;
+  FCompiler.Config.CompilerOptions := [coSymbolDictionary, coContextMap,
+    coAssertions];
+  Compilation;
 end;
 
 // ExecutionNonOptimized
 //
 procedure TBigIntegerTests.ExecutionNonOptimized;
 begin
-   FCompiler.Config.CompilerOptions:=[coAssertions];
-   Execution;
+  FCompiler.Config.CompilerOptions := [coAssertions];
+  Execution;
 end;
 
 // ExecutionOptimized
 //
 procedure TBigIntegerTests.ExecutionOptimized;
 begin
-   FCompiler.Config.CompilerOptions:=[coOptimize, coAssertions];
-   Execution;
+  FCompiler.Config.CompilerOptions := [coOptimize, coAssertions];
+  Execution;
 end;
 
 type
-   TCheckEquals = procedure (const expected, effective : String; const msg : String) of object;
+  TCheckEquals = procedure(const expected, effective: String; const msg: String)
+    of object;
 
-procedure RunTests(testList : TStrings; compiler : TDelphiWebScript;
-                   checkEquals :  TCheckEquals; rounds : Integer);
+procedure RunTests(testList: TStrings; compiler: TDelphiWebScript;
+  checkEquals: TCheckEquals; rounds: Integer);
 var
-   source, expectedResult : TStringList;
-   i, j : Integer;
-   prog : IdwsProgram;
-   exec : IdwsProgramExecution;
-   resultBase, resultText, resultsFileName, expectedResultText : String;
+  source, expectedResult: TStringList;
+  i, j: Integer;
+  prog: IdwsProgram;
+  exec: IdwsProgramExecution;
+  resultBase, resultText, resultsFileName, expectedResultText: String;
 begin
-   source:=TStringList.Create;
-   expectedResult:=TStringList.Create;
-   try
+  source := TStringList.Create;
+  expectedResult := TStringList.Create;
+  try
 
-      for i:=0 to testList.Count-1 do begin
+    for i := 0 to testList.Count - 1 do
+    begin
 
-         source.LoadFromFile(testList[i]);
+      source.LoadFromFile(testList[i]);
 
-         prog := compiler.Compile(source.Text);
+      prog := compiler.Compile(source.Text);
 
-         resultBase := prog.Msgs.AsInfo;
-         checkEquals('0', BoolToStr(prog.Msgs.HasErrors), testList[i]);
+      resultBase := prog.Msgs.AsInfo;
+      checkEquals('0', BoolToStr(prog.Msgs.HasErrors), testList[i]);
 
-         resultsFileName:=ChangeFileExt(testList[i], '.txt');
-         if FileExists(resultsFileName) then begin
-            expectedResult.LoadFromFile(resultsFileName);
-            expectedResultText := expectedResult.Text;
-         end else expectedResultText := '';
+      resultsFileName := ChangeFileExt(testList[i], '.txt');
+      if FileExists(resultsFileName) then
+      begin
+        expectedResult.LoadFromFile(resultsFileName);
+        expectedResultText := expectedResult.Text;
+      end
+      else
+        expectedResultText := '';
 
-         for j := 1 to rounds do begin
-            exec:=prog.Execute;
+      for j := 1 to rounds do
+      begin
+        exec := prog.Execute;
 
-            resultText := resultBase + exec.Result.ToString;
-            if exec.Msgs.Count > 0 then
-               resultText := resultText + #13#10'>>>> Error(s): '#13#10 + exec.Msgs.AsInfo;
+        resultText := resultBase + exec.Result.ToString;
+        if exec.Msgs.Count > 0 then
+          resultText := resultText + #13#10'>>>> Error(s): '#13#10 +
+            exec.Msgs.AsInfo;
 
-            checkEquals(expectedResultText, resultText, testList[i]);
-         end;
-
+        checkEquals(expectedResultText, resultText, testList[i]);
       end;
 
-   finally
-      expectedResult.Free;
-      source.Free;
-   end;
+    end;
+
+  finally
+    expectedResult.Free;
+    source.Free;
+  end;
 end;
 
 // Execution
 //
 procedure TBigIntegerTests.Execution;
 begin
-   RunTests(FTests, FCompiler, CheckEquals, 1);
+  RunTests(FTests, FCompiler, checkEquals, 1);
 end;
 
 type
-   TThreadRunner = class(TThread)
-      FTests : TBigIntegerTests;
-      FMessage : String;
-      procedure CheckEquals(const expected, effective : String; const msg : String);
-      procedure Execute; override;
+  TThreadRunner = class(TThread)
+    FTests: TBigIntegerTests;
+    FMessage: String;
+    procedure checkEquals(const expected, effective: String; const msg: String);
+    procedure Execute; override;
 
-   end;
+  end;
 
-// Execute
-//
+  // Execute
+  //
 procedure TThreadRunner.Execute;
 begin
-   RunTests(FTests.FTests, FTests.FCompiler, CheckEquals, 20);
+  RunTests(FTests.FTests, FTests.FCompiler, checkEquals, 20);
 end;
 
 // CheckEquals
 //
-procedure TThreadRunner.CheckEquals(const expected, effective : String; const msg : String);
+procedure TThreadRunner.checkEquals(const expected, effective: String;
+  const msg: String);
 begin
-   if expected <> effective then
-      FMessage := Format('expected << %s >> but got << %s >> (%s)', [expected, effective, msg]);
+  if expected <> effective then
+    FMessage := Format('expected << %s >> but got << %s >> (%s)',
+      [expected, effective, msg]);
 end;
 
 // MultiThreadedExecution
 //
 procedure TBigIntegerTests.MultiThreadedExecution;
 var
-   i : Integer;
-   t : array [0..3] of TThreadRunner;
+  i: Integer;
+  t: array [0 .. 3] of TThreadRunner;
 begin
-   for i := 0 to High(t) do begin
-      t[i] := TThreadRunner.Create(True);
-      t[i].FTests := Self;
-      t[i].Start;
-   end;
-   for i := 0 to High(t) do t[i].WaitFor;
-   try
-      for i := 0 to High(t) do
-         if t[i].FMessage <> '' then
-            Check(False, t[i].FMessage);
-   finally
-      for i := 0 to High(t) do t[i].Free;
-   end;
+  for i := 0 to High(t) do
+  begin
+    t[i] := TThreadRunner.Create(True);
+    t[i].FTests := Self;
+    t[i].Start;
+  end;
+  for i := 0 to High(t) do
+    t[i].WaitFor;
+  try
+    for i := 0 to High(t) do
+      if t[i].FMessage <> '' then
+        Check(False, t[i].FMessage);
+  finally
+    for i := 0 to High(t) do
+      t[i].Free;
+  end;
 end;
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 initialization
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
-   RegisterTest('BigIntegerTests', TBigIntegerTests);
+RegisterTest('BigIntegerTests', TBigIntegerTests);
 
 end.

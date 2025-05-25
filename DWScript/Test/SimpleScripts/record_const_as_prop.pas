@@ -1,16 +1,22 @@
 type
-   TBase = record
-      Field : Boolean;
-      class const c1 = 1;
-      const c2 = 2;
-      property p1 : Integer read c1;
-      property p2 : Integer read c2;
-   end;
+  TBase = record
+    Field: Boolean;
+    class
 
-var o : TBase;
+  const
+    c1 = 1;
 
-PrintLn(TBase.P1);
-PrintLn(TBase.P2);
+  const
+    c2 = 2;
+    property p1: Integer read c1;
+    property p2: Integer read c2;
+  end;
 
-PrintLn(o.P1);
-PrintLn(o.P2);
+var
+  o: TBase;
+
+PrintLn(TBase.p1);
+PrintLn(TBase.p2);
+
+PrintLn(o.p1);
+PrintLn(o.p2);

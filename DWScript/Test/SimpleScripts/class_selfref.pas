@@ -1,15 +1,15 @@
 type
-   TMyObj = class
-      function GetSelf : TMyObj;
-   end;
+  TMyObj = class
+    function GetSelf: TMyObj;
+  end;
 
-function TMyObj.GetSelf : TMyObj;
+function TMyObj.GetSelf: TMyObj;
 begin
-   Result:=Self;
+  Result := Self;
 end;
 
-var o = TMyObj.Create;
+var
+o = TMyObj.Create;
 
-if o<>o.GetSelf then PrintLn('bug');
-
-
+if o <> o.GetSelf then
+  PrintLn('bug');

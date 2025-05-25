@@ -1,43 +1,49 @@
 type
-   TBase = class
-      Field : Integer;
-      procedure MyProc;
-      function Virt : Integer; virtual;
-   end;
+  TBase = class
+    Field: Integer;
+    procedure MyProc;
+    function Virt: Integer; virtual;
+  end;
+
 type
-   TChild = class (TBase)
-      function Virt : Integer; override;
-      property Prop : Integer read Field;
-   end;
+  TChild = class(TBase)
+    function Virt: Integer; override;
+    property Prop: Integer read Field;
+  end;
 
 procedure TBase.MyProc;
 begin
-   if Assigned(Self) then begin
-      PrintLn(Self.ClassName);
-      PrintLn(Self.Virt);
-   end else PrintLn('nil');
+  if Assigned(Self) then
+  begin
+    PrintLn(Self.ClassName);
+    PrintLn(Self.Virt);
+  end
+  else
+    PrintLn('nil');
 end;
 
-function TBase.Virt : Integer;
+function TBase.Virt: Integer;
 begin
-   Result:=Self.Field;
+  Result := Self.Field;
 end;
 
-function TChild.Virt : Integer;
+function TChild.Virt: Integer;
 begin
-   Result:=Self.Prop*100;
+  Result := Self.Prop * 100;
 end;
 
-var o : TBase;
+var
+  o: TBase;
 o.MyProc;
 try
-   o.Virt;
+  o.Virt;
 except
-   on E: Exception do PrintLn(E.Message);
+  on E: Exception do
+    PrintLn(E.Message);
 end;
-o:=TBase.Create;
-o.Field:=1;
+o := TBase.Create;
+o.Field := 1;
 o.MyProc;
-o:=TChild.Create;
-o.Field:=2;
+o := TChild.Create;
+o.Field := 2;
 o.MyProc;

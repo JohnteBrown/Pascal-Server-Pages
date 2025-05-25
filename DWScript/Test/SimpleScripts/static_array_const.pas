@@ -1,4 +1,5 @@
-const a = [1, 2, 3];
+const
+  a = [1, 2, 3];
 
 PrintLn(a.Low);
 PrintLn(a.High);

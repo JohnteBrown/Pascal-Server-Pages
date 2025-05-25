@@ -1,26 +1,28 @@
-Type TProc = Procedure;
+Type
+  TProc = Procedure;
 
 procedure SayHello;
 begin
-   PrintLn('Hello');
+  PrintLn('Hello');
 end;
 
 procedure SayBye;
 begin
-   PrintLn('Bye');
+  PrintLn('Bye');
 end;
 
-Procedure Test(Var AProc : TProc);
+Procedure Test(Var AProc: TProc);
 Begin
-   if Assigned(AProc) then
-      AProc;
-   AProc:=SayBye;
+  if Assigned(AProc) then
+    AProc;
+  AProc := SayBye;
 End;
 
-Var p : TProc;
+Var
+  p: TProc;
 
 Test(p);
 Test(p);
-p:=SayHello;
+p := SayHello;
 Test(p);
 Test(p);

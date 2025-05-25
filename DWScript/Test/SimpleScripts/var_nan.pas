@@ -1,4 +1,5 @@
-var value1 : Variant;
+var
+  value1: Variant;
 value1 := NaN;
 PrintLn(value1 = 1.0);
 PrintLn(value1 = NaN);

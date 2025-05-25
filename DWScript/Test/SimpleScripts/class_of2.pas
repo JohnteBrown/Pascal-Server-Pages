@@ -1,28 +1,29 @@
 Type
 
- TBaseClass = Class
- 
-  Constructor Create;// Virtual;
-  Begin
-  
-   PrintLn(ClassName);
-  
+  TBaseClass = Class
+
+    Constructor Create; // Virtual;
+
+    Begin
+
+      PrintLn(ClassName);
+
+    End;
+
   End;
-  
- End;
- 
-Type
-
- TDescendant = Class(TBaseClass)
- End; 
 
 Type
 
- TClassRef = Class Of TBaseClass;
- 
+  TDescendant = Class(TBaseClass)
+  End;
+
+Type
+
+  TClassRef = Class Of TBaseClass;
+
 Var
 
- cr : TClassRef;
- 
+  cr: TClassRef;
+
 cr := TDescendant;
-cr.Create;  
+cr.Create;

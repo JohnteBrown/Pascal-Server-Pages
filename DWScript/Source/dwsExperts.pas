@@ -1,22 +1,22 @@
-{**********************************************************************}
-{                                                                      }
-{    "The contents of this file are subject to the Mozilla Public      }
-{    License Version 1.1 (the "License"); you may not use this         }
-{    file except in compliance with the License. You may obtain        }
-{    a copy of the License at http://www.mozilla.org/MPL/              }
-{                                                                      }
-{    Software distributed under the License is distributed on an       }
-{    "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express       }
-{    or implied. See the License for the specific language             }
-{    governing rights and limitations under the License.               }
-{                                                                      }
-{    The Initial Developer of the Original Code is Matthias            }
-{    Ackermann. For other initial contributors, see contributors.txt   }
-{    Subsequent portions Copyright Creative IT.                        }
-{                                                                      }
-{    Current maintainer: Eric Grange                                   }
-{                                                                      }
-{**********************************************************************}
+{ ********************************************************************** }
+{ }
+{ "The contents of this file are subject to the Mozilla Public }
+{ License Version 1.1 (the "License"); you may not use this }
+{ file except in compliance with the License. You may obtain }
+{ a copy of the License at http://www.mozilla.org/MPL/ }
+{ }
+{ Software distributed under the License is distributed on an }
+{ "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express }
+{ or implied. See the License for the specific language }
+{ governing rights and limitations under the License. }
+{ }
+{ The Initial Developer of the Original Code is Matthias }
+{ Ackermann. For other initial contributors, see contributors.txt }
+{ Subsequent portions Copyright Creative IT. }
+{ }
+{ Current maintainer: Eric Grange }
+{ }
+{ ********************************************************************** }
 // Design-Time only, do NOT include this unit in runtime packages.
 unit dwsExperts;
 
@@ -29,8 +29,8 @@ procedure Register;
 implementation
 
 uses
-   System.Classes, Vcl.Forms, System.SysUtils, DesignIntf, DesignEditors,
-   dwsStrings, dwsComp, dwsSymbols;
+  System.Classes, Vcl.Forms, System.SysUtils, DesignIntf, DesignEditors,
+  dwsStrings, dwsComp, dwsSymbols;
 
 type
   TdwsDataTypeProperty = class(TStringProperty)
@@ -60,7 +60,7 @@ var
   dwsUnit: TdwsUnit;
   sl: TStringList;
 begin
-  if not (GetComponent(0) is TdwsSymbol) then
+  if not(GetComponent(0) is TdwsSymbol) then
     exit;
 
   dwsUnit := TdwsSymbol(GetComponent(0)).GetUnit;
@@ -142,4 +142,3 @@ begin
 end;
 
 end.
-

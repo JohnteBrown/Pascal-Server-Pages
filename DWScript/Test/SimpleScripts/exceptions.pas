@@ -1,10 +1,10 @@
 {
-Demo: Exception handling.
+  Demo: Exception handling.
 }
 
 type
   MyException = class(Exception);
-  
+
 type
   OtherException = class(Exception)
   end;
@@ -16,8 +16,8 @@ except
     PrintLn('MyException: ' + e.Message);
   on e: OtherException do
     PrintLn('OtherException: ' + e.Message);
-else
-  PrintLn('Else');
+  else
+    PrintLn('Else');
 end;
 
 try
@@ -27,8 +27,8 @@ except
     PrintLn('MyException: ' + e.Message);
   on e: OtherException do
     PrintLn('OtherException: ' + e.Message);
-else
-  PrintLn('Else');
+  else
+    PrintLn('Else');
 end;
 
 try
@@ -38,8 +38,8 @@ except
     PrintLn('MyException: ' + e.Message);
   on e: OtherException do
     PrintLn('OtherException: ' + e.Message);
-else
-  PrintLn('Else');
+  else
+    PrintLn('Else');
 end;
 
 try
@@ -47,15 +47,16 @@ try
 except
   on e: Exception do
     PrintLn('MyException: ' + e.Message);
-else
-  PrintLn('Invisible');
+  else
+    PrintLn('Invisible');
 end;
 
-var t := True;
+var
+t := True;
 try
   try
     if t then
-       raise Exception.Create('exception message 3');
+      raise Exception.Create('exception message 3');
     PrintLn('Invisible');
   finally
     PrintLn('Finally');
