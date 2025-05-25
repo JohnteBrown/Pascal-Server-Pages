@@ -1,0 +1,4 @@
+Hint: "test" does not match case of declaration ("Test") [line: 5, column: 1]
+Hint: "test" does not match case of declaration ("Test") [line: 5, column: 7]
+Syntax Error: More arguments expected [line: 5, column: 7]
+Syntax Error: Incompatible types: "void" and "nil" [line: 5, column: 11]

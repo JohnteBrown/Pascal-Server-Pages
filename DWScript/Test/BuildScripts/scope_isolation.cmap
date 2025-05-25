@@ -1,0 +1,106 @@
+[
+	{
+		"Token" : "ttPROGRAM",
+		"Symbol" : null,
+		"SubContexts" : [
+			{
+				"Token" : "ttUSES",
+				"Symbol" : null,
+				"SubContexts" : [ ],
+				"Start" : " [line: 1, column: 1]",
+				"End" : " [line: 1, column: 28]"
+			}
+		],
+		"Start" : " [line: 1, column: 1]",
+		"End" : ""
+	},
+	{
+		"Token" : "ttUNIT",
+		"Symbol" : {
+			"Class" : "TUnitMainSymbol",
+			"Name" : "scope_isolation_direct"
+		},
+		"SubContexts" : [
+			{
+				"Token" : "ttINTERFACE",
+				"Symbol" : {
+					"Class" : "TUnitMainSymbol",
+					"Name" : "scope_isolation_direct"
+				},
+				"SubContexts" : [
+					{
+						"Token" : "ttUSES",
+						"Symbol" : null,
+						"SubContexts" : [ ],
+						"Start" : " [line: 5, column: 1, file: scope_isolation_direct]",
+						"End" : " [line: 5, column: 30, file: scope_isolation_direct]"
+					},
+					{
+						"Token" : "ttPROCEDURE",
+						"Symbol" : {
+							"Class" : "TSourceFuncSymbol",
+							"Name" : "ShouldWork"
+						},
+						"SubContexts" : [ ],
+						"Start" : " [line: 7, column: 1, file: scope_isolation_direct]",
+						"End" : " [line: 9, column: 1, file: scope_isolation_direct]"
+					}
+				],
+				"Start" : " [line: 3, column: 1, file: scope_isolation_direct]",
+				"End" : " [line: 9, column: 1, file: scope_isolation_direct]"
+			},
+			{
+				"Token" : "ttIMPLEMENTATION",
+				"Symbol" : {
+					"Class" : "TUnitMainSymbol",
+					"Name" : "scope_isolation_direct"
+				},
+				"SubContexts" : [ ],
+				"Start" : " [line: 9, column: 1, file: scope_isolation_direct]",
+				"End" : ""
+			}
+		],
+		"Start" : " [line: 1, column: 1, file: scope_isolation_direct]",
+		"End" : ""
+	},
+	{
+		"Token" : "ttUNIT",
+		"Symbol" : {
+			"Class" : "TUnitMainSymbol",
+			"Name" : "scope_isolation_indirect"
+		},
+		"SubContexts" : [
+			{
+				"Token" : "ttPROCEDURE",
+				"Symbol" : {
+					"Class" : "TSourceFuncSymbol",
+					"Name" : "ShouldFail"
+				},
+				"SubContexts" : [
+					{
+						"Token" : "ttBEGIN",
+						"Symbol" : {
+							"Class" : "TSourceFuncSymbol",
+							"Name" : "ShouldFail"
+						},
+						"SubContexts" : [
+							{
+								"Token" : "ttBEGIN",
+								"Symbol" : null,
+								"SubContexts" : [ ],
+								"Start" : " [line: 4, column: 6, file: scope_isolation_indirect]",
+								"End" : " [line: 6, column: 4, file: scope_isolation_indirect]"
+							}
+						],
+						"Start" : " [line: 4, column: 6, file: scope_isolation_indirect]",
+						"End" : " [line: 6, column: 4, file: scope_isolation_indirect]"
+					}
+				],
+				"Start" : " [line: 3, column: 1, file: scope_isolation_indirect]",
+				"End" : " [line: 6, column: 4, file: scope_isolation_indirect]"
+			}
+		],
+		"Start" : " [line: 1, column: 1, file: scope_isolation_indirect]",
+		"End" : " [line: 7, column: 1, file: scope_isolation_indirect]"
+	}
+]

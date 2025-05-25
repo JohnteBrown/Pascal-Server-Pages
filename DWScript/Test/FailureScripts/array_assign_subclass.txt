@@ -1,0 +1,1 @@
+Syntax Error: Argument 0 expects type "TFrameArr" instead of "array of TObject" [line: 15, column: 9]

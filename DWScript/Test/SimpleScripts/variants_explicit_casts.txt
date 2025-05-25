@@ -1,0 +1,19 @@
+123123
+127
+123123
+127
+123.4123.4
+124
+124.4
+Booleans
+True
+False
+Booleans strings
+True
+True
+False
+False
+Booleans integer
+True
+False
+True

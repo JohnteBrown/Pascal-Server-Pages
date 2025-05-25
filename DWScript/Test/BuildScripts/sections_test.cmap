@@ -1,0 +1,152 @@
+[
+	{
+		"Token" : "ttPROGRAM",
+		"Symbol" : null,
+		"SubContexts" : [
+			{
+				"Token" : "ttUSES",
+				"Symbol" : null,
+				"SubContexts" : [ ],
+				"Start" : " [line: 1, column: 1]",
+				"End" : " [line: 1, column: 14]"
+			}
+		],
+		"Start" : " [line: 1, column: 1]",
+		"End" : " [line: 3, column: 1]"
+	},
+	{
+		"Token" : "ttUNIT",
+		"Symbol" : {
+			"Class" : "TUnitMainSymbol",
+			"Name" : "Sections"
+		},
+		"SubContexts" : [
+			{
+				"Token" : "ttINTERFACE",
+				"Symbol" : {
+					"Class" : "TUnitMainSymbol",
+					"Name" : "Sections"
+				},
+				"SubContexts" : [
+					{
+						"Token" : "ttNAME",
+						"Symbol" : {
+							"Class" : "TClassSymbol",
+							"Name" : "THello"
+						},
+						"SubContexts" : [ ],
+						"Start" : " [line: 5, column: 6, file: Sections]",
+						"End" : " [line: 9, column: 8, file: Sections]"
+					},
+					{
+						"Token" : "ttBEGIN",
+						"Symbol" : null,
+						"SubContexts" : [ ],
+						"Start" : " [line: 11, column: 6, file: Sections]",
+						"End" : " [line: 13, column: 1, file: Sections]"
+					},
+					{
+						"Token" : "ttPROCEDURE",
+						"Symbol" : {
+							"Class" : "TSourceFuncSymbol",
+							"Name" : "Stuff"
+						},
+						"SubContexts" : [ ],
+						"Start" : " [line: 15, column: 1, file: Sections]",
+						"End" : " [line: 17, column: 1, file: Sections]"
+					},
+					{
+						"Token" : "ttPROCEDURE",
+						"Symbol" : {
+							"Class" : "TSourceFuncSymbol",
+							"Name" : "Dummy"
+						},
+						"SubContexts" : [ ],
+						"Start" : " [line: 17, column: 1, file: Sections]",
+						"End" : " [line: 19, column: 1, file: Sections]"
+					}
+				],
+				"Start" : " [line: 3, column: 1, file: Sections]",
+				"End" : " [line: 19, column: 1, file: Sections]"
+			},
+			{
+				"Token" : "ttIMPLEMENTATION",
+				"Symbol" : {
+					"Class" : "TUnitMainSymbol",
+					"Name" : "Sections"
+				},
+				"SubContexts" : [
+					{
+						"Token" : "ttMETHOD",
+						"Symbol" : {
+							"Class" : "TSourceMethodSymbol",
+							"Name" : "Dummy"
+						},
+						"SubContexts" : [
+							{
+								"Token" : "ttBEGIN",
+								"Symbol" : {
+									"Class" : "TSourceMethodSymbol",
+									"Name" : "Dummy"
+								},
+								"SubContexts" : [
+									{
+										"Token" : "ttBEGIN",
+										"Symbol" : null,
+										"SubContexts" : [ ],
+										"Start" : " [line: 22, column: 6, file: Sections]",
+										"End" : " [line: 23, column: 4, file: Sections]"
+									}
+								],
+								"Start" : " [line: 21, column: 21, file: Sections]",
+								"End" : " [line: 23, column: 4, file: Sections]"
+							}
+						],
+						"Start" : " [line: 21, column: 1, file: Sections]",
+						"End" : " [line: 23, column: 4, file: Sections]"
+					},
+					{
+						"Token" : "ttBEGIN",
+						"Symbol" : null,
+						"SubContexts" : [ ],
+						"Start" : " [line: 27, column: 6, file: Sections]",
+						"End" : " [line: 29, column: 1, file: Sections]"
+					},
+					{
+						"Token" : "ttPROCEDURE",
+						"Symbol" : {
+							"Class" : "TSourceFuncSymbol",
+							"Name" : "Dummy"
+						},
+						"SubContexts" : [
+							{
+								"Token" : "ttBEGIN",
+								"Symbol" : {
+									"Class" : "TSourceFuncSymbol",
+									"Name" : "Dummy"
+								},
+								"SubContexts" : [
+									{
+										"Token" : "ttBEGIN",
+										"Symbol" : null,
+										"SubContexts" : [ ],
+										"Start" : " [line: 32, column: 6, file: Sections]",
+										"End" : " [line: 33, column: 4, file: Sections]"
+									}
+								],
+								"Start" : " [line: 32, column: 6, file: Sections]",
+								"End" : " [line: 33, column: 4, file: Sections]"
+							}
+						],
+						"Start" : " [line: 31, column: 1, file: Sections]",
+						"End" : " [line: 33, column: 4, file: Sections]"
+					}
+				],
+				"Start" : " [line: 19, column: 1, file: Sections]",
+				"End" : " [line: 37, column: 5, file: Sections]"
+			}
+		],
+		"Start" : " [line: 1, column: 1, file: Sections]",
+		"End" : " [line: 37, column: 5, file: Sections]"
+	}
+]

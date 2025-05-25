@@ -1,0 +1,29 @@
+Main
+   Call
+      Reference
+         Token name <<PrintLn>>
+      Parameters
+         Token (
+         Field
+            Index
+               Reference
+                  Token name <<a>>
+               Indexes
+                  Token [
+                  Reference
+                     Token name <<i>>
+                  Token ]
+            Token .
+            Field
+               Index
+                  Reference
+                     Token name <<a>>
+                  Indexes
+                     Token [
+                     Reference
+                        Token name <<j>>
+                     Token ]
+               Token .
+               Reference
+                  Token name <<x>>
+         Token )

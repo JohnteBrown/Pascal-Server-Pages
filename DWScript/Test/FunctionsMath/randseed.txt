@@ -1,0 +1,7 @@
+Errors >>>>
+Warning: "RandSeed" has been deprecated [line: 2, column: 9]
+Result >>>>
+1234
+47687
+125347
+903103

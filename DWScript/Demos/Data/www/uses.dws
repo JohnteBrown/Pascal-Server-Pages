@@ -1,0 +1,9 @@
+<html>
+<head>
+<title>Uses test</title>
+</head>
+<body><?pas
+uses TestUnit;
+TestIt('hello');
+?></body>
+</html>

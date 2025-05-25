@@ -1,0 +1,70 @@
+Main
+   StatementList
+      TypeInline
+         Token type [LF]
+         TypeDecl
+            Reference
+               Token name <<TTest>>
+            Token =
+            ClassDecl
+               ClassFwd
+                  Token class [LF]
+               ClassBody
+                  TypeInnerDecl
+                     FieldDeclaration
+                        NameList
+                           Token name <<FField>>
+                        Token :
+                        Reference
+                           Token name <<Integer>>
+                     Token ; [LF]
+                     FunctionDecl
+                        Token function
+                        Reference
+                           Token name <<GetField>>
+                        FunctionReturnDecl
+                           Token :
+                           Reference
+                              Token name <<Integer>>
+                     Token ; [LF]
+                     PropertyDecl
+                        Token property
+                        Token name <<Field>>
+                        Token :
+                        Reference
+                           Token name <<Integer>>
+                        PropertyReadDecl
+                           Token read
+                           Reference
+                              Token name <<GetField>>
+                        PropertyWriteDecl
+                           Token write
+                           Reference
+                              Token name <<FField>>
+                     Token ; [LF]
+                  Token end
+      Token ; [LF]
+      FunctionImpl
+         FunctionDecl
+            Token function [PL]
+            Reference
+               Token name <<TTest>>
+               Token .
+               Token name <<GetFiled>>
+            FunctionReturnDecl
+               Token :
+               Reference
+                  Token name <<Integer>>
+         Token ; [LF]
+         FunctionBlock
+            Token begin [LF]
+            StatementList
+               Assignment
+                  Reference
+                     Token name <<Result>>
+                  Token :=
+                  Reference
+                     Token name <<FField>>
+               Token ; [LF]
+            Token end
+      Token ;

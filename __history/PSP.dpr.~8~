@@ -1,0 +1,275 @@
+program PSP;
+{$APPTYPE CONSOLE}
+
+uses
+  System.SysUtils,
+  System.Types,
+  IPPeerServer,
+  IPPeerAPI,
+  IdHTTPWebBrokerBridge,
+  Web.WebReq,
+  Web.WebBroker,
+  WebModuleUnit1 in 'WebModuleUnit1.pas' {WebModule1: TWebModule},
+  PSPEngine in 'PSPEngine.pas',
+  PSPParser in 'src\PSPParser.pas',
+  dwsComp in 'DWScript\Source\dwsComp.pas',
+  dwsArrayElementContext in 'DWScript\Source\dwsArrayElementContext.pas',
+  dwsArrayExprs in 'DWScript\Source\dwsArrayExprs.pas',
+  dwsArrayIndexOfExprs in 'DWScript\Source\dwsArrayIndexOfExprs.pas',
+  dwsArrayMethodKinds in 'DWScript\Source\dwsArrayMethodKinds.pas',
+  dwsAssociativeArrays in 'DWScript\Source\dwsAssociativeArrays.pas',
+  dwsComConnector in 'DWScript\Source\dwsComConnector.pas',
+  dwsCompilerContext in 'DWScript\Source\dwsCompilerContext.pas',
+  dwsCompilerUtils in 'DWScript\Source\dwsCompilerUtils.pas',
+  dwsConnectorExprs in 'DWScript\Source\dwsConnectorExprs.pas',
+  dwsConnectorSymbols in 'DWScript\Source\dwsConnectorSymbols.pas',
+  dwsConstExprs in 'DWScript\Source\dwsConstExprs.pas',
+  dwsContextMap in 'DWScript\Source\dwsContextMap.pas',
+  dwsConvExprs in 'DWScript\Source\dwsConvExprs.pas',
+  dwsCoreExprs in 'DWScript\Source\dwsCoreExprs.pas',
+  dwsCryptoXPlatform in 'DWScript\Source\dwsCryptoXPlatform.pas',
+  dwsCustomData in 'DWScript\Source\dwsCustomData.pas',
+  dwsDataContext in 'DWScript\Source\dwsDataContext.pas',
+  dwsDateTime in 'DWScript\Source\dwsDateTime.pas',
+  dwsDebugFunctions in 'DWScript\Source\dwsDebugFunctions.pas',
+  dwsDebugger in 'DWScript\Source\dwsDebugger.pas',
+  dwsDynamicArrays in 'DWScript\Source\dwsDynamicArrays.pas',
+  dwsEncoding in 'DWScript\Source\dwsEncoding.pas',
+  dwsErrors in 'DWScript\Source\dwsErrors.pas',
+  dwsEvaluate in 'DWScript\Source\dwsEvaluate.pas',
+  dwsExperts in 'DWScript\Source\dwsExperts.pas',
+  dwsExprList in 'DWScript\Source\dwsExprList.pas',
+  dwsExprs in 'DWScript\Source\dwsExprs.pas',
+  dwsExternalFunctions in 'DWScript\Source\dwsExternalFunctions.pas',
+  dwsExternalSymbols in 'DWScript\Source\dwsExternalSymbols.pas',
+  dwsFileFunctions in 'DWScript\Source\dwsFileFunctions.pas',
+  dwsFileSystem in 'DWScript\Source\dwsFileSystem.pas',
+  dwsFilter in 'DWScript\Source\dwsFilter.pas',
+  dwsCompiler in 'DWScript\Source\dwsCompiler.pas',
+  dwsUtils in 'DWScript\Source\dwsUtils.pas',
+  dwsXPlatform in 'DWScript\Source\dwsXPlatform.pas',
+  dwsStrings in 'DWScript\Source\dwsStrings.pas',
+  dwsXXHash in 'DWScript\Source\dwsXXHash.pas',
+  Wcrypt2 in 'DWScript\Source\Wcrypt2.pas',
+  dwsFunctions in 'DWScript\Source\dwsFunctions.pas',
+  dwsSymbols in 'DWScript\Source\dwsSymbols.pas',
+  DelegateTestLibModule in 'DWScript\Test\DelegateTestLibModule.pas' {DelegateTestLib: TDataModule},
+  dwsXPlatformTests in 'DWScript\Test\dwsXPlatformTests.pas',
+  LanguageTestsLAZ in 'DWScript\Test\LanguageTestsLAZ.pas',
+  UAlgorithmsTests in 'DWScript\Test\UAlgorithmsTests.pas',
+  UAutoFormatTests in 'DWScript\Test\UAutoFormatTests.pas',
+  UBigIntegerTests in 'DWScript\Test\UBigIntegerTests.pas',
+  UBuildTests in 'DWScript\Test\UBuildTests.pas',
+  UCodeDOMTests in 'DWScript\Test\UCodeDOMTests.pas',
+  UCOMConnectorTests in 'DWScript\Test\UCOMConnectorTests.pas',
+  UCornerCasesTests in 'DWScript\Test\UCornerCasesTests.pas',
+  UDebuggerTests in 'DWScript\Test\UDebuggerTests.pas',
+  UdwsClassesTests in 'DWScript\Test\UdwsClassesTests.pas',
+  UdwsCryptoTests in 'DWScript\Test\UdwsCryptoTests.pas',
+  UdwsCSSPackTests in 'DWScript\Test\UdwsCSSPackTests.pas',
+  UdwsCustomDataTests in 'DWScript\Test\UdwsCustomDataTests.pas',
+  UdwsDataBaseTests in 'DWScript\Test\UdwsDataBaseTests.pas',
+  UdwsDateTimeTests in 'DWScript\Test\UdwsDateTimeTests.pas',
+  UdwsEncodingTests in 'DWScript\Test\UdwsEncodingTests.pas',
+  UdwsFunctionsTests in 'DWScript\Test\UdwsFunctionsTests.pas',
+  UdwsGraphicsTests in 'DWScript\Test\UdwsGraphicsTests.pas',
+  UdwsIniFileTests in 'DWScript\Test\UdwsIniFileTests.pas',
+  UdwsSystemInfoTests in 'DWScript\Test\UdwsSystemInfoTests.pas',
+  UdwsTabularTests in 'DWScript\Test\UdwsTabularTests.pas',
+  UdwsTimeSeriesTests in 'DWScript\Test\UdwsTimeSeriesTests.pas',
+  UdwsUnitTests in 'DWScript\Test\UdwsUnitTests.pas',
+  UdwsUnitTestsStatic in 'DWScript\Test\UdwsUnitTestsStatic.pas',
+  UdwsUtilsTests in 'DWScript\Test\UdwsUtilsTests.pas',
+  UdwsWebLibModuleTest in 'DWScript\Test\UdwsWebLibModuleTest.pas',
+  UdwsWebUtilsTests in 'DWScript\Test\UdwsWebUtilsTests.pas',
+  UdwsXPlatformTests in 'DWScript\Test\UdwsXPlatformTests.pas',
+  UExternalFunctionTests in 'DWScript\Test\UExternalFunctionTests.pas',
+  UHTMLFilterTests in 'DWScript\Test\UHTMLFilterTests.pas',
+  UInstantiateTests in 'DWScript\Test\UInstantiateTests.pas',
+  UJITTests in 'DWScript\Test\UJITTests.pas',
+  UJITx86_64Tests in 'DWScript\Test\UJITx86_64Tests.pas',
+  UJITx86Tests in 'DWScript\Test\UJITx86Tests.pas',
+  UJSCodeGenTests in 'DWScript\Test\UJSCodeGenTests.pas',
+  UJSFilterTests in 'DWScript\Test\UJSFilterTests.pas',
+  UJSONConnectorTests in 'DWScript\Test\UJSONConnectorTests.pas',
+  UJSONTests in 'DWScript\Test\UJSONTests.pas',
+  UJSSmartLinkerTests in 'DWScript\Test\UJSSmartLinkerTests.pas',
+  UJSTestChromium in 'DWScript\Test\UJSTestChromium.pas',
+  ULanguageExtensionTests in 'DWScript\Test\ULanguageExtensionTests.pas',
+  ULinqJsonTests in 'DWScript\Test\ULinqJsonTests.pas',
+  ULinqTests in 'DWScript\Test\ULinqTests.pas',
+  ULocalizerTests in 'DWScript\Test\ULocalizerTests.pas',
+  UMemoryTests in 'DWScript\Test\UMemoryTests.pas',
+  URTTIExposeTests in 'DWScript\Test\URTTIExposeTests.pas',
+  UScriptTests in 'DWScript\Test\UScriptTests.pas',
+  USourceUtilsTests in 'DWScript\Test\USourceUtilsTests.pas',
+  USpecialTestsRTTI in 'DWScript\Test\USpecialTestsRTTI.pas',
+  USymbolDictionaryTests in 'DWScript\Test\USymbolDictionaryTests.pas',
+  UTestDispatcher in 'DWScript\Test\UTestDispatcher.pas',
+  UTokenizerTests in 'DWScript\Test\UTokenizerTests.pas',
+  gethostbyaddr in 'DWScript\Test\WebLib\gethostbyaddr.pas',
+  gethostbyname in 'DWScript\Test\WebLib\gethostbyname.pas',
+  webrequest in 'DWScript\Test\WebLib\webrequest.pas',
+  basic_unnamed in 'DWScript\Test\TimeSeriesLib\basic_unnamed.pas',
+  nans in 'DWScript\Test\TimeSeriesLib\nans.pas',
+  next in 'DWScript\Test\TimeSeriesLib\next.pas',
+  ranges in 'DWScript\Test\TimeSeriesLib\ranges.pas',
+  rounding in 'DWScript\Test\TimeSeriesLib\rounding.pas',
+  basic_batch in 'DWScript\Test\TabularLib\basic_batch.pas',
+  basic_cmp_jit in 'DWScript\Test\TabularLib\basic_cmp_jit.pas',
+  basic_cmp_nojit in 'DWScript\Test\TabularLib\basic_cmp_nojit.pas',
+  basic_columns in 'DWScript\Test\TabularLib\basic_columns.pas',
+  basic_manyops in 'DWScript\Test\TabularLib\basic_manyops.pas',
+  basic_ops_jit in 'DWScript\Test\TabularLib\basic_ops_jit.pas',
+  basic_ops_nojit in 'DWScript\Test\TabularLib\basic_ops_nojit.pas',
+  dup in 'DWScript\Test\TabularLib\dup.pas',
+  evaluate_columns in 'DWScript\Test\TabularLib\evaluate_columns.pas',
+  lookup_stress in 'DWScript\Test\TabularLib\lookup_stress.pas',
+  lookupfield in 'DWScript\Test\TabularLib\lookupfield.pas',
+  newcolumns_compute in 'DWScript\Test\TabularLib\newcolumns_compute.pas',
+  numfield_default in 'DWScript\Test\TabularLib\numfield_default.pas',
+  numfielddef_stress in 'DWScript\Test\TabularLib\numfielddef_stress.pas',
+  round_floor_ceil in 'DWScript\Test\TabularLib\round_floor_ceil.pas',
+  smape in 'DWScript\Test\TabularLib\smape.pas';
+
+{$R *.res}
+
+function BindPort(APort: Integer): Boolean;
+var
+  LTestServer: IIPTestServer;
+begin
+  Result := True;
+  try
+    LTestServer := PeerFactory.CreatePeer('', IIPTestServer) as IIPTestServer;
+    LTestServer.TestOpenPort(APort, nil);
+  except
+    Result := False;
+  end;
+end;
+
+function CheckPort(APort: Integer): Integer;
+begin
+  if BindPort(APort) then
+    Result := APort
+  else
+    Result := 0;
+end;
+
+procedure SetPort(const AServer: TIdHTTPWebBrokerBridge; APort: String);
+begin
+  if not AServer.Active then
+  begin
+    APort := APort.Replace(cCommandSetPort, '').Trim;
+    if CheckPort(APort.ToInteger) > 0 then
+    begin
+      AServer.DefaultPort := APort.ToInteger;
+      Writeln(Format(sPortSet, [APort]));
+    end
+    else
+      Writeln(Format(sPortInUse, [APort]));
+  end
+  else
+    Writeln(sServerRunning);
+  Write(cArrow);
+end;
+
+procedure StartServer(const AServer: TIdHTTPWebBrokerBridge);
+begin
+  if not AServer.Active then
+  begin
+    if CheckPort(AServer.DefaultPort) > 0 then
+    begin
+      Writeln(Format(sStartingServer, [AServer.DefaultPort]));
+      AServer.Bindings.Clear;
+      AServer.Active := True;
+    end
+    else
+      Writeln(Format(sPortInUse, [AServer.DefaultPort.ToString]));
+  end
+  else
+    Writeln(sServerRunning);
+  Write(cArrow);
+end;
+
+procedure StopServer(const AServer: TIdHTTPWebBrokerBridge);
+begin
+  if AServer.Active then
+  begin
+    Writeln(sStoppingServer);
+    AServer.Active := False;
+    AServer.Bindings.Clear;
+    Writeln(sServerStopped);
+  end
+  else
+    Writeln(sServerNotRunning);
+  Write(cArrow);
+end;
+
+procedure WriteCommands;
+begin
+  Writeln(sCommands);
+  Write(cArrow);
+end;
+
+procedure WriteStatus(const AServer: TIdHTTPWebBrokerBridge);
+begin
+  Writeln(sIndyVersion + AServer.SessionList.Version);
+  Writeln(sActive + AServer.Active.ToString(TUseBoolStrs.True));
+  Writeln(sPort + AServer.DefaultPort.ToString);
+  Writeln(sSessionID + AServer.SessionIDCookieName);
+  Write(cArrow);
+end;
+
+procedure RunServer(APort: Integer);
+var
+  LServer: TIdHTTPWebBrokerBridge;
+  LResponse: string;
+begin
+  WriteCommands;
+  LServer := TIdHTTPWebBrokerBridge.Create(nil);
+  try
+    LServer.DefaultPort := APort;
+    while True do
+    begin
+      Readln(LResponse);
+      LResponse := LowerCase(LResponse);
+      if LResponse.StartsWith(cCommandSetPort) then
+        SetPort(LServer, LResponse)
+      else if sametext(LResponse, cCommandStart) then
+        StartServer(LServer)
+      else if sametext(LResponse, cCommandStatus) then
+        WriteStatus(LServer)
+      else if sametext(LResponse, cCommandStop) then
+        StopServer(LServer)
+      else if sametext(LResponse, cCommandHelp) then
+        WriteCommands
+      else if sametext(LResponse, cCommandExit) then
+        if LServer.Active then
+        begin
+          StopServer(LServer);
+          break
+        end
+        else
+          break
+      else
+      begin
+        Writeln(sInvalidCommand);
+        Write(cArrow);
+      end;
+    end;
+  finally
+    LServer.Free;
+  end;
+end;
+
+begin
+  try
+    if WebRequestHandler <> nil then
+      WebRequestHandler.WebModuleClass := WebModuleClass;
+    RunServer(8080);
+  except
+    on E: Exception do
+      Writeln(E.ClassName, ': ', E.Message);
+  end
+
+end.

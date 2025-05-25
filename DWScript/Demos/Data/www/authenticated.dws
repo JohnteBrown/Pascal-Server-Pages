@@ -1,0 +1,43 @@
+﻿<?pas
+uses System.Net;
+
+?>
+<h1>Authentication</h1>
+<p>
+   Host: <b><?pas= WebRequest.Host.ToHtml ?></b><br>
+   FullURL: <b><?pas= WebRequest.FullURL.ToHtml ?></b><br>
+</p><p>
+<?pas
+if WebRequest.Authentication = WebAuthentication.None then
+
+   if WebRequest.Header['Authorization'] <> '' then
+      PrintLn('Authentication not activated in server options')
+   else WebResponse.RequestAuthentication(WebAuthentication.Negotiate)
+   
+else begin
+
+   if WebRequest.Authentication = WebAuthentication.Failed then
+
+      PrintLn('Authentication failed')
+   
+   else begin
+
+      Print('Authenticated as "<b>' + WebRequest.AuthenticatedUser.ToHtml + '</b>" using <b>');
+      case WebRequest.Authentication of
+         WebAuthentication.Basic : PrintLn('Basic');
+         WebAuthentication.Digest : PrintLn('Digest');
+         WebAuthentication.NTLM : PrintLn('NTLM');
+         WebAuthentication.Negotiate, WebAuthentication.Kerberos : PrintLn('Kerberos');
+      else
+         PrintLn('demo-needs-to-be-upgraded');
+      end;
+      Print('</b>');
+
+   end;
+   
+   if WebRequest.Security <> '' then begin
+      PrintLn('<br> and <b>' + WebRequest.Security.ToHtml + '</b>');
+   end;
+   
+end;
+?></p>

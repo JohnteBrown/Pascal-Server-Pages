@@ -1,0 +1,290 @@
+{**********************************************************************}
+{                                                                      }
+{    "The contents of this file are subject to the Mozilla Public      }
+{    License Version 1.1 (the "License"); you may not use this         }
+{    file except in compliance with the License. You may obtain        }
+{    a copy of the License at http://www.mozilla.org/MPL/              }
+{                                                                      }
+{    Software distributed under the License is distributed on an       }
+{    "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express       }
+{    or implied. See the License for the specific language             }
+{    governing rights and limitations under the License.               }
+{                                                                      }
+{    Copyright Creative IT.                                            }
+{    Current maintainer: Eric Grange                                   }
+{                                                                      }
+{**********************************************************************}
+unit dwsEncodingLibModule;
+
+interface
+
+uses
+  System.SysUtils, System.Classes,
+  dwsExprs, dwsComp, dwsExprList;
+
+type
+  TdwsEncodingLib = class(TDataModule)
+    dwsEncoding: TdwsUnit;
+    procedure dwsEncodingClassesUTF8EncoderMethodsEncodeEval(Info: TProgramInfo;
+      ExtObject: TObject);
+    procedure dwsEncodingClassesUTF8EncoderMethodsDecodeEval(Info: TProgramInfo;
+      ExtObject: TObject);
+    procedure dwsEncodingClassesURLEncodedEncoderMethodsEncodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesURLEncodedEncoderMethodsDecodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesBase64EncoderMethodsEncodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesBase64EncoderMethodsDecodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesHTMLTextEncoderMethodsEncodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesHTMLTextEncoderMethodsDecodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesHexadecimalEncoderMethodsEncodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesHexadecimalEncoderMethodsDecodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesBase58EncoderMethodsEncodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesBase58EncoderMethodsDecodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesHTMLAttributeEncoderMethodsEncodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesHTMLAttributeEncoderMethodsDecodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesBase32EncoderMethodsEncodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesBase32EncoderMethodsDecodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesUTF16BigEndianEncoderMethodsEncodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesUTF16BigEndianEncoderMethodsDecodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesUTF16LittleEndianEncoderMethodsEncodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesUTF16LittleEndianEncoderMethodsDecodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesXMLTextEncoderMethodsEncodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesXMLTextEncoderMethodsDecodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesBase64URLEncoderMethodsEncodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesBase64URLEncoderMethodsDecodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesBase64EncoderMethodsEncodeMIMEFastEvalString(
+      baseExpr: TTypedExpr; const args: TExprBaseListExec; var result: string);
+    procedure dwsEncodingClassesMIMEEncodedWordEncoderMethodsDecodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsEncodingClassesMIMEEncodedWordEncoderMethodsEncodeEval(
+      Info: TProgramInfo; ExtObject: TObject);
+    function dwsEncodingClassesUTF8EncoderMethodsIsValidUTF8FastEvalBoolean(
+      baseExpr: TTypedExpr; const args: TExprBaseListExec): Boolean;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+// ------------------------------------------------------------------
+// ------------------------------------------------------------------
+// ------------------------------------------------------------------
+implementation
+// ------------------------------------------------------------------
+// ------------------------------------------------------------------
+// ------------------------------------------------------------------
+
+uses dwsUtils, dwsEncoding, dwsWebUtils, dwsSymbols;
+
+{$R *.dfm}
+
+procedure TdwsEncodingLib.dwsEncodingClassesBase32EncoderMethodsDecodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsDataString:=Base32Decode(Info.ParamAsString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesBase32EncoderMethodsEncodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsString:=Base32Encode(Info.ParamAsDataString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesBase58EncoderMethodsDecodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsDataString := Base58Decode(Info.ParamAsString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesBase58EncoderMethodsEncodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsString := Base58Encode(Info.ParamAsDataString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesBase64EncoderMethodsDecodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsDataString := Base64Decode(Info.ParamAsString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesBase64EncoderMethodsEncodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsString := Base64Encode(Info.ParamAsDataString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesBase64EncoderMethodsEncodeMIMEFastEvalString(
+  baseExpr: TTypedExpr; const args: TExprBaseListExec; var result: string);
+begin
+   var data := args.AsDataString[0];
+   result := Base64Encode(Pointer(data), Length(data), cBase64, True);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesBase64URLEncoderMethodsDecodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsDataString := Base64DecodeURI(Info.ParamAsString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesBase64URLEncoderMethodsEncodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsString := Base64EncodeURI(Info.ParamAsDataString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesHexadecimalEncoderMethodsDecodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsDataString := dwsUtils.HexToBin(Info.ParamAsString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesHexadecimalEncoderMethodsEncodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsString := dwsUtils.BinToHex(Info.ParamAsDataString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesHTMLAttributeEncoderMethodsDecodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsString := WebUtils.HTMLAttributeDecode(Info.ParamAsString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesHTMLAttributeEncoderMethodsEncodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsString := WebUtils.HTMLAttributeEncode(Info.ParamAsString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesHTMLTextEncoderMethodsDecodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsString := WebUtils.HTMLTextDecode(Info.ParamAsString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesHTMLTextEncoderMethodsEncodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsString := WebUtils.HTMLTextEncode(Info.ParamAsString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesMIMEEncodedWordEncoderMethodsDecodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   raise Exception.Create('MIMEEncodedWordEncoder.Decode is not yet supported');
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesMIMEEncodedWordEncoderMethodsEncodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsString := WebUtils.EncodeEncodedWord(Info.ParamAsString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesURLEncodedEncoderMethodsDecodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+var
+   buf : RawByteString;
+begin
+   buf := Info.ParamAsDataString[0];
+   Info.ResultAsString := WebUtils.DecodeURLEncoded(buf, 1, Length(buf));
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesURLEncodedEncoderMethodsEncodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsString := WebUtils.EncodeURLEncoded(Info.ParamAsString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesUTF16BigEndianEncoderMethodsDecodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+var
+   buf : UnicodeString;
+begin
+   buf := Info.ParamAsString[0];
+   StringWordsToBytes(buf, True);
+   Info.ResultAsString := buf;
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesUTF16BigEndianEncoderMethodsEncodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+var
+   buf : UnicodeString;
+begin
+   buf := Info.ParamAsString[0];
+   StringBytesToWords(buf, True);
+   Info.ResultAsString := buf;
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesUTF16LittleEndianEncoderMethodsDecodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+var
+   buf : UnicodeString;
+begin
+   buf := Info.ParamAsString[0];
+   StringWordsToBytes(buf, False);
+   Info.ResultAsString := buf;
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesUTF16LittleEndianEncoderMethodsEncodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+var
+   buf : UnicodeString;
+begin
+   buf := Info.ParamAsString[0];
+   StringBytesToWords(buf, False);
+   Info.ResultAsString := buf;
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesUTF8EncoderMethodsDecodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsString := UTF8ToString(Info.ParamAsDataString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesUTF8EncoderMethodsEncodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsDataString := UTF8Encode(Info.ParamAsString[0]);
+end;
+
+function TdwsEncodingLib.dwsEncodingClassesUTF8EncoderMethodsIsValidUTF8FastEvalBoolean(
+  baseExpr: TTypedExpr; const args: TExprBaseListExec): Boolean;
+begin
+   Result := IsValidUTF8(args.AsDataString[0]);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesXMLTextEncoderMethodsEncodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsString := WebUtils.XMLTextEncode(Info.ParamAsString[0], 0);
+end;
+
+procedure TdwsEncodingLib.dwsEncodingClassesXMLTextEncoderMethodsDecodeEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+   Info.ResultAsString := WebUtils.XMLTextDecode(Info.ParamAsString[0]);
+end;
+
+end.

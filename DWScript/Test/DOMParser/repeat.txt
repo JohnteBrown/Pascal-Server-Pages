@@ -1,0 +1,22 @@
+Main
+   Repeat
+      Token repeat [LF]
+      StatementList
+         Assignment
+            Reference
+               Token name <<a>>
+            Token :=
+            Token Integer Literal <<1>>
+         Token ; [LF]
+         Call
+            Reference
+               Token name <<b>>
+            Parameters
+               Token (
+               Token ) [LF]
+      Token until
+      BinaryOperator
+         Reference
+            Token name <<a>>
+         Token >
+         Token Integer Literal <<1>>

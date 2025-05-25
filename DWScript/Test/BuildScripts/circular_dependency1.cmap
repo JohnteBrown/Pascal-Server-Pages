@@ -1,0 +1,104 @@
+[
+	{
+		"Token" : "ttPROGRAM",
+		"Symbol" : null,
+		"SubContexts" : [
+			{
+				"Token" : "ttUSES",
+				"Symbol" : null,
+				"SubContexts" : [ ],
+				"Start" : " [line: 1, column: 1]",
+				"End" : " [line: 1, column: 15]"
+			}
+		],
+		"Start" : " [line: 1, column: 1]",
+		"End" : ""
+	},
+	{
+		"Token" : "ttUNIT",
+		"Symbol" : {
+			"Class" : "TUnitMainSymbol",
+			"Name" : "CircularA"
+		},
+		"SubContexts" : [
+			{
+				"Token" : "ttINTERFACE",
+				"Symbol" : {
+					"Class" : "TUnitMainSymbol",
+					"Name" : "CircularA"
+				},
+				"SubContexts" : [
+					{
+						"Token" : "ttUSES",
+						"Symbol" : null,
+						"SubContexts" : [ ],
+						"Start" : " [line: 5, column: 1, file: CircularA]",
+						"End" : " [line: 5, column: 15, file: CircularA]"
+					}
+				],
+				"Start" : " [line: 3, column: 1, file: CircularA]",
+				"End" : ""
+			}
+		],
+		"Start" : " [line: 1, column: 1, file: CircularA]",
+		"End" : ""
+	},
+	{
+		"Token" : "ttUNIT",
+		"Symbol" : {
+			"Class" : "TUnitMainSymbol",
+			"Name" : "CircularB"
+		},
+		"SubContexts" : [
+			{
+				"Token" : "ttINTERFACE",
+				"Symbol" : {
+					"Class" : "TUnitMainSymbol",
+					"Name" : "CircularB"
+				},
+				"SubContexts" : [
+					{
+						"Token" : "ttUSES",
+						"Symbol" : null,
+						"SubContexts" : [ ],
+						"Start" : " [line: 5, column: 1, file: CircularB]",
+						"End" : " [line: 5, column: 15, file: CircularB]"
+					}
+				],
+				"Start" : " [line: 3, column: 1, file: CircularB]",
+				"End" : ""
+			}
+		],
+		"Start" : " [line: 1, column: 1, file: CircularB]",
+		"End" : ""
+	},
+	{
+		"Token" : "ttUNIT",
+		"Symbol" : {
+			"Class" : "TUnitMainSymbol",
+			"Name" : "CircularC"
+		},
+		"SubContexts" : [
+			{
+				"Token" : "ttINTERFACE",
+				"Symbol" : {
+					"Class" : "TUnitMainSymbol",
+					"Name" : "CircularC"
+				},
+				"SubContexts" : [
+					{
+						"Token" : "ttUSES",
+						"Symbol" : null,
+						"SubContexts" : [ ],
+						"Start" : " [line: 5, column: 1, file: CircularC]",
+						"End" : " [line: 5, column: 15, file: CircularC]"
+					}
+				],
+				"Start" : " [line: 3, column: 1, file: CircularC]",
+				"End" : ""
+			}
+		],
+		"Start" : " [line: 1, column: 1, file: CircularC]",
+		"End" : ""
+	}
+]

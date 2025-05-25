@@ -1,0 +1,17 @@
+[
+	{
+		"Token" : "ttPROGRAM",
+		"Symbol" : null,
+		"SubContexts" : [
+			{
+				"Token" : "ttUSES",
+				"Symbol" : null,
+				"SubContexts" : [ ],
+				"Start" : " [line: 1, column: 1]",
+				"End" : " [line: 1, column: 11]"
+			}
+		],
+		"Start" : " [line: 1, column: 1]",
+		"End" : " [line: 4, column: 1]"
+	}
+]

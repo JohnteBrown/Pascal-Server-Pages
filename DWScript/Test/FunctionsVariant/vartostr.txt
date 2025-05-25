@@ -1,0 +1,7 @@
+Errors >>>>
+Hint: Prefer .ToString or IntToStr() [line: 1, column: 9]
+Hint: Redundant function call [line: 13, column: 9]
+Result >>>>
+123
+12.3
+12.3

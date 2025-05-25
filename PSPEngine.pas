@@ -16,11 +16,11 @@ resourcestring
   sPort = '- Port: ';
   sSessionID = '- Session ID CookieName: ';
   sCommands = 'Enter a Command: ' + slineBreak +
-    '   - "start" to start the server'+ slineBreak +
-    '   - "stop" to stop the server'+ slineBreak +
-    '   - "set port" to change the default port'+ slineBreak +
-    '   - "status" for Server status'+ slineBreak +
-    '   - "help" to show commands'+ slineBreak +
+    '   - "start" to start the server' + slineBreak +
+    '   - "stop" to stop the server' + slineBreak +
+    '   - "set port" to change the default port' + slineBreak +
+    '   - "status" for Server status' + slineBreak +
+    '   - "help" to show commands' + slineBreak +
     '   - "exit" to close the application';
 
 const

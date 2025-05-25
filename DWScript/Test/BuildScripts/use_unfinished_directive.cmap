@@ -1,0 +1,38 @@
+[
+	{
+		"Token" : "ttPROGRAM",
+		"Symbol" : null,
+		"SubContexts" : [
+			{
+				"Token" : "ttUSES",
+				"Symbol" : null,
+				"SubContexts" : [ ],
+				"Start" : " [line: 1, column: 1]",
+				"End" : " [line: 1, column: 25]"
+			}
+		],
+		"Start" : " [line: 1, column: 1]",
+		"End" : ""
+	},
+	{
+		"Token" : "ttUNIT",
+		"Symbol" : {
+			"Class" : "TUnitMainSymbol",
+			"Name" : "UnfinishedDirective"
+		},
+		"SubContexts" : [
+			{
+				"Token" : "ttINTERFACE",
+				"Symbol" : {
+					"Class" : "TUnitMainSymbol",
+					"Name" : "UnfinishedDirective"
+				},
+				"SubContexts" : [ ],
+				"Start" : " [line: 3, column: 1, file: UnfinishedDirective]",
+				"End" : " [line: 6, column: 1, file: UnfinishedDirective]"
+			}
+		],
+		"Start" : " [line: 1, column: 1, file: UnfinishedDirective]",
+		"End" : " [line: 6, column: 1, file: UnfinishedDirective]"
+	}
+]

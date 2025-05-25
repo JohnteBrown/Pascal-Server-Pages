@@ -1,0 +1,17 @@
+Main
+   StatementList
+      IfThenElseStmt
+         Token if
+         Reference
+            Token name <<a>>
+         Token then [LF]
+         Reference
+            Token name <<b>> [LF]
+         Token else
+         Call
+            Reference
+               Token name <<c>>
+            Parameters
+               Token (
+               Token )
+      Token ;

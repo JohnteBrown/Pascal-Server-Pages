@@ -1,0 +1,2 @@
+Syntax Error: "]" expected [line: 3, column: 5]
+Syntax Error: Incompatible types: Cannot assign "Integer" to "array of Integer" [line: 3, column: 5]

@@ -1,0 +1,198 @@
+unit PSPParser;
+
+interface
+
+uses
+  System.SysUtils, System.Classes,
+  dwsComp,       // DWScript compiler
+  dwsExprs,      // DWScript expressions & runtime
+  dwsSymbols;    // DWScript symbol system
+
+type
+  TPSPParser = class
+  private
+    FInput: TStringList;
+    FHTMLBuffer: TStringList;
+    FCodeBuffer: TStringList;
+    FScript: TdwsProgram; // compiled DWScript program
+    FFileName: string;     // store filename for base path
+
+    procedure ParseLine(const Line: string);
+    procedure FlushBuffers;
+    procedure ProcessIncludes(const BasePath: string);
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+
+    procedure LoadFromFile(const FileName: string);
+    procedure Parse;
+    procedure ExecuteCode;
+    function GetHTML: string;
+  end;
+
+implementation
+
+{ TPSPParser }
+
+constructor TPSPParser.Create;
+begin
+  FInput := TStringList.Create;
+  FHTMLBuffer := TStringList.Create;
+  FCodeBuffer := TStringList.Create;
+end;
+
+destructor TPSPParser.Destroy;
+begin
+  FInput.Free;
+  FHTMLBuffer.Free;
+  FCodeBuffer.Free;
+  if Assigned(FScript) then
+    FScript.Free;
+  inherited;
+end;
+
+procedure TPSPParser.LoadFromFile(const FileName: string);
+begin
+  FFileName := FileName;
+  FInput.LoadFromFile(FileName);
+end;
+
+procedure TPSPParser.ProcessIncludes(const BasePath: string);
+var
+  i, IncludeStart, IncludeEnd: Integer;
+  Line, IncludeFileName, IncludeFilePath: string;
+  IncludedContent: TStringList;
+begin
+  i := 0;
+  while i < FInput.Count do
+  begin
+    Line := FInput[i];
+    IncludeStart := Pos('<%include', Line);
+    if IncludeStart > 0 then
+    begin
+      IncludeEnd := Pos('%>', Line);
+      if IncludeEnd > 0 then
+      begin
+        // Extract filename inside quotes, e.g. <%include 'foo.pas'%> lol
+        IncludeFileName := Copy(Line, IncludeStart + Length('<%include'), IncludeEnd - (IncludeStart + Length('<%include')));
+        IncludeFileName := IncludeFileName.Trim;
+        IncludeFileName := IncludeFileName.Replace('''', '').Replace('"', '');
+
+        IncludeFilePath := TPath.Combine(BasePath, IncludeFileName);
+
+        if FileExists(IncludeFilePath) then
+        begin
+          IncludedContent := TStringList.Create;
+          try
+            IncludedContent.LoadFromFile(IncludeFilePath);
+            // Remove the include line
+            FInput.Delete(i);
+            // Insert included lines right here
+            FInput.InsertRange(i, IncludedContent);
+            // don't increment i, I want to process new lines inserted here
+            Continue;
+          finally
+            IncludedContent.Free;
+          end;
+        end else
+          raise Exception.CreateFmt('Include file not found: %s', [IncludeFilePath]);
+      end;
+    end;
+    Inc(i);
+  end;
+end;
+
+procedure TPSPParser.Parse;
+var
+  Line: string;
+  BasePath: string;
+begin
+  FlushBuffers;
+
+  BasePath := ExtractFilePath(FFileName);
+
+  ProcessIncludes(BasePath);
+
+  for Line in FInput do
+    ParseLine(Line);
+
+  ExecuteCode;
+end;
+
+procedure TPSPParser.ParseLine(const Line: string);
+const
+  OpenTag = '<%pas';
+  CloseTag = '%>';
+var
+  StartPos, EndPos: Integer;
+  BeforeTag, CodeChunk, AfterTag: string;
+begin
+  StartPos := Pos(OpenTag, Line);
+  if StartPos > 0 then
+  begin
+    BeforeTag := Copy(Line, 1, StartPos - 1);
+    EndPos := Pos(CloseTag, Line);
+    if EndPos > 0 then
+    begin
+      CodeChunk := Copy(Line, StartPos + Length(OpenTag), EndPos - StartPos - Length(OpenTag));
+      AfterTag := Copy(Line, EndPos + Length(CloseTag), MaxInt);
+
+      if BeforeTag <> '' then
+        FHTMLBuffer.Add(BeforeTag);
+      FCodeBuffer.Add(Trim(CodeChunk));
+      if AfterTag <> '' then
+        FHTMLBuffer.Add(AfterTag);
+    end else
+      FHTMLBuffer.Add(Line);
+  end else
+    FHTMLBuffer.Add(Line);
+end;
+
+procedure TPSPParser.ExecuteCode;
+var
+  compiler: TdwsCompiler;
+  exec: IdwsProgramExecution;
+  combinedCode: string;
+begin
+  combinedCode := FCodeBuffer.Text;
+
+  compiler := TdwsCompiler.Create(nil);
+  try
+    FScript := compiler.Compile(combinedCode);
+
+    if FScript.Msgs.HasErrors then
+      raise Exception.Create('DWScript compile error: ' + FScript.Msgs.AsInfo);
+
+    exec := FScript.BeginProgram;
+    try
+      exec.Execute;
+      if exec.Msgs.HasErrors then
+        raise Exception.Create('DWScript runtime error: ' + exec.Msgs.AsInfo);
+    finally
+      exec.EndProgram;
+    end;
+
+  finally
+    compiler.Free;
+  end;
+end;
+
+function TPSPParser.GetHTML: string;
+begin
+  Result := FHTMLBuffer.Text;
+end;
+
+procedure TPSPParser.FlushBuffers;
+begin
+  FHTMLBuffer.Clear;
+  FCodeBuffer.Clear;
+  if Assigned(FScript) then
+  begin
+    FScript.Free;
+    FScript := nil;
+  end;
+end;
+
+end.
+

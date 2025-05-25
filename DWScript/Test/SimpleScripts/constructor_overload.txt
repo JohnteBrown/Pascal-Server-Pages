@@ -1,0 +1,10 @@
+Errors >>>>
+Warning: Method "Create" overlaps a virtual method [line: 8, column: 17]
+Hint: Overloaded method "Create" should be marked with the "overload" directive [line: 14, column: 5]
+Result >>>>
+True
+1
+2
+False
+1
+2

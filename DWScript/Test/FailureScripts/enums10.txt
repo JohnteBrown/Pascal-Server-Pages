@@ -1,0 +1,1 @@
+Syntax Error: Argument 0 expects type "TEnum1" instead of "TEnum2" [line: 7, column: 8]

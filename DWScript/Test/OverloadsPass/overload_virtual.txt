@@ -1,0 +1,9 @@
+Errors >>>>
+Hint: Overloaded method "Test" should be marked with the "overload" directive [line: 18, column: 7]
+Result >>>>
+Base no param
+Base: 1
+Sub no param
+Sub: 2
+Sub no param
+Sub: 3

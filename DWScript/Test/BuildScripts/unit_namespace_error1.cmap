@@ -1,0 +1,122 @@
+[
+	{
+		"Token" : "ttPROGRAM",
+		"Symbol" : null,
+		"SubContexts" : [
+			{
+				"Token" : "ttUSES",
+				"Symbol" : null,
+				"SubContexts" : [ ],
+				"Start" : " [line: 1, column: 1]",
+				"End" : " [line: 1, column: 17]"
+			},
+			{
+				"Token" : "ttUSES",
+				"Symbol" : null,
+				"SubContexts" : [ ],
+				"Start" : " [line: 3, column: 1]",
+				"End" : " [line: 3, column: 17]"
+			}
+		],
+		"Start" : " [line: 1, column: 1]",
+		"End" : " [line: 5, column: 1]"
+	},
+	{
+		"Token" : "ttUNIT",
+		"Symbol" : {
+			"Class" : "TUnitMainSymbol",
+			"Name" : "Dotted.Both"
+		},
+		"SubContexts" : [
+			{
+				"Token" : "ttUSES",
+				"Symbol" : null,
+				"SubContexts" : [ ],
+				"Start" : " [line: 3, column: 1, file: Dotted.Both]",
+				"End" : " [line: 3, column: 36, file: Dotted.Both]"
+			}
+		],
+		"Start" : " [line: 1, column: 1, file: Dotted.Both]",
+		"End" : " [line: 4, column: 1, file: Dotted.Both]"
+	},
+	{
+		"Token" : "ttUNIT",
+		"Symbol" : {
+			"Class" : "TUnitMainSymbol",
+			"Name" : "Dotted.Abc"
+		},
+		"SubContexts" : [
+			{
+				"Token" : "ttFUNCTION",
+				"Symbol" : {
+					"Class" : "TSourceFuncSymbol",
+					"Name" : "Abc"
+				},
+				"SubContexts" : [
+					{
+						"Token" : "ttBEGIN",
+						"Symbol" : {
+							"Class" : "TSourceFuncSymbol",
+							"Name" : "Abc"
+						},
+						"SubContexts" : [
+							{
+								"Token" : "ttBEGIN",
+								"Symbol" : null,
+								"SubContexts" : [ ],
+								"Start" : " [line: 4, column: 6, file: Dotted.Abc]",
+								"End" : " [line: 6, column: 4, file: Dotted.Abc]"
+							}
+						],
+						"Start" : " [line: 4, column: 6, file: Dotted.Abc]",
+						"End" : " [line: 6, column: 4, file: Dotted.Abc]"
+					}
+				],
+				"Start" : " [line: 3, column: 1, file: Dotted.Abc]",
+				"End" : " [line: 6, column: 4, file: Dotted.Abc]"
+			}
+		],
+		"Start" : " [line: 1, column: 1, file: Dotted.Abc]",
+		"End" : " [line: 7, column: 1, file: Dotted.Abc]"
+	},
+	{
+		"Token" : "ttUNIT",
+		"Symbol" : {
+			"Class" : "TUnitMainSymbol",
+			"Name" : "Dotted.Hello.World"
+		},
+		"SubContexts" : [
+			{
+				"Token" : "ttFUNCTION",
+				"Symbol" : {
+					"Class" : "TSourceFuncSymbol",
+					"Name" : "HelloWorld"
+				},
+				"SubContexts" : [
+					{
+						"Token" : "ttBEGIN",
+						"Symbol" : {
+							"Class" : "TSourceFuncSymbol",
+							"Name" : "HelloWorld"
+						},
+						"SubContexts" : [
+							{
+								"Token" : "ttBEGIN",
+								"Symbol" : null,
+								"SubContexts" : [ ],
+								"Start" : " [line: 4, column: 6, file: Dotted.Hello.World]",
+								"End" : " [line: 6, column: 4, file: Dotted.Hello.World]"
+							}
+						],
+						"Start" : " [line: 4, column: 6, file: Dotted.Hello.World]",
+						"End" : " [line: 6, column: 4, file: Dotted.Hello.World]"
+					}
+				],
+				"Start" : " [line: 3, column: 1, file: Dotted.Hello.World]",
+				"End" : " [line: 6, column: 4, file: Dotted.Hello.World]"
+			}
+		],
+		"Start" : " [line: 1, column: 1, file: Dotted.Hello.World]",
+		"End" : " [line: 7, column: 1, file: Dotted.Hello.World]"
+	}
+]

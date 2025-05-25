@@ -1,0 +1,40 @@
+<?pas
+uses System.Info;
+
+function Pretty(i : Integer) : String;
+begin
+   Result:=Format('%.1f MiB', [i/(1024*1024)]);
+end;
+
+function Bar(const d : MemoryStatusDetail) : String;
+begin
+   Result:= '<div class="bar"><div class="barfill" style="width:'
+           +IntToStr(100-Round(100*d.Available/d.Total))
+           +'%">'
+end;
+
+var ms := new MemoryStatus;
+
+?>
+<table cellspacing="0" cellpadding="6">
+   <tr>
+      <th>Memory
+      <th>Available
+      <th>Total
+      <th>Ratio
+   <tr>
+      <td>Physical
+      <td><?pas=Pretty(ms.Physical.Available)?>
+      <td><?pas=Pretty(ms.Physical.Total)?>
+      <td><?pas=Bar(ms.Physical)?>
+   <tr>
+      <td>Virtual
+      <td><?pas=Pretty(ms.Virtual.Available)?>
+      <td><?pas=Pretty(ms.Virtual.Total)?>
+      <td><?pas=Bar(ms.Virtual)?>
+   <tr>
+      <td>PageFile
+      <td><?pas=Pretty(ms.PageFile.Available)?>
+      <td><?pas=Pretty(ms.PageFile.Total)?>
+      <td><?pas=Bar(ms.PageFile)?>
+</table>

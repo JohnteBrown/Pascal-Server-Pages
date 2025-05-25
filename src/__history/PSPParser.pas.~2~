@@ -1,0 +1,104 @@
+unit PSPParser;
+
+interface
+
+uses
+  System.SysUtils, System.Classes;
+
+type
+  TPSPParser = class
+  private
+    FInput: TStringList;
+    FHTMLBuffer: TStringList;
+    FCodeBuffer: TStringList;
+
+    procedure ParseLine(const Line: string);
+    procedure FlushBuffers;
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+
+    procedure LoadFromFile(const FileName: string);
+    procedure Parse;
+    function GetHTML: string;
+    function GetPascalCode: string;
+  end;
+
+implementation
+
+{ TPSPParser }
+
+constructor TPSPParser.Create;
+begin
+  FInput := TStringList.Create;
+  FHTMLBuffer := TStringList.Create;
+  FCodeBuffer := TStringList.Create;
+end;
+
+destructor TPSPParser.Destroy;
+begin
+  FInput.Free;
+  FHTMLBuffer.Free;
+  FCodeBuffer.Free;
+  inherited;
+end;
+
+procedure TPSPParser.LoadFromFile(const FileName: string);
+begin
+  FInput.LoadFromFile(FileName);
+end;
+
+procedure TPSPParser.Parse;
+var
+  Line: string;
+begin
+  for Line in FInput do
+    ParseLine(Line);
+end;
+
+procedure TPSPParser.ParseLine(const Line: string);
+const
+  OpenTag = '<%pas';
+  CloseTag = '%>';
+var
+  StartPos, EndPos: Integer;
+  BeforeTag, CodeChunk, AfterTag: string;
+begin
+  StartPos := Pos(OpenTag, Line);
+  if StartPos > 0 then
+  begin
+    BeforeTag := Copy(Line, 1, StartPos - 1);
+    EndPos := Pos(CloseTag, Line);
+    if EndPos > 0 then
+    begin
+      CodeChunk := Copy(Line, StartPos + Length(OpenTag), EndPos - StartPos - Length(OpenTag));
+      AfterTag := Copy(Line, EndPos + Length(CloseTag), MaxInt);
+
+      FHTMLBuffer.Add(BeforeTag);
+      FCodeBuffer.Add(Trim(CodeChunk));
+      if AfterTag <> '' then
+        FHTMLBuffer.Add(AfterTag);
+    end;
+  end
+  else
+    FHTMLBuffer.Add(Line);
+end;
+
+function TPSPParser.GetHTML: string;
+begin
+  Result := FHTMLBuffer.Text;
+end;
+
+function TPSPParser.GetPascalCode: string;
+begin
+  Result := FCodeBuffer.Text;
+end;
+
+procedure TPSPParser.FlushBuffers;
+begin
+  FHTMLBuffer.Clear;
+  FCodeBuffer.Clear;
+end;
+
+end.

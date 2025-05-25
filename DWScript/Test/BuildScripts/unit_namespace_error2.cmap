@@ -1,0 +1,27 @@
+[
+	{
+		"Token" : "ttPROGRAM",
+		"Symbol" : null,
+		"SubContexts" : [
+			{
+				"Token" : "ttUSES",
+				"Symbol" : null,
+				"SubContexts" : [ ],
+				"Start" : " [line: 1, column: 1]",
+				"End" : " [line: 3, column: 10]"
+			}
+		],
+		"Start" : " [line: 1, column: 1]",
+		"End" : " [line: 5, column: 1]"
+	},
+	{
+		"Token" : "ttUNIT",
+		"Symbol" : {
+			"Class" : "TUnitMainSymbol",
+			"Name" : "DottedXY.Z"
+		},
+		"SubContexts" : [ ],
+		"Start" : " [line: 1, column: 1, file: DottedXY.Z]",
+		"End" : " [line: 2, column: 1, file: DottedXY.Z]"
+	}
+]
