@@ -7,7 +7,7 @@ call "C:\Program Files (x86)\Embarcadero\Studio\23.0\bin\rsvars.bat"
 :: === Configuration ===
 set PROJECT_PATH=.\PSP.dproj
 set BUILD_CONFIG=Release
-set BUILD_PLATFORM=Win64
+set BUILD_PLATFORM=Win32
 set LOG_FILE=log\build_output.logs
 set MSBUILD=msbuild
 

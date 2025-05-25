@@ -540,7 +540,7 @@
         <DCCReference Include="DWScript\Test\SimpleScripts\plus_plus_minus_minus.pas"/>
         <DCCReference Include="DWScript\Test\SimpleScripts\proc_of_method.pas"/>
         <DCCReference Include="DWScript\Test\SimpleScripts\procedure_contracts.pas"/>
-        <DCCReference Include="DWScript\Test\SimpleScripts\program.pas"/>
+        <DCCReference Include="DWScript\Test\SimpleScripts\programmer.pas"/>
         <DCCReference Include="DWScript\Test\SimpleScripts\programDot.pas"/>
         <DCCReference Include="DWScript\Test\SimpleScripts\property_call.pas"/>
         <DCCReference Include="DWScript\Test\SimpleScripts\property_chain.pas"/>
