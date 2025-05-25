@@ -18,7 +18,7 @@ if not exist log (
 
 :: === Timestamp and intro ===
 echo ========================================================
-echo 🛠️  PSP Build Started: %DATE% %TIME%
+echo PSP Build Started: %DATE% %TIME%
 echo Project: %PROJECT_PATH%
 echo Target: %BUILD_CONFIG% ^| Platform: %BUILD_PLATFORM%
 echo ========================================================
@@ -32,17 +32,17 @@ powershell -ExecutionPolicy Bypass -NoProfile -File buildcli.ps1 ^
 :: === Result check
 findstr /C:"Build succeeded." %LOG_FILE% >nul
 if %errorlevel% neq 0 (
-    echo ❌ Build FAILED — see %LOG_FILE%
-    echo ❌ FAILED at %TIME% >> %LOG_FILE%
+    echo Build FAILED — see %LOG_FILE%
+    echo FAILED at %TIME% >> %LOG_FILE%
     pause
     exit /b 1
 ) else (
-    echo ✅ Build SUCCEEDED — logged in %LOG_FILE%
-    echo ✅ SUCCESS at %TIME% >> %LOG_FILE%
+    echo Build SUCCEEDED — logged in %LOG_FILE%
+    echo SUCCESS at %TIME% >> %LOG_FILE%
 )
 
 echo ========================================================
-echo ✅ PSP Build Complete: %TIME%
+echo PSP Build Complete: %TIME%
 echo ========================================================
 pause
 endlocal
